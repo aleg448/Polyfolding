@@ -12,6 +12,7 @@
 - [x] Add Linux Docker environments for split MACE/AIMNet and fairchem stacks.
 - [x] Add CPOSS209 source inventory indexing.
 - [x] Add CPOSS209 adjacent-form candidate pair queue.
+- [x] Add ADHD and high-use medicine therapeutic priority queue.
 - [ ] Replace draft placeholders with 5 verified records.
 
 ## Month 1

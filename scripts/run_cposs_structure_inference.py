@@ -67,12 +67,21 @@ def main() -> int:
     parser.add_argument("--mace-model", default="small")
     parser.add_argument("--aimnet-model", default="aimnet2")
     parser.add_argument("--aimnet-dispersion", action="store_true")
+    parser.add_argument(
+        "--family",
+        action="append",
+        default=[],
+        help="Restrict to one CPOSS family code; repeat for multiple families, e.g. --family IBP --family CBZ.",
+    )
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--continue-on-error", action="store_true")
     args = parser.parse_args()
 
     source_path = args.source_dir / args.source_file
     records = index_cposs_cif(source_path, with_atoms=False)
+    if args.family:
+        families = {family.upper() for family in args.family}
+        records = [record for record in records if record.family_code.upper() in families]
     if args.limit is not None:
         records = records[: args.limit]
 
@@ -109,6 +118,7 @@ def main() -> int:
                 "attempted": len(records),
                 "completed": completed,
                 "errors": errors,
+                "families": sorted({record.family_code for record in records}),
                 "output": str(args.output),
             },
             indent=2,

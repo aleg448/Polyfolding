@@ -1,0 +1,81 @@
+{
+  "schema_version": "0.1.0",
+  "purpose": "Therapeutic-priority queue for CrystalProbe measurement and curation. This is not medical advice and not a verified benchmark manifest.",
+  "priority_groups": [
+    {
+      "group_id": "adhd_core",
+      "rationale": "ADHD medications are societally important and solid-form behavior is directly relevant to reliable manufacturing, storage, and formulation.",
+      "targets": [
+        {
+          "name": "atomoxetine hydrochloride",
+          "role": "ADHD nonstimulant",
+          "status": "high_priority_external_curation",
+          "known_public_evidence": [
+            "stable and metastable polymorphic forms reported in Journal of Pharmaceutical Sciences, DOI 10.1002/jps.20643",
+            "commercial atomoxetine HCl powder-diffraction structure reported in Powder Diffraction, DOI 10.1017/S0885715614000517"
+          ],
+          "next_action": "Locate redistributable CIFs or request CCDC/API-compatible access, then create verified pair candidate if licenses permit."
+        },
+        {
+          "name": "methylphenidate hydrochloride",
+          "role": "ADHD stimulant",
+          "status": "source_discovery",
+          "known_public_evidence": [
+            "PubChem CID 9280 records crystalline methylphenidate hydrochloride identity and salt form."
+          ],
+          "next_action": "Search CSD/open patent/literature sources for polymorph or solid-form CIFs before benchmark inclusion."
+        },
+        {
+          "name": "lisdexamfetamine dimesylate",
+          "role": "ADHD stimulant prodrug",
+          "status": "source_discovery",
+          "known_public_evidence": [
+            "PubChem CID 11597697 records the dimesylate salt identity."
+          ],
+          "next_action": "Search for solid-form structures and license-compatible CIF access."
+        },
+        {
+          "name": "modafinil",
+          "role": "wakefulness-promoting medication sometimes studied near ADHD workflows",
+          "status": "high_priority_external_curation",
+          "known_public_evidence": [
+            "metastable polymorph structure reported in Crystal Growth & Design, DOI 10.1021/cg030069t"
+          ],
+          "next_action": "Review whether the available forms and licensing support a benchmark pair."
+        }
+      ]
+    },
+    {
+      "group_id": "everyday_foundation_medicines",
+      "rationale": "High-use medicines make the benchmark easier to explain and connect to real-world quality concerns.",
+      "targets": [
+        {
+          "name": "ibuprofen",
+          "role": "analgesic/anti-inflammatory",
+          "status": "measured_cposs_source_inventory",
+          "cposs_family_code": "IBP",
+          "next_action": "Use CPOSS IBP MACE/AIMNet measurements for source-level model behavior, but do not compute ranking accuracy until stability evidence is curated."
+        },
+        {
+          "name": "paracetamol",
+          "role": "analgesic/antipyretic",
+          "status": "draft_manifest_seed",
+          "next_action": "Replace TODO seed with license-compatible CIFs and verified stability evidence."
+        },
+        {
+          "name": "aspirin",
+          "role": "analgesic/antiplatelet",
+          "status": "draft_manifest_seed",
+          "next_action": "Replace TODO seed with license-compatible CIFs and verified stability evidence."
+        },
+        {
+          "name": "carbamazepine",
+          "role": "neurology foundation medication and polymorphism standard",
+          "status": "high_priority_cposs_curation",
+          "cposs_family_code": "CBZ",
+          "next_action": "Curate CPOSS CBZ form labels, solvate/channel caveats, and stability evidence before ranking metrics."
+        }
+      ]
+    }
+  ]
+}
