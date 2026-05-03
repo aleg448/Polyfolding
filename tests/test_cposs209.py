@@ -1,9 +1,11 @@
 from pathlib import Path
 
 from crystalprobe.datahub.cposs209 import (
+    generate_cposs_pair_candidates,
     index_cposs_cif,
     iter_cif_block_ids,
     parse_cposs_block_id,
+    summarize_cposs_pair_candidates,
     summarize_cposs_records,
 )
 
@@ -70,3 +72,35 @@ def test_summarize_cposs_records(tmp_path):
     assert summary["records"] == 2
     assert summary["families"] == 2
     assert summary["family_counts"] == {"ACR": 1, "CRN": 1}
+
+
+def test_generate_adjacent_pair_candidates(tmp_path):
+    cif = tmp_path / "tiny.cif"
+    _write_tiny_cif(cif)
+    records = index_cposs_cif(cif, with_atoms=False)
+    extra = records[0].__class__(
+        block_id="CRN02_PsiCrys",
+        family_code="CRN",
+        form_number=2,
+        suffix="PsiCrys",
+        source_file="tiny.cif",
+        source_index=2,
+        formula=None,
+        natoms=None,
+        space_group="P 21/c",
+        cell_setting="monoclinic",
+        cell={},
+    )
+    candidates = generate_cposs_pair_candidates([records[0], extra, records[1]], mode="adjacent")
+    assert len(candidates) == 1
+    assert candidates[0].pair_id == "cposs209_crn_crn01_psicrys_vs_crn02_psicrys"
+    assert candidates[0].stability_status == "uncurated"
+
+
+def test_generate_all_pair_candidates(tmp_path):
+    cif = tmp_path / "tiny.cif"
+    _write_tiny_cif(cif)
+    records = index_cposs_cif(cif, with_atoms=False)
+    candidates = generate_cposs_pair_candidates(records, mode="all")
+    summary = summarize_cposs_pair_candidates(candidates)
+    assert summary["candidate_pairs"] == 0

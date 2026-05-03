@@ -19,9 +19,12 @@ The CPOSS209 supplemental ZIP is the current benchmark spine. After download and
 ```powershell
 python scripts\inspect_cposs209.py
 python -m crystalprobe.benchmark.cli cposs-index data\sources\cposs209\cg5c00255_si_004 --no-atoms
+python -m crystalprobe.benchmark.cli cposs-pairs data\sources\cposs209\cg5c00255_si_004\All_Psi_Crys.cif
 ```
 
 The local archive currently indexes as 20 molecule families and 422 CIF data blocks: 209 `PsiCrys`, 209 `PsiMol`, and 4 additional molecule blocks. This is source inventory, not a curated stability benchmark. Experimental stability labels and source-specific redistribution decisions still gate promotion into checked-in benchmark manifests.
+
+The adjacent-form curation queue from `All_Psi_Crys.cif` contains 189 candidate pairs across 20 families. The all-pairs queue contains 1127 candidates and is useful for exploratory analysis, not initial v0.1 curation.
 
 Single-structure backend smoke inference can be run without creating benchmark claims:
 

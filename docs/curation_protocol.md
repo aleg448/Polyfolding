@@ -17,9 +17,12 @@ Use the CPOSS209 indexer to create a source inventory before promoting records:
 
 ```powershell
 python -m crystalprobe.benchmark.cli cposs-index data\sources\cposs209\cg5c00255_si_004 --no-atoms
+python -m crystalprobe.benchmark.cli cposs-pairs data\sources\cposs209\cg5c00255_si_004\All_Psi_Crys.cif
 ```
 
 The indexer supplies block IDs, molecule-family codes, form numbers, space groups, and cell metadata. It does not supply experimental stability ordering; that still has to be curated from primary evidence.
+
+The adjacent-form pair queue from `All_Psi_Crys.cif` currently contains 189 candidate pairs across 20 families. Those candidates are a curation queue, not benchmark records, until experimental evidence is attached.
 
 ## Promotion Rules
 

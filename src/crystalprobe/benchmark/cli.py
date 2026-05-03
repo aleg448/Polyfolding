@@ -11,7 +11,13 @@ from crystalprobe.benchmark.dataset import load_manifest
 from crystalprobe.benchmark.metrics import ranking_accuracy
 from crystalprobe.benchmark.predictions import load_pair_energy_prediction_records, load_pair_energy_predictions
 from crystalprobe.config import load_config
-from crystalprobe.datahub.cposs209 import index_cposs_directory, summarize_cposs_records
+from crystalprobe.datahub.cposs209 import (
+    generate_cposs_pair_candidates,
+    index_cposs_cif,
+    index_cposs_directory,
+    summarize_cposs_pair_candidates,
+    summarize_cposs_records,
+)
 from crystalprobe.datahub.sources import source_registry
 from crystalprobe.foundry.adapters import all_adapter_availability
 from crystalprobe.insight.fingerprint import build_fingerprint_report
@@ -66,6 +72,11 @@ def build_parser() -> argparse.ArgumentParser:
     cposs.add_argument("source_dir", type=Path, nargs="?", default=Path("data/sources/cposs209/cg5c00255_si_004"))
     cposs.add_argument("--json-out", type=Path, help="Optional path for the full indexed record JSON")
     cposs.add_argument("--no-atoms", action="store_true", help="Skip ASE atom/formula metadata")
+
+    cposs_pairs = subparsers.add_parser("cposs-pairs", help="Generate CPOSS209 within-family pair candidates")
+    cposs_pairs.add_argument("cif_path", type=Path, nargs="?", default=Path("data/sources/cposs209/cg5c00255_si_004/All_Psi_Crys.cif"))
+    cposs_pairs.add_argument("--mode", choices=["adjacent", "all"], default="adjacent")
+    cposs_pairs.add_argument("--json-out", type=Path, help="Optional path for candidate pair JSON")
 
     return parser
 
@@ -171,6 +182,19 @@ def main(argv: list[str] | None = None) -> int:
         payload = {
             "summary": summarize_cposs_records(records),
             "records": [record.as_dict() for record in records],
+        }
+        if args.json_out:
+            args.json_out.parent.mkdir(parents=True, exist_ok=True)
+            args.json_out.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8", newline="\n")
+        print(json.dumps(payload["summary"], indent=2, sort_keys=True))
+        return 0
+
+    if args.command == "cposs-pairs":
+        records = index_cposs_cif(args.cif_path, with_atoms=False)
+        candidates = generate_cposs_pair_candidates(records, mode=args.mode)
+        payload = {
+            "summary": summarize_cposs_pair_candidates(candidates),
+            "pairs": [candidate.as_dict() for candidate in candidates],
         }
         if args.json_out:
             args.json_out.parent.mkdir(parents=True, exist_ok=True)

@@ -29,6 +29,7 @@ python -m crystalprobe.benchmark.cli run-config examples\quick_config.json
 python -m crystalprobe.benchmark.cli doctor
 python -m crystalprobe.benchmark.cli sources
 python -m crystalprobe.benchmark.cli cposs-index data\sources\cposs209\cg5c00255_si_004 --no-atoms
+python -m crystalprobe.benchmark.cli cposs-pairs data\sources\cposs209\cg5c00255_si_004\All_Psi_Crys.cif
 python scripts\run_cposs_structure_inference.py --backend mace --limit 2
 ```
 

@@ -44,6 +44,26 @@ class CpossStructureRecord:
         return asdict(self)
 
 
+@dataclass(frozen=True)
+class CpossPairCandidate:
+    """A within-family CPOSS pair candidate awaiting stability curation."""
+
+    pair_id: str
+    family_code: str
+    structure_a: str
+    structure_b: str
+    source_file: str
+    source_index_a: int
+    source_index_b: int
+    form_number_a: int | None
+    form_number_b: int | None
+    curation_status: str = "candidate"
+    stability_status: str = "uncurated"
+
+    def as_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
 def parse_cposs_block_id(block_id: str) -> tuple[str, int | None, str | None]:
     """Return molecule family, form number, and suffix from a CPOSS block id."""
 
@@ -172,6 +192,70 @@ def summarize_cposs_records(records: Iterable[CpossStructureRecord]) -> dict[str
         file_counts[row.source_file] = file_counts.get(row.source_file, 0) + 1
     return {
         "records": len(rows),
+        "families": len(family_counts),
+        "family_counts": dict(sorted(family_counts.items())),
+        "source_files": dict(sorted(file_counts.items())),
+    }
+
+
+def generate_cposs_pair_candidates(
+    records: Iterable[CpossStructureRecord],
+    *,
+    mode: str = "adjacent",
+) -> list[CpossPairCandidate]:
+    """Generate within-family pair candidates from indexed CPOSS structures.
+
+    `adjacent` pairs neighboring form numbers and matches the Month 1 queue size
+    in the roadmap. `all` emits every within-family combination.
+    """
+
+    if mode not in {"adjacent", "all"}:
+        raise ValueError("mode must be 'adjacent' or 'all'")
+
+    grouped: dict[tuple[str, str], list[CpossStructureRecord]] = {}
+    for record in records:
+        grouped.setdefault((record.source_file, record.family_code), []).append(record)
+
+    candidates: list[CpossPairCandidate] = []
+    for (source_file, family_code), rows in sorted(grouped.items()):
+        ordered = sorted(rows, key=lambda row: (row.form_number is None, row.form_number or 0, row.block_id))
+        if mode == "adjacent":
+            pairs = zip(ordered, ordered[1:], strict=False)
+        else:
+            pairs = (
+                (ordered[left], ordered[right])
+                for left in range(len(ordered))
+                for right in range(left + 1, len(ordered))
+            )
+        for left, right in pairs:
+            pair_id = f"cposs209_{family_code.lower()}_{left.block_id.lower()}_vs_{right.block_id.lower()}"
+            candidates.append(
+                CpossPairCandidate(
+                    pair_id=pair_id,
+                    family_code=family_code,
+                    structure_a=left.block_id,
+                    structure_b=right.block_id,
+                    source_file=source_file,
+                    source_index_a=left.source_index,
+                    source_index_b=right.source_index,
+                    form_number_a=left.form_number,
+                    form_number_b=right.form_number,
+                )
+            )
+    return candidates
+
+
+def summarize_cposs_pair_candidates(candidates: Iterable[CpossPairCandidate]) -> dict[str, Any]:
+    """Summarize generated pair candidates."""
+
+    rows = list(candidates)
+    family_counts: dict[str, int] = {}
+    file_counts: dict[str, int] = {}
+    for row in rows:
+        family_counts[row.family_code] = family_counts.get(row.family_code, 0) + 1
+        file_counts[row.source_file] = file_counts.get(row.source_file, 0) + 1
+    return {
+        "candidate_pairs": len(rows),
         "families": len(family_counts),
         "family_counts": dict(sorted(family_counts.items())),
         "source_files": dict(sorted(file_counts.items())),
