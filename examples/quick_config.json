@@ -1,0 +1,11 @@
+{
+  "quick_benchmark": {
+    "ledger": "outputs/ledger.jsonl",
+    "manifest": "data/benchmark/v0.1/manifest.jsonl",
+    "output_dir": "outputs/quick",
+    "predictions": "examples/demo_predictions.jsonl",
+    "verified_only": false
+  },
+  "workflow": "quick_benchmark"
+}
+

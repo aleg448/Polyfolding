@@ -1,0 +1,46 @@
+"""Inspect the locally downloaded CPOSS209 supplemental CIF bundle."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import zipfile
+from pathlib import Path
+
+from ase.io import read
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("zip_path", type=Path, default=Path("data/sources/cposs209/cg5c00255_si_004.zip"), nargs="?")
+    args = parser.parse_args()
+
+    zip_path = args.zip_path
+    extract_dir = zip_path.with_suffix("")
+    with zipfile.ZipFile(zip_path) as archive:
+        members = [{"name": item.filename, "size": item.file_size} for item in archive.infolist()]
+    cif_paths = sorted(extract_dir.glob("*.cif"))
+    first = read(str(cif_paths[0]), index=0) if cif_paths else None
+    report = {
+        "zip_path": str(zip_path),
+        "bytes": zip_path.stat().st_size,
+        "md5": hashlib.md5(zip_path.read_bytes()).hexdigest(),
+        "members": members,
+        "extracted_cifs": [str(path) for path in cif_paths],
+        "first_structure": None
+        if first is None
+        else {
+            "file": str(cif_paths[0]),
+            "natoms": len(first),
+            "formula": first.get_chemical_formula(),
+            "cellpar": first.cell.cellpar().tolist(),
+        },
+    }
+    print(json.dumps(report, indent=2, sort_keys=True))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+
