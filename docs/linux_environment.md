@@ -13,20 +13,15 @@ Docker/WSL is the clean path for publication-grade CrystalProbe runs. The Window
 Install Docker Desktop with WSL2 backend and NVIDIA GPU support. After Docker is available, run from the repo root:
 
 ```powershell
-$env:HF_TOKEN="hf_your_token_here"
 docker compose build crystalprobe-core
-docker compose run --rm --gpus all crystalprobe-core
-docker compose build crystalprobe-fairchem
-docker compose run --rm --gpus all crystalprobe-fairchem
-```
-
-If Docker Compose rejects `--gpus all`, try:
-
-```powershell
 docker compose run --rm crystalprobe-core
+docker compose run --rm crystalprobe-core bash scripts/linux_smoke.sh
+
+docker compose build crystalprobe-fairchem
+docker compose run --rm crystalprobe-fairchem bash scripts/fairchem_smoke.sh
 ```
 
-and verify GPU visibility inside the container separately.
+GPU passthrough is validated through the Compose device reservation in `docker-compose.yml`; this Docker Compose version rejected `--gpus all` on `compose run`.
 
 ## Services
 
@@ -43,9 +38,25 @@ Use an environment variable rather than writing tokens to files:
 $env:HF_TOKEN="hf_your_token_here"
 ```
 
-The compose file passes `HF_TOKEN` through to the containers.
+The compose file passes `HF_TOKEN` through to the containers. Validate without printing the token:
+
+```powershell
+docker compose run --rm crystalprobe-fairchem python -c "import os; print(bool(os.environ.get('HF_TOKEN')))"
+```
 
 Alternatively, copy `.env.example` to `.env` and put the token there. Do not commit `.env`.
+
+This was not visible in the Codex-run container during validation, so gated UMA checkpoint download is still waiting on this handoff.
+
+## Validated Results
+
+- Docker Desktop is available.
+- NVIDIA GPU passthrough works in Linux containers.
+- `crystalprobe-core` builds and passes tests.
+- `crystalprobe-core` runs MACE-OFF and AIMNet on CUDA.
+- AIMNet full DFT-D3/Triton path works in Linux.
+- `crystalprobe-fairchem` builds and imports fairchem on CUDA.
+- OMC25/UMA model metadata is visible but remains manually gated.
 
 ## WSL Alternative
 
