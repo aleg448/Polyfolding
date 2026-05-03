@@ -11,6 +11,7 @@ CrystalProbe is organized around one principle: every polymorph prediction shoul
 - `docs/cposs209_curation_notes.md`: CPOSS209 source-evidence triage and promotion cautions.
 - `docs/therapeutic_priorities.md`: ADHD and high-use medicine curation priority queue.
 - `docs/measurement_log.md`: source-level measurement results and interpretation guardrails.
+- `docs/local_diagnostics.md`: bond/contact/force hot-spot diagnostics for structure measurements.
 - `docs/environments.md`: local environment split for MACE/AIMNet versus fairchem.
 - `docs/linux_environment.md`: Docker/WSL path for clean Linux runs.
 - `BLOCKERS.md`: dependency and approval queue.

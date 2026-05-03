@@ -24,6 +24,8 @@ Result:
 - Lowest normalized MACE structure: `IBP01_PsiCrys`.
 - Next structure: `IBP06_PsiCrys`, `1.28 kJ/mol` above `IBP01_PsiCrys` per common structural unit.
 - Highest measured relative structure: `IBP03_PsiCrys`, `45.27 kJ/mol` above `IBP01_PsiCrys` per common structural unit.
+- Local diagnostics: most IBP structures trigger `high_force_atom`; top force hot spots localize on oxygen atoms. No severe short-contact flags were reported by the covalent-radius contact screen.
+- Leading bond-geometry outliers are O-C distances in the carboxylate/carbonyl region, with covalent-radius ratios around `0.87`.
 
 ### Carbamazepine (`CBZ`)
 
@@ -41,10 +43,13 @@ Result:
 - Lowest normalized MACE structure: `CBZ01_PsiCrys`.
 - Next structure: `CBZ03_PsiCrys`, `2.23 kJ/mol` above `CBZ01_PsiCrys` per common structural unit.
 - Highest measured relative structure: `CBZ08_PsiCrys`, `28.74 kJ/mol` above `CBZ01_PsiCrys` per common structural unit.
+- Local diagnostics: all measured CBZ structures trigger `high_force_atom`; top force hot spots are mostly carbon atoms in the current atom indexing. No severe short-contact flags were reported.
+- Leading bond-geometry outliers are C-O distances, with covalent-radius ratios around `0.88`.
 
 ## Interpretation Guardrails
 
 - These measurements are useful for backend behavior and curation triage.
 - They are not experimental stability rankings.
 - Total crystal energies must be normalized before comparing structures with different cell contents.
+- Local bond/contact/force diagnostics should be inspected before attributing an energy gap to molecular identity.
 - Any publication-facing ranking number still requires verified form labels and experimental stability evidence.

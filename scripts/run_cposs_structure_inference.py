@@ -10,6 +10,7 @@ from typing import Any
 
 from crystalprobe.datahub.cposs209 import CpossStructureRecord, index_cposs_cif
 from crystalprobe.foundry.optional_adapters import AIMNet2Adapter, MACEOffAdapter
+from crystalprobe.insight.local_geometry import analyze_local_geometry
 from crystalprobe.structures.cif import read_cif_structure
 
 
@@ -40,10 +41,11 @@ def _prediction_row(
     *,
     source_path: Path,
     adapter: Any,
+    include_local_geometry: bool,
 ) -> dict[str, Any]:
     atoms = read_cif_structure(source_path, index=record.source_index)
     prediction = adapter.predict(atoms)
-    return {
+    row = {
         "block_id": record.block_id,
         "family_code": record.family_code,
         "form_number": record.form_number,
@@ -55,6 +57,9 @@ def _prediction_row(
         "force_summary": _force_summary(prediction.forces),
         "model_metadata": prediction.metadata,
     }
+    if include_local_geometry:
+        row["local_geometry"] = analyze_local_geometry(atoms, forces=prediction.forces)
+    return row
 
 
 def main() -> int:
@@ -74,6 +79,7 @@ def main() -> int:
         help="Restrict to one CPOSS family code; repeat for multiple families, e.g. --family IBP --family CBZ.",
     )
     parser.add_argument("--limit", type=int, default=None)
+    parser.add_argument("--no-local-geometry", action="store_true", help="Skip local bond/contact/force diagnostics")
     parser.add_argument("--continue-on-error", action="store_true")
     args = parser.parse_args()
 
@@ -93,7 +99,12 @@ def main() -> int:
     with args.output.open("w", encoding="utf-8", newline="\n") as handle:
         for record in records:
             try:
-                row = _prediction_row(record, source_path=source_path, adapter=model)
+                row = _prediction_row(
+                    record,
+                    source_path=source_path,
+                    adapter=model,
+                    include_local_geometry=not args.no_local_geometry,
+                )
             except Exception as exc:
                 if not args.continue_on_error:
                     raise

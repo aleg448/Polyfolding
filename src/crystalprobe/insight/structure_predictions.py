@@ -116,6 +116,10 @@ def summarize_relative_structure_energies(rows: Iterable[dict[str, Any]]) -> dic
                     "energy_ev_per_formula_unit": energy_per_unit,
                     "relative_kj_mol_per_formula_unit": (energy_per_unit - baseline) * EV_TO_KJ_MOL,
                     "max_force_ev_per_ang": row.get("force_summary", {}).get("max_force_ev_per_ang"),
+                    "local_diagnostic_flags": row.get("local_geometry", {}).get("diagnostic_flags", []),
+                    "top_force_hotspot": (row.get("local_geometry", {}).get("force_hotspots") or [None])[0],
+                    "top_bond_geometry_outlier": (row.get("local_geometry", {}).get("bond_geometry_outliers") or [None])[0],
+                    "top_short_contact": (row.get("local_geometry", {}).get("short_contacts") or [None])[0],
                 }
                 for row, unit_count, energy_per_unit in sorted(normalized_rows, key=lambda item: item[2])
             ],

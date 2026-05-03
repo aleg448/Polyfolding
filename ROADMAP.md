@@ -13,6 +13,7 @@
 - [x] Add CPOSS209 source inventory indexing.
 - [x] Add CPOSS209 adjacent-form candidate pair queue.
 - [x] Add ADHD and high-use medicine therapeutic priority queue.
+- [x] Add local bond/contact/force diagnostics to structure measurements.
 - [ ] Replace draft placeholders with 5 verified records.
 
 ## Month 1
@@ -20,6 +21,7 @@
 - [ ] Verify 20 polymorph pairs across 10 anchor molecules.
 - [x] Add optional CIF parsing with ASE or pymatgen.
 - [x] Run first MACE-OFF single-point energy smoke test.
+- [x] Normalize source-level energies by inferred formula unit.
 - [x] Run fairchem OMC25 checkpoint smoke test in Linux Docker.
 - [ ] Compute first ranking accuracy number on verified records.
 - [ ] Draft fingerprint paper figure list.

@@ -21,9 +21,16 @@ def test_summarize_relative_structure_energies_normalizes_formula_units():
         [
             {"block_id": "IBP01", "family_code": "IBP", "formula": "C52H72O8", "energy_ev": -400.0},
             {"block_id": "IBP02", "family_code": "IBP", "formula": "C104H144O16", "energy_ev": -808.0},
-            {"block_id": "IBP03", "family_code": "IBP", "formula": "C26H36O4", "energy_ev": -198.0},
+            {
+                "block_id": "IBP03",
+                "family_code": "IBP",
+                "formula": "C26H36O4",
+                "energy_ev": -198.0,
+                "local_geometry": {"diagnostic_flags": ["high_force_atom"], "force_hotspots": [{"atom_index": 3}]},
+            },
         ]
     )
     family = summary["families"]["IBP"]
     assert family["formula_unit"] == "C26H36O4"
     assert [row["block_id"] for row in family["structures"]] == ["IBP02", "IBP01", "IBP03"]
+    assert family["structures"][2]["local_diagnostic_flags"] == ["high_force_atom"]
