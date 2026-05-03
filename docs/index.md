@@ -8,6 +8,7 @@ CrystalProbe is organized around one principle: every polymorph prediction shoul
 - `docs/architecture.md`: local module architecture.
 - `docs/full_suite_plan.md`: full CrystalProbe build plan.
 - `docs/sources.md`: source registry and licensing notes.
+- `docs/cposs209_curation_notes.md`: CPOSS209 source-evidence triage and promotion cautions.
 - `docs/environments.md`: local environment split for MACE/AIMNet versus fairchem.
 - `docs/linux_environment.md`: Docker/WSL path for clean Linux runs.
 - `BLOCKERS.md`: dependency and approval queue.
