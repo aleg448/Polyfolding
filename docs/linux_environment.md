@@ -45,6 +45,8 @@ $env:HF_TOKEN="hf_your_token_here"
 
 The compose file passes `HF_TOKEN` through to the containers.
 
+Alternatively, copy `.env.example` to `.env` and put the token there. Do not commit `.env`.
+
 ## WSL Alternative
 
 If Docker Desktop is not desired, install Ubuntu for WSL:
@@ -66,4 +68,3 @@ python -m pip install -e ".[dev]"
 python -m pip install ase mace-torch "aimnet[ase]" huggingface_hub requests
 python -B -m pytest -q -p no:cacheprovider
 ```
-
