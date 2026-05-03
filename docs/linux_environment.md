@@ -4,9 +4,9 @@ Docker/WSL is the clean path for publication-grade CrystalProbe runs. The Window
 
 ## Current Local Status
 
-- Docker CLI is not installed or not on `PATH`.
-- WSL command is present, but no usable distro is currently available in this Codex shell.
-- `HF_TOKEN` is not visible in this Codex shell, even though it may be set in another PowerShell session.
+- Docker Desktop is installed and available on `PATH`.
+- NVIDIA GPU passthrough works in Linux containers.
+- `.env` is the working path for passing `HF_TOKEN` into Docker Compose without printing or committing the token.
 
 ## Recommended Setup
 
@@ -46,7 +46,13 @@ docker compose run --rm crystalprobe-fairchem python -c "import os; print(bool(o
 
 Alternatively, copy `.env.example` to `.env` and put the token there. Do not commit `.env`.
 
-This was not visible in the Codex-run container during validation, so gated UMA checkpoint download is still waiting on this handoff.
+The fairchem smoke can be run directly:
+
+```powershell
+docker compose run --rm crystalprobe-fairchem python scripts/fairchem_omc25_smoke.py --try-uma
+```
+
+This prints whether a token is present, downloads the permitted OMC25 ESEN checkpoint from `facebook/OMC25`, runs a small periodic H2O inference through fairchem, and separately reports whether `facebook/UMA` access is available.
 
 ## Validated Results
 
@@ -56,7 +62,8 @@ This was not visible in the Codex-run container during validation, so gated UMA 
 - `crystalprobe-core` runs MACE-OFF and AIMNet on CUDA.
 - AIMNet full DFT-D3/Triton path works in Linux.
 - `crystalprobe-fairchem` builds and imports fairchem on CUDA.
-- OMC25/UMA model metadata is visible but remains manually gated.
+- OMC25 ESEN checkpoint download and fairchem CUDA inference work from Docker with `.env`.
+- UMA remains gated separately through `facebook/UMA` and currently requires account-side access approval.
 
 ## WSL Alternative
 

@@ -28,6 +28,8 @@ python -m crystalprobe.benchmark.cli quick-benchmark data\benchmark\v0.1\manifes
 python -m crystalprobe.benchmark.cli run-config examples\quick_config.json
 python -m crystalprobe.benchmark.cli doctor
 python -m crystalprobe.benchmark.cli sources
+python -m crystalprobe.benchmark.cli cposs-index data\sources\cposs209\cg5c00255_si_004 --no-atoms
+python scripts\run_cposs_structure_inference.py --backend mace --limit 2
 ```
 
 The included `data/benchmark/v0.1/manifest.jsonl` file is a curation seed, not a verified scientific benchmark. Records marked `draft` may contain `TODO` placeholders and must not be used for claims.

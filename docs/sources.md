@@ -12,6 +12,26 @@ CPOSS209 is the first benchmark spine. The paper is "One Size Fits All? Developm
 
 Before redistributing derived records, verify the license terms of the Figshare files and preserve attribution.
 
+CrystalProbe keeps raw source archives under `data/sources/`, which is ignored by git. Checked-in benchmark manifests should only contain curated, license-audited records.
+
+The CPOSS209 supplemental ZIP is the current benchmark spine. After download and extraction, inspect it with:
+
+```powershell
+python scripts\inspect_cposs209.py
+python -m crystalprobe.benchmark.cli cposs-index data\sources\cposs209\cg5c00255_si_004 --no-atoms
+```
+
+The local archive currently indexes as 20 molecule families and 422 CIF data blocks: 209 `PsiCrys`, 209 `PsiMol`, and 4 additional molecule blocks. This is source inventory, not a curated stability benchmark. Experimental stability labels and source-specific redistribution decisions still gate promotion into checked-in benchmark manifests.
+
+Single-structure backend smoke inference can be run without creating benchmark claims:
+
+```powershell
+python scripts\run_cposs_structure_inference.py --backend mace --limit 2
+docker compose run --rm crystalprobe-core python scripts/run_cposs_structure_inference.py --backend mace --limit 1
+```
+
+The output is written under `outputs/`, which is ignored by git.
+
 ## OMC25
 
 OMC25 is a large molecular-crystal DFT dataset for model development and OOD context, not the primary experimental stability benchmark.
@@ -40,4 +60,3 @@ fairchem is the current integration point for Meta FAIR Chemistry models and mol
 - OMC25 dataset page: https://huggingface.co/datasets/facebook/OMC25
 
 UMA model access and checkpoint licenses must be handled explicitly.
-

@@ -5,7 +5,7 @@ This file tracks work that cannot be completed inside the current local sandbox 
 ## Current Blockers
 
 - `ase` is installed in `.venv`. CIF parsing can now be tested when CIF files are present.
-- MACE and PyTorch are installed in `.venv`; MACE-OFF checkpoint download/configuration still needs verification.
+- MACE and PyTorch are installed in `.venv`.
 - MACE-OFF23 small checkpoint has been downloaded to the local MACE cache and CUDA smoke-tested. License is ASL/non-commercial, so use is research-only unless licensing changes.
 - AIMNet is installed in `.venv`; default AIMNet2 model was downloaded and core CUDA inference works with `needs_dispersion=False`.
 - AIMNet default DFT-D3 dispersion path failed on Windows because Torch/Triton support is missing; keep `needs_dispersion=False` locally or use Linux for full dispersion.
@@ -13,12 +13,19 @@ This file tracks work that cannot be completed inside the current local sandbox 
 - FastCSP/fairchem source is not cloned; only the packaged `fairchem-core` dependency is installed.
 - CPOSS209 supplemental ZIP has been downloaded and MD5-verified locally under `data/sources/cposs209`; license is CC BY-NC 4.0.
 - OMC25 public lightweight dataset metadata has been downloaded locally under `data/sources/omc25`.
-- OMC25/UMA model repository is manually gated on Hugging Face; checkpoint download requires account-side license/access acceptance.
-- GitHub remote creation/push requires a remote URL or GitHub CLI/token setup.
+- OMC25 ESEN checkpoint download from `facebook/OMC25` works with Docker `.env` token handoff and has been CUDA smoke-tested through fairchem.
+- UMA checkpoints are gated separately under `facebook/UMA`; the current Hugging Face account/token is not authorized yet.
+- GitHub remote and identity are configured for `https://github.com/aleg448/Polyfolding.git`.
 - Docker Desktop is installed and GPU passthrough works.
 - Linux core and fairchem Docker images build and run.
 - AIMNet full DFT-D3/Triton path works in Linux.
-- `HF_TOKEN` is not visible inside Docker Compose containers yet. Create `.env` from `.env.example` or set the token in the shell that runs Compose.
+- `HF_TOKEN` is visible inside Docker Compose containers through `.env`.
+- CPOSS209 source indexing and MACE structure-level inference both run locally and in the Linux core container.
+
+## Remaining User Input
+
+- Request access to [facebook/UMA](https://huggingface.co/facebook/UMA) from the Hugging Face account associated with the token in `.env`.
+- After access is approved, rerun `docker compose run --rm crystalprobe-fairchem python scripts/fairchem_omc25_smoke.py --try-uma` to verify UMA.
 
 ## Linux Environment Files Added
 

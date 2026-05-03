@@ -9,6 +9,7 @@ import zipfile
 from pathlib import Path
 
 from ase.io import read
+from crystalprobe.datahub.cposs209 import index_cposs_directory, summarize_cposs_records
 
 
 def main() -> int:
@@ -22,12 +23,14 @@ def main() -> int:
         members = [{"name": item.filename, "size": item.file_size} for item in archive.infolist()]
     cif_paths = sorted(extract_dir.glob("*.cif"))
     first = read(str(cif_paths[0]), index=0) if cif_paths else None
+    cposs_records = index_cposs_directory(extract_dir) if extract_dir.exists() else []
     report = {
         "zip_path": str(zip_path),
         "bytes": zip_path.stat().st_size,
         "md5": hashlib.md5(zip_path.read_bytes()).hexdigest(),
         "members": members,
         "extracted_cifs": [str(path) for path in cif_paths],
+        "index_summary": summarize_cposs_records(cposs_records),
         "first_structure": None
         if first is None
         else {
@@ -43,4 +46,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

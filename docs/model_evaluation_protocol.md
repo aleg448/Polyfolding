@@ -14,6 +14,15 @@ Every prediction file must record:
 - energy uncertainty per structure when available
 - OOD score and OOD flag per structure when available
 
+For source-inventory smoke runs before verified pairs exist, structure-level JSONL is allowed. Those rows must record:
+
+- source file and source block ID
+- source index inside the CIF
+- formula and atom count
+- energy unit
+- model metadata
+- compact force diagnostics
+
 ## Ranking Convention
 
 Lower predicted energy is treated as more stable. Experimental ordering `A>B` means structure A is experimentally more stable than structure B.
@@ -28,4 +37,3 @@ Lower predicted energy is treated as more stable. Experimental ordering `A>B` me
 ## Reproducibility
 
 Every headline report must include the manifest SHA-256, prediction-file SHA-256, CrystalProbe version, model versions, and generated ledger entry.
-

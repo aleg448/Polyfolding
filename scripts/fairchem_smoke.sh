@@ -10,3 +10,4 @@ print("torch", torch.__version__, "cuda", torch.cuda.is_available(), torch.versi
 print("fairchem import ok")
 PY
 
+python scripts/fairchem_omc25_smoke.py --try-uma

@@ -11,6 +11,7 @@ from crystalprobe.benchmark.dataset import load_manifest
 from crystalprobe.benchmark.metrics import ranking_accuracy
 from crystalprobe.benchmark.predictions import load_pair_energy_prediction_records, load_pair_energy_predictions
 from crystalprobe.config import load_config
+from crystalprobe.datahub.cposs209 import index_cposs_directory, summarize_cposs_records
 from crystalprobe.datahub.sources import source_registry
 from crystalprobe.foundry.adapters import all_adapter_availability
 from crystalprobe.insight.fingerprint import build_fingerprint_report
@@ -60,6 +61,11 @@ def build_parser() -> argparse.ArgumentParser:
 
     subparsers.add_parser("doctor", help="Check optional scientific backend availability")
     subparsers.add_parser("sources", help="List curated external data/model sources")
+
+    cposs = subparsers.add_parser("cposs-index", help="Index extracted CPOSS209 CIF source files")
+    cposs.add_argument("source_dir", type=Path, nargs="?", default=Path("data/sources/cposs209/cg5c00255_si_004"))
+    cposs.add_argument("--json-out", type=Path, help="Optional path for the full indexed record JSON")
+    cposs.add_argument("--no-atoms", action="store_true", help="Skip ASE atom/formula metadata")
 
     return parser
 
@@ -158,6 +164,18 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "sources":
         print(json.dumps([source.__dict__ for source in source_registry()], indent=2, sort_keys=True))
+        return 0
+
+    if args.command == "cposs-index":
+        records = index_cposs_directory(args.source_dir, with_atoms=not args.no_atoms)
+        payload = {
+            "summary": summarize_cposs_records(records),
+            "records": [record.as_dict() for record in records],
+        }
+        if args.json_out:
+            args.json_out.parent.mkdir(parents=True, exist_ok=True)
+            args.json_out.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8", newline="\n")
+        print(json.dumps(payload["summary"], indent=2, sort_keys=True))
         return 0
 
     parser.error(f"unknown command: {args.command}")
