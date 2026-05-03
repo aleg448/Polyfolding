@@ -15,6 +15,16 @@ This file tracks work that cannot be completed inside the current local sandbox 
 - OMC25 public lightweight dataset metadata has been downloaded locally under `data/sources/omc25`.
 - OMC25/UMA model repository is manually gated on Hugging Face; checkpoint download requires account-side license/access acceptance.
 - GitHub remote creation/push requires a remote URL or GitHub CLI/token setup.
+- Docker CLI is not installed or not on `PATH`; Linux container build cannot run yet.
+- WSL is present as a launcher, but no usable Linux distro is available in this shell. Installing Ubuntu WSL may require Windows admin approval and possibly a restart.
+- `HF_TOKEN` is not visible in the Codex shell. Set it in the shell/session that runs Docker or WSL commands.
+
+## Linux Environment Files Added
+
+- `docker/core.Dockerfile`: CrystalProbe + ASE + MACE + AIMNet.
+- `docker/fairchem.Dockerfile`: CrystalProbe + ASE + fairchem-core.
+- `docker-compose.yml`: GPU-capable compose services for both stacks.
+- `docs/linux_environment.md`: setup and run instructions.
 
 ## Approval Batch To Request
 

@@ -45,6 +45,7 @@ The included `data/benchmark/v0.1/manifest.jsonl` file is a curation seed, not a
 - `data/benchmark/v0.1`: draft curation seed for the first anchor molecules.
 - `docs`: implementation notes and project architecture.
 - `docs/index.md`: documentation entry point.
+- `docker-compose.yml` and `docker/`: clean Linux container environments for core and fairchem stacks.
 - `papers`: living outlines for the fingerprint, data descriptor, and JOSS papers.
 - `tests`: unit tests for the current research contract.
 - `BLOCKERS.md`: current approval/dependency queue.

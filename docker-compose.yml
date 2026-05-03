@@ -1,0 +1,47 @@
+services:
+  crystalprobe-core:
+    build:
+      context: .
+      dockerfile: docker/core.Dockerfile
+    image: crystalprobe/core:local
+    working_dir: /workspace
+    environment:
+      HF_TOKEN: ${HF_TOKEN:-}
+      WARP_CACHE_PATH: /workspace/.cache/warp
+      HF_HOME: /workspace/.cache/huggingface
+    volumes:
+      - .:/workspace
+      - crystalprobe-cache:/workspace/.cache
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    command: python -B -m pytest -q -p no:cacheprovider
+
+  crystalprobe-fairchem:
+    build:
+      context: .
+      dockerfile: docker/fairchem.Dockerfile
+    image: crystalprobe/fairchem:local
+    working_dir: /workspace
+    environment:
+      HF_TOKEN: ${HF_TOKEN:-}
+      HF_HOME: /workspace/.cache/huggingface
+    volumes:
+      - .:/workspace
+      - crystalprobe-cache:/workspace/.cache
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    command: python -m crystalprobe.benchmark.cli doctor
+
+volumes:
+  crystalprobe-cache:
+

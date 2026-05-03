@@ -1,0 +1,11 @@
+.git
+.venv
+.venv-fairchem
+.cache
+data/sources
+outputs
+__pycache__
+*.pyc
+.pytest_cache
+src/crystalprobe.egg-info
+
