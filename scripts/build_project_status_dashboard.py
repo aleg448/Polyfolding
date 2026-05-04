@@ -17,6 +17,8 @@ def main() -> int:
     parser.add_argument("--contrast", type=Path, default=Path("outputs/therapeutic_sensitivity_contrast_mace.json"))
     parser.add_argument("--blockers", type=Path, default=Path("BLOCKERS.md"))
     parser.add_argument("--test-summary", default="54 passed, 1 skipped")
+    parser.add_argument("--docker-status", default="not_run")
+    parser.add_argument("--git-status", default="not_recorded")
     parser.add_argument("--json-out", type=Path, default=Path("outputs/crystalprobe_project_status.json"))
     parser.add_argument("--md-out", type=Path, default=Path("outputs/crystalprobe_project_status.md"))
     args = parser.parse_args()
@@ -28,6 +30,8 @@ def main() -> int:
         therapeutic_contrast=json.loads(args.contrast.read_text(encoding="utf-8")) if args.contrast.exists() else None,
         blockers_text=args.blockers.read_text(encoding="utf-8"),
         test_summary=args.test_summary,
+        docker_status=args.docker_status,
+        git_status=args.git_status,
     )
     args.json_out.parent.mkdir(parents=True, exist_ok=True)
     args.json_out.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8", newline="\n")

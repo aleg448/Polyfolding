@@ -12,8 +12,11 @@ from crystalprobe.insight.release import release_boundary_markdown, release_boun
 DEFAULT_REPO_PATHS = [
     "README.md",
     "BLOCKERS.md",
+    "data/curation/facebook_model_access_v0.1.json",
     "docs/report_workflows.md",
+    "docs/facebook_model_access.md",
     "docs/full_suite_plan.md",
+    "docs/sources.md",
     "papers/ampetp_case_study.md",
     "papers/joss_paper.md",
     "src/crystalprobe/insight/claims.py",

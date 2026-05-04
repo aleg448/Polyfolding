@@ -78,5 +78,10 @@ fairchem is the current integration point for Meta FAIR Chemistry models and mol
 - GitHub: https://github.com/facebookresearch/fairchem
 - OMC25 model page: https://huggingface.co/facebook/OMC25
 - OMC25 dataset page: https://huggingface.co/datasets/facebook/OMC25
+- UMA model page: https://huggingface.co/facebook/UMA
+- OMAT24 model page: https://huggingface.co/facebook/OMAT24
+- OMol25 model page: https://huggingface.co/facebook/OMol25
 
-UMA model access and checkpoint licenses must be handled explicitly.
+Local access is accepted for OMC25, UMA, OMAT24, and OMol25. The verification note is `docs/facebook_model_access.md`, with machine-readable details in `data/curation/facebook_model_access_v0.1.json`.
+
+UMA and OMat24-trained model energies must not be mixed directly with Materials Project reference energies or MP2020 corrections. Use the OMat24-specific reference and correction assets for OMat24 thermodynamic work.

@@ -46,3 +46,4 @@ def test_roadmap_status_markdown_contains_remaining_work():
     assert "pair-candidate records" in markdown
     assert "triage report" in markdown
     assert "evidence workpacks" in markdown
+    assert "UMA access now verifies" in markdown

@@ -19,6 +19,7 @@ CrystalProbe is organized around one principle: every polymorph prediction shoul
 - `docs/publication_readiness_review.md`: go/no-go review for release-boundary and CPOSS evidence artifacts.
 - `docs/environments.md`: local environment split for MACE/AIMNet versus fairchem.
 - `docs/linux_environment.md`: Docker/WSL path for clean Linux runs.
+- `docs/facebook_model_access.md`: accepted Hugging Face FAIR Chemistry model access and Docker verification.
 - `BLOCKERS.md`: dependency and approval queue.
 
 ## Generated AMPETP Research Bundle

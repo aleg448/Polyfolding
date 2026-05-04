@@ -13,6 +13,8 @@ def project_status_report(
     blockers_text: str,
     test_summary: str,
     therapeutic_contrast: dict[str, Any] | None = None,
+    docker_status: str = "not_run",
+    git_status: str = "not_recorded",
 ) -> dict[str, Any]:
     """Build a compact status report for a CrystalProbe work session."""
 
@@ -35,14 +37,14 @@ def project_status_report(
         "therapeutic_contrast": _contrast_status(therapeutic_contrast),
         "verification": {
             "latest_local_test_summary": test_summary,
-            "docker_status": "not_run_in_heartbeat",
-            "git_status": "not_staged_or_committed_in_heartbeat",
+            "docker_status": docker_status,
+            "git_status": git_status,
         },
         "remaining_user_input": blockers,
         "next_recommended_steps": [
-            "Commit the accumulated local changes once git index permissions allow it.",
-            "Run Docker verification once escalated action limits allow it.",
-            "Request UMA access for the Hugging Face account in .env.",
+            "Commit new access-state documentation after review.",
+            "Wire UMA into a CrystalProbe fairchem prediction adapter.",
+            "Design OMAT24 and OMol25 validation paths before using those models for scientific claims.",
             "Promote CPOSS bridge records into curated pair records with experimental stability evidence.",
             "Run AIMNet2 on the ibuprofen sensitivity grid in Linux/Docker.",
         ],
@@ -83,6 +85,8 @@ def project_status_markdown(report: dict[str, Any]) -> str:
         "",
     ]
     lines.extend(f"- {item}" for item in report["remaining_user_input"])
+    if not report["remaining_user_input"]:
+        lines.append("- None currently recorded.")
     lines.extend(["", "## Next Recommended Steps", ""])
     lines.extend(f"- {item}" for item in report["next_recommended_steps"])
     return "\n".join(lines).rstrip() + "\n"

@@ -20,6 +20,8 @@ def roadmap_status_report(
 ) -> dict[str, Any]:
     """Map current local artifacts to the four CrystalProbe roadmap deliverables."""
 
+    docker_status = str(project_status.get("verification", {}).get("docker_status") or "")
+    docker_verified = "verified" in docker_status or "ok" in docker_status
     deliverables = [
         {
             "deliverable": "Polymorph-pair benchmark",
@@ -65,7 +67,7 @@ def roadmap_status_report(
             ],
             "remaining": [
                 "Run AIMNet2 ibuprofen sensitivity in Linux/Docker.",
-                "Add UMA once access is approved.",
+                "Add UMA measurements now that Hugging Face access is approved and Docker/fairchem initializes UMA.",
                 "Scale from pilot/bridge results to curated pairwise benchmark slices.",
             ],
         },
@@ -87,12 +89,14 @@ def roadmap_status_report(
             "status": "planned_not_integrated" if has_fastcsp_plan else "not_started",
             "evidence": [
                 "FastCSP integration plan exists." if has_fastcsp_plan else "No FastCSP integration plan found.",
-                "Docker/fairchem environment is documented, but heartbeat work avoided Docker.",
+                "Docker/fairchem environment is documented and UMA access now verifies through fairchem.",
             ],
             "remaining": [
-                "Verify fairchem/UMA access.",
+                "Wire CrystalProbe uncertainty/reporting outputs into a fairchem/UMA-compatible workflow.",
                 "Read FastCSP code and identify small upstream PR targets.",
-                "Wire CrystalProbe uncertainty/reporting outputs into a FastCSP-compatible workflow.",
+                "Run a FastCSP-specific integration smoke test."
+                if docker_verified
+                else "Wire CrystalProbe uncertainty/reporting outputs into a FastCSP-compatible workflow.",
             ],
         },
         {
@@ -104,7 +108,7 @@ def roadmap_status_report(
             ],
             "remaining": [
                 "Commit and push accumulated changes.",
-                "Run Docker verification.",
+                "Keep Docker/fairchem verification current before release." if docker_verified else "Run Docker verification.",
                 "Add installation and user documentation for the new report generators.",
             ],
         },

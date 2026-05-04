@@ -63,7 +63,8 @@ This prints whether a token is present, downloads the permitted OMC25 ESEN check
 - AIMNet full DFT-D3/Triton path works in Linux.
 - `crystalprobe-fairchem` builds and imports fairchem on CUDA.
 - OMC25 ESEN checkpoint download and fairchem CUDA inference work from Docker with `.env`.
-- UMA remains gated separately through `facebook/UMA` and currently requires account-side access approval.
+- UMA access through `facebook/UMA` is accepted and `uma-s-1p2` initializes from Docker/fairchem.
+- OMAT24 and OMol25 model repository access are accepted and file inventories are verified; dedicated CrystalProbe calculation paths remain future work.
 
 ## WSL Alternative
 

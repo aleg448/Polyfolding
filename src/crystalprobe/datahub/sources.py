@@ -37,7 +37,21 @@ def source_registry() -> list[DataSource]:
             kind="model_checkpoint",
             url="https://huggingface.co/facebook/OMC25",
             license="Model licenses vary; verify per checkpoint",
-            access_notes="Use through fairchem after accepting repository terms.",
+            access_notes="OMC25 and UMA access accepted locally; use through fairchem after accepting repository terms.",
+        ),
+        DataSource(
+            name="OMAT24 models",
+            kind="model_checkpoint",
+            url="https://huggingface.co/facebook/OMAT24",
+            license="Model licenses vary; verify per checkpoint and use policy",
+            access_notes="Access accepted locally; do not mix OMat24-trained energies with Materials Project corrections or references.",
+        ),
+        DataSource(
+            name="OMol25 models",
+            kind="model_checkpoint",
+            url="https://huggingface.co/facebook/OMol25",
+            license="Model licenses vary; verify per checkpoint and use policy",
+            access_notes="Access accepted locally; dedicated CrystalProbe OMol25 validation path remains future work.",
         ),
         DataSource(
             name="fairchem",
@@ -54,4 +68,3 @@ def source_registry() -> list[DataSource]:
             access_notes="Use through MACE ASE calculator; verify license compatibility for public workflows.",
         ),
     ]
-

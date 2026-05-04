@@ -1,0 +1,88 @@
+{
+  "schema_version": "0.1",
+  "verified_date": "2026-05-04",
+  "verification_environment": "docker compose service crystalprobe-fairchem",
+  "hf_token_in_container": true,
+  "model_repositories": [
+    {
+      "repo_id": "facebook/UMA",
+      "request_status": "accepted",
+      "verified_access": true,
+      "file_count": 11,
+      "key_assets": [
+        "checkpoints/uma-m-1p1.pt",
+        "checkpoints/uma-s-1.pt",
+        "checkpoints/uma-s-1p1.pt",
+        "checkpoints/uma-s-1p2.pt",
+        "references/form_elem_refs.yaml",
+        "references/iso_atom_elem_refs.yaml"
+      ],
+      "local_smoke": {
+        "checkpoint_alias": "uma-s-1p2",
+        "task_name": "omc",
+        "available": true,
+        "blocked_by_access": false
+      }
+    },
+    {
+      "repo_id": "facebook/OMC25",
+      "request_status": "accepted",
+      "verified_access": true,
+      "file_count": 8,
+      "key_assets": [
+        "checkpoints/esen_s.pt",
+        "assets/omc25-starting-crystals.csv"
+      ],
+      "local_smoke": {
+        "checkpoint": "checkpoints/esen_s.pt",
+        "checkpoint_sha256": "38cd8d4b48da75f1385fc7044ac33d7a4d007c62de3a9ede7b1fb",
+        "task_name": "omc",
+        "device": "cuda",
+        "water_energy_ev": -14.11356679011865,
+        "forces_shape": [
+          3,
+          3
+        ]
+      }
+    },
+    {
+      "repo_id": "facebook/OMAT24",
+      "request_status": "accepted",
+      "verified_access": true,
+      "file_count": 17,
+      "key_assets": [
+        "eqV2_153M_omat.pt",
+        "eqV2_153M_omat_mp_salex.pt",
+        "eqV2_31M_mp.pt",
+        "eqV2_31M_omat.pt",
+        "eqV2_31M_omat_mp_salex.pt",
+        "eqV2_86M_omat.pt",
+        "eqV2_86M_omat_mp_salex.pt",
+        "esen_30m_omat.pt"
+      ],
+      "local_smoke": {
+        "status": "not_run",
+        "reason": "Repository access and file inventory verified; CrystalProbe does not yet have an OMat24-specific calculation path."
+      }
+    },
+    {
+      "repo_id": "facebook/OMol25",
+      "request_status": "accepted",
+      "verified_access": true,
+      "file_count": 13,
+      "key_assets": [
+        "checkpoints/AllScAIP/AllScAIP-OMol102M-md-cons.pt",
+        "checkpoints/AllScAIP/AllScAIP-OMol102M-md-d.pt",
+        "checkpoints/esen_md_direct_all.pt",
+        "checkpoints/esen_sm_conserving_all.pt",
+        "checkpoints/esen_sm_direct_all.pt",
+        "references/iso_atom_elem_refs.yaml"
+      ],
+      "local_smoke": {
+        "status": "not_run",
+        "reason": "Repository access and file inventory verified; CrystalProbe does not yet have an OMol25-specific molecule/MD validation path."
+      }
+    }
+  ],
+  "energy_reference_caution": "UMA and OMat24-trained model energies are not directly compatible with Materials Project calculations; do not apply MP2020 corrections or MP reference compounds directly to OMat24-trained outputs."
+}

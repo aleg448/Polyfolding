@@ -14,7 +14,9 @@ This file tracks work that cannot be completed inside the current local sandbox 
 - CPOSS209 supplemental ZIP has been downloaded and MD5-verified locally under `data/sources/cposs209`; license is CC BY-NC 4.0.
 - OMC25 public lightweight dataset metadata has been downloaded locally under `data/sources/omc25`.
 - OMC25 ESEN checkpoint download from `facebook/OMC25` works with Docker `.env` token handoff and has been CUDA smoke-tested through fairchem.
-- UMA checkpoints are gated separately under `facebook/UMA`; the current Hugging Face account/token is not authorized yet.
+- UMA access to `facebook/UMA` is accepted and Docker/fairchem initializes `uma-s-1p2` successfully.
+- OMAT24 access to `facebook/OMAT24` is accepted and the model repository file inventory is verified.
+- OMol25 access to `facebook/OMol25` is accepted and the model repository file inventory is verified.
 - GitHub remote and identity are configured for `https://github.com/aleg448/Polyfolding.git`.
 - Docker Desktop is installed and GPU passthrough works.
 - Linux core and fairchem Docker images build and run.
@@ -27,8 +29,6 @@ This file tracks work that cannot be completed inside the current local sandbox 
 
 ## Remaining User Input
 
-- Request access to [facebook/UMA](https://huggingface.co/facebook/UMA) from the Hugging Face account associated with the token in `.env`.
-- After access is approved, rerun `docker compose run --rm crystalprobe-fairchem python scripts/fairchem_omc25_smoke.py --try-uma` to verify UMA.
 - Locate or obtain license-compatible crystalline lisdexamfetamine dimesylate atom coordinates/CIF. Patent evidence exists, but the accessible patent text does not provide a reusable coordinate file.
 - For CCDC/CSD: complete human validation in CCDC Access Structures or install/configure licensed CSD Python API access, then search the lisdexamfetamine terms and lattice window recorded in `docs/crystallographic_database_search.md`.
 - Keep raw CCDC CIFs local and ignored unless the applicable CCDC/CSD license explicitly permits redistribution.
