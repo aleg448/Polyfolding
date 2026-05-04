@@ -21,8 +21,9 @@ def project_status_report(
 
     blockers = _extract_bullets(blockers_text, heading="## Remaining User Input")
     next_steps = [
-        "Design OMAT24 and OMol25 validation paths before using those models for scientific claims.",
+        "Keep OMAT24 and OMol25 blocked from CrystalProbe scientific claims until task-specific validation paths are implemented.",
         "Promote CPOSS bridge records into curated pair records with experimental stability evidence.",
+        "Use CPOSS backend-disagreement reports as inspection triggers, not thermodynamic uncertainty estimates.",
     ]
     if "aimnet2_therapeutic_contrast" not in docker_status:
         next_steps.append("Run AIMNet2 on the ibuprofen sensitivity grid in Linux/Docker.")

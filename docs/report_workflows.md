@@ -64,6 +64,10 @@ python scripts\build_cposs_pair_candidate_report.py
 python scripts\build_cposs_pair_triage_report.py
 python scripts\build_cposs_candidate_cards.py
 python scripts\build_cposs_evidence_workpack.py
+docker compose run --rm crystalprobe-core python scripts/run_cposs_structure_inference.py --backend mace --block-id IBP01_PsiCrys --block-id IBP06_PsiCrys --block-id CBZ01_PsiCrys --block-id CBZ03_PsiCrys --output outputs/cposs_candidates_high_priority_mace.jsonl --continue-on-error
+docker compose run --rm crystalprobe-core python scripts/run_cposs_structure_inference.py --backend aimnet2 --block-id IBP01_PsiCrys --block-id IBP06_PsiCrys --block-id CBZ01_PsiCrys --block-id CBZ03_PsiCrys --output outputs/cposs_candidates_high_priority_aimnet2.jsonl --continue-on-error
+docker compose run --rm crystalprobe-fairchem python scripts/run_cposs_structure_inference.py --backend uma --block-id IBP01_PsiCrys --block-id IBP06_PsiCrys --block-id CBZ01_PsiCrys --block-id CBZ03_PsiCrys --output outputs/cposs_candidates_high_priority_uma.jsonl --continue-on-error
+python scripts\build_cposs_backend_disagreement_report.py
 ```
 
 Primary outputs:
@@ -78,8 +82,12 @@ Primary outputs:
 - `outputs/cposs_candidate_cards.md`
 - `outputs/cposs_evidence_workpack.json`
 - `outputs/cposs_evidence_workpack.md`
+- `outputs/cposs_high_priority_backend_disagreement.json`
+- `outputs/cposs_high_priority_backend_disagreement.md`
 
 The candidate cards include exact MACE, AIMNet2, and UMA commands for follow-up measurements on each pair. They remain AGI-assisted planning artifacts, not benchmark records.
+
+The high-priority disagreement report compares the current ibuprofen and carbamazepine CPOSS candidate pairs across MACE, AIMNet2, and UMA. It is a backend-behavior inspection report, not an experimental stability result.
 
 ## Therapeutic sensitivity contrast
 
@@ -97,6 +105,7 @@ python scripts\build_sensitivity_contrast_report.py
 python scripts\build_sensitivity_contrast_report.py --ibuprofen outputs\ibuprofen_sensitivity_summary_aimnet2_linux.json --backend aimnet2 --json-out outputs\therapeutic_sensitivity_contrast_aimnet2_linux.json --md-out outputs\therapeutic_sensitivity_contrast_aimnet2_linux.md
 python scripts\build_sensitivity_contrast_report.py --ibuprofen outputs\ibuprofen_sensitivity_summary_uma.json --backend uma --json-out outputs\therapeutic_sensitivity_contrast_uma.json --md-out outputs\therapeutic_sensitivity_contrast_uma.md
 python scripts\build_backend_disagreement_report.py
+python scripts\build_uncertainty_proxy_report.py
 ```
 
 Primary outputs:
@@ -108,6 +117,24 @@ Primary outputs:
 - `outputs/therapeutic_sensitivity_contrast_aimnet2_linux.md`
 - `outputs/therapeutic_sensitivity_contrast_uma.md`
 - `outputs/ampetp_backend_disagreement.md`
+- `outputs/crystalprobe_uncertainty_proxy_v0.md`
+
+The uncertainty proxy is deliberately uncalibrated. It uses backend ranking and diagnostic-flag disagreement as an inspection trigger, not as a thermodynamic confidence interval.
+
+## Model validation guardrails
+
+Use this report before routing new FAIR Chemistry checkpoints into CrystalProbe claims.
+
+```powershell
+python scripts\build_model_guardrails_report.py
+```
+
+Primary outputs:
+
+- `outputs/fairchem_model_guardrails.json`
+- `outputs/fairchem_model_guardrails.md`
+
+OMAT24 and OMol25 access are accepted locally, but these models remain validation-blocked for CrystalProbe scientific claims until task-specific calculation paths and reference policies are implemented.
 
 ## AGI-assisted evidence-tier policy
 
@@ -133,6 +160,8 @@ python scripts\build_project_status_dashboard.py --test-summary "CURRENT_TEST_SU
 python scripts\build_roadmap_status_report.py
 python scripts\build_release_boundary_report.py
 python scripts\build_evidence_tier_report.py
+python scripts\build_model_guardrails_report.py
+python scripts\build_uncertainty_proxy_report.py
 ```
 
 Replace `CURRENT_TEST_SUMMARY` with the latest local pytest result, for example `54 passed, 3 skipped`.
@@ -145,6 +174,8 @@ Primary outputs:
 - `outputs/crystalprobe_roadmap_status.md`
 - `outputs/crystalprobe_release_boundary.md`
 - `outputs/crystalprobe_evidence_tiers.md`
+- `outputs/fairchem_model_guardrails.md`
+- `outputs/crystalprobe_uncertainty_proxy_v0.md`
 
 ## Verification
 

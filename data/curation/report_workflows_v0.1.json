@@ -32,14 +32,17 @@
         "scripts/build_cposs_pair_candidate_report.py",
         "scripts/build_cposs_pair_triage_report.py",
         "scripts/build_cposs_candidate_cards.py",
-        "scripts/build_cposs_evidence_workpack.py"
+        "scripts/build_cposs_evidence_workpack.py",
+        "scripts/run_cposs_structure_inference.py",
+        "scripts/build_cposs_backend_disagreement_report.py"
       ],
       "primary_outputs": [
         "outputs/cposs_mini_benchmark_report.md",
         "outputs/cposs_pair_candidate_report.md",
         "outputs/cposs_pair_triage_report.md",
         "outputs/cposs_candidate_cards.md",
-        "outputs/cposs_evidence_workpack.md"
+        "outputs/cposs_evidence_workpack.md",
+        "outputs/cposs_high_priority_backend_disagreement.md"
       ]
     },
     {
@@ -50,7 +53,8 @@
         "scripts/run_sensitivity_inference.py",
         "scripts/summarize_sensitivity_predictions.py",
         "scripts/build_sensitivity_contrast_report.py",
-        "scripts/build_backend_disagreement_report.py"
+        "scripts/build_backend_disagreement_report.py",
+        "scripts/build_uncertainty_proxy_report.py"
       ],
       "primary_outputs": [
         "outputs/ibuprofen_sensitivity_summary_mace.md",
@@ -59,7 +63,18 @@
         "outputs/therapeutic_sensitivity_contrast_mace.md",
         "outputs/therapeutic_sensitivity_contrast_aimnet2_linux.md",
         "outputs/therapeutic_sensitivity_contrast_uma.md",
-        "outputs/ampetp_backend_disagreement.md"
+        "outputs/ampetp_backend_disagreement.md",
+        "outputs/crystalprobe_uncertainty_proxy_v0.md"
+      ]
+    },
+    {
+      "id": "model_guardrails",
+      "label": "Model validation guardrails",
+      "scripts": [
+        "scripts/build_model_guardrails_report.py"
+      ],
+      "primary_outputs": [
+        "outputs/fairchem_model_guardrails.md"
       ]
     },
     {
@@ -81,7 +96,9 @@
         "scripts/build_project_status_dashboard.py",
         "scripts/build_roadmap_status_report.py",
         "scripts/build_release_boundary_report.py",
-        "scripts/build_evidence_tier_report.py"
+        "scripts/build_evidence_tier_report.py",
+        "scripts/build_model_guardrails_report.py",
+        "scripts/build_uncertainty_proxy_report.py"
       ],
       "primary_outputs": [
         "outputs/crystalprobe_preliminary_findings_memo.md",
@@ -89,7 +106,9 @@
         "outputs/crystalprobe_project_status.md",
         "outputs/crystalprobe_roadmap_status.md",
         "outputs/crystalprobe_release_boundary.md",
-        "outputs/crystalprobe_evidence_tiers.md"
+        "outputs/crystalprobe_evidence_tiers.md",
+        "outputs/fairchem_model_guardrails.md",
+        "outputs/crystalprobe_uncertainty_proxy_v0.md"
       ]
     }
   ],
@@ -98,6 +117,8 @@
     "Generated outputs are reproducible artifacts, not source-controlled evidence by default.",
     "Sensitivity probes are local perturbation diagnostics and must not be reported as polymorph rankings.",
     "AIMNet2 and UMA/FastCSP follow-ups may require Linux or Docker depending on the host environment.",
-    "AGI-assisted evidence without human database validation must remain below verified benchmark status."
+    "AGI-assisted evidence without human database validation must remain below verified benchmark status.",
+    "OMAT24 and OMol25 remain blocked from CrystalProbe scientific claims until task-specific validation is implemented.",
+    "Backend-disagreement uncertainty is an uncalibrated inspection proxy, not a thermodynamic uncertainty estimate."
   ]
 }

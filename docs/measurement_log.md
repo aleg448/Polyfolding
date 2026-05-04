@@ -258,3 +258,33 @@ Result:
 ### Interpretation
 
 Both backends identify the same local region as the main diagnostic hotspot: the amide/carbonyl O-C environment in the parent conformer. This is exactly the kind of local agreement we want before moving to the dimesylate crystal. The current blocker remains coordinate access for the crystalline dimesylate salt.
+
+## 2026-05-04: High-Priority CPOSS Candidate Multi-Backend Measurements
+
+Source: CPOSS209 `All_Psi_Crys.cif`.
+
+Targets:
+
+- Ibuprofen adjacent pair: `IBP01_PsiCrys` and `IBP06_PsiCrys`.
+- Carbamazepine adjacent pair: `CBZ01_PsiCrys` and `CBZ03_PsiCrys`.
+
+Commands:
+
+```powershell
+docker compose run --rm crystalprobe-core python scripts/run_cposs_structure_inference.py --backend mace --block-id IBP01_PsiCrys --block-id IBP06_PsiCrys --block-id CBZ01_PsiCrys --block-id CBZ03_PsiCrys --output outputs/cposs_candidates_high_priority_mace.jsonl --continue-on-error
+docker compose run --rm crystalprobe-core python scripts/run_cposs_structure_inference.py --backend aimnet2 --block-id IBP01_PsiCrys --block-id IBP06_PsiCrys --block-id CBZ01_PsiCrys --block-id CBZ03_PsiCrys --output outputs/cposs_candidates_high_priority_aimnet2.jsonl --continue-on-error
+docker compose run --rm crystalprobe-fairchem python scripts/run_cposs_structure_inference.py --backend uma --block-id IBP01_PsiCrys --block-id IBP06_PsiCrys --block-id CBZ01_PsiCrys --block-id CBZ03_PsiCrys --output outputs/cposs_candidates_high_priority_uma.jsonl --continue-on-error
+python scripts\build_cposs_backend_disagreement_report.py
+python scripts\build_uncertainty_proxy_report.py
+```
+
+Result:
+
+- MACE, AIMNet2, and UMA each completed 4 of 4 high-priority CPOSS structures.
+- The backend-disagreement report is written to `outputs/cposs_high_priority_backend_disagreement.json` and `outputs/cposs_high_priority_backend_disagreement.md`.
+- Ibuprofen has cross-backend ordering consensus: all three backends place `IBP01_PsiCrys` below `IBP06_PsiCrys` after common structural-unit normalization.
+- Carbamazepine has a true backend-ordering disagreement: MACE and AIMNet2 place `CBZ01_PsiCrys` below `CBZ03_PsiCrys`, while UMA places `CBZ03_PsiCrys` below `CBZ01_PsiCrys`.
+- Diagnostic-flag agreement is also incomplete: UMA does not reproduce the high-force flags reported by MACE and AIMNet2 on this high-priority subset.
+- The uncertainty proxy v0 marks the CPOSS report for inspection while keeping the AMPETP sensitivity disagreement report in the high-confidence behavioral category.
+
+Interpretation: this is the first intentionally found CPOSS backend disagreement in the suite. It is backend-behavior evidence for inspection and case selection, not an experimental polymorph stability claim.

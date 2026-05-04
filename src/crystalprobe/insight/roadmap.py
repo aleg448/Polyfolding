@@ -19,6 +19,9 @@ def roadmap_status_report(
     has_cposs_candidate_cards: bool = False,
     has_cposs_evidence_workpack: bool = False,
     has_backend_disagreement: bool = False,
+    has_cposs_backend_disagreement: bool = False,
+    has_model_guardrails: bool = False,
+    has_uncertainty_proxy: bool = False,
 ) -> dict[str, Any]:
     """Map current local artifacts to the four CrystalProbe roadmap deliverables."""
 
@@ -47,6 +50,9 @@ def roadmap_status_report(
                 "CPOSS triage queue has curator-fillable evidence workpacks."
                 if has_cposs_evidence_workpack
                 else "CPOSS evidence workpack is missing.",
+                "Prioritized CPOSS pairs have multi-backend disagreement evidence."
+                if has_cposs_backend_disagreement
+                else "Prioritized CPOSS pairs still need multi-backend disagreement evidence.",
                 "Release-boundary report separates candidate public, review-required, and local-only artifacts."
                 if has_release_boundary
                 else "Release-boundary report is missing.",
@@ -58,12 +64,19 @@ def roadmap_status_report(
                 "Work through the triage queue to add experimental stability labels and citations."
                 if has_cposs_pair_triage
                 else "Add experimental stability labels and citations.",
-                "Use candidate-card commands to run AIMNet2 and UMA on prioritized CPOSS pairs."
-                if has_cposs_candidate_cards
-                else "Create claim-safe candidate cards for prioritized CPOSS pairs.",
+                "Scale candidate-card measurements to additional CPOSS pairs after inspecting the first disagreement."
+                if has_cposs_backend_disagreement
+                else (
+                    "Use candidate-card commands to run AIMNet2 and UMA on prioritized CPOSS pairs."
+                    if has_cposs_candidate_cards
+                    else "Create claim-safe candidate cards for prioritized CPOSS pairs."
+                ),
                 "Complete evidence workpack fields before promoting candidate pairs."
                 if has_cposs_evidence_workpack
                 else "Create curator-fillable evidence forms for candidate pairs.",
+                "Inspect CPOSS backend-disagreement families before selecting paper-facing examples."
+                if has_cposs_backend_disagreement
+                else "Run candidate-card commands with AIMNet2 and UMA for top CPOSS pairs.",
                 "Human-review the release-boundary report before publishing CCDC-derived artifacts."
                 if has_release_boundary
                 else "Separate redistributable source records from restricted local CCDC evidence.",
@@ -85,6 +98,9 @@ def roadmap_status_report(
                 "AMPETP backend-disagreement metrics are available."
                 if has_backend_disagreement
                 else "AMPETP backend-disagreement metrics are missing.",
+                "High-priority CPOSS backend-disagreement metrics are available."
+                if has_cposs_backend_disagreement
+                else "High-priority CPOSS backend-disagreement metrics are missing.",
                 "AMPETP has Docker/fairchem UMA reference and sensitivity measurements."
                 if uma_ampetp_sensitivity_verified
                 else (
@@ -112,7 +128,9 @@ def roadmap_status_report(
                 ),
                 "Scale from pilot/bridge results to curated pairwise benchmark slices.",
                 "Extend backend-disagreement metrics from AMPETP sensitivity to CPOSS candidate pairs."
-                if has_backend_disagreement
+                if has_backend_disagreement and not has_cposs_backend_disagreement
+                else "Use the CPOSS disagreement report to choose bounded case-study examples."
+                if has_cposs_backend_disagreement
                 else "Build backend-disagreement metrics from the AMPETP sensitivity summary.",
             ],
         },
@@ -125,11 +143,16 @@ def roadmap_status_report(
                 "Backend-disagreement metrics provide the first uncalibrated uncertainty proxy."
                 if has_backend_disagreement
                 else "Backend-disagreement metrics are not yet available.",
+                "Uncertainty proxy v0 aggregates AMPETP sensitivity and high-priority CPOSS disagreement evidence."
+                if has_uncertainty_proxy
+                else "Uncertainty proxy v0 report is missing.",
             ],
             "remaining": [
                 "Calibrate uncertainty against verified benchmark pairs.",
                 "Add OOD features grounded in model embeddings or chemistry descriptors.",
-                "Define release API and documentation examples.",
+                "Define release API and documentation examples."
+                if has_uncertainty_proxy
+                else "Generate the uncertainty proxy v0 report from available backend-disagreement evidence.",
             ],
         },
         {
@@ -138,6 +161,9 @@ def roadmap_status_report(
             "evidence": [
                 "FastCSP integration plan exists." if has_fastcsp_plan else "No FastCSP integration plan found.",
                 "Docker/fairchem environment is documented and UMA access now verifies through fairchem.",
+                "OMAT24/OMol25 model guardrails are documented before scientific use."
+                if has_model_guardrails
+                else "OMAT24/OMol25 model guardrail report is missing.",
             ],
             "remaining": [
                 "Wire CrystalProbe uncertainty/reporting outputs into a fairchem/UMA-compatible workflow.",

@@ -18,6 +18,9 @@ def test_roadmap_status_report_maps_deliverables():
         has_cposs_candidate_cards=True,
         has_cposs_evidence_workpack=True,
         has_backend_disagreement=True,
+        has_cposs_backend_disagreement=True,
+        has_model_guardrails=True,
+        has_uncertainty_proxy=True,
     )
     assert report["status"] == "roadmap_active"
     assert len(report["deliverables"]) == 5
@@ -41,6 +44,9 @@ def test_roadmap_status_markdown_contains_remaining_work():
         has_cposs_candidate_cards=True,
         has_cposs_evidence_workpack=True,
         has_backend_disagreement=True,
+        has_cposs_backend_disagreement=True,
+        has_model_guardrails=True,
+        has_uncertainty_proxy=True,
     )
     markdown = roadmap_status_markdown(report)
     assert markdown.startswith("# CrystalProbe Roadmap Status")
@@ -52,6 +58,9 @@ def test_roadmap_status_markdown_contains_remaining_work():
     assert "candidate cards" in markdown
     assert "evidence workpacks" in markdown
     assert "backend-disagreement metrics" in markdown
+    assert "CPOSS backend-disagreement" in markdown
+    assert "Uncertainty proxy v0" in markdown
+    assert "OMAT24/OMol25 model guardrails" in markdown
     assert "UMA access now verifies" in markdown
     assert "UMA reference measurement" in markdown
 
@@ -76,6 +85,9 @@ def test_roadmap_status_records_completed_uma_contrast():
         has_cposs_candidate_cards=True,
         has_cposs_evidence_workpack=True,
         has_backend_disagreement=True,
+        has_cposs_backend_disagreement=True,
+        has_model_guardrails=True,
+        has_uncertainty_proxy=True,
     )
     paper = report["deliverables"][1]
 
@@ -103,6 +115,9 @@ def test_roadmap_status_records_completed_aimnet2_contrast():
         has_cposs_candidate_cards=True,
         has_cposs_evidence_workpack=True,
         has_backend_disagreement=True,
+        has_cposs_backend_disagreement=True,
+        has_model_guardrails=True,
+        has_uncertainty_proxy=True,
     )
     paper = report["deliverables"][1]
 
@@ -127,11 +142,17 @@ def test_roadmap_status_records_candidate_cards_and_disagreement():
         has_cposs_candidate_cards=True,
         has_cposs_evidence_workpack=True,
         has_backend_disagreement=True,
+        has_cposs_backend_disagreement=True,
+        has_model_guardrails=True,
+        has_uncertainty_proxy=True,
     )
 
     benchmark = report["deliverables"][0]
     paper = report["deliverables"][1]
     uncertainty = report["deliverables"][2]
     assert "CPOSS candidate cards include claim boundaries and follow-up backend commands." in benchmark["evidence"]
+    assert "Prioritized CPOSS pairs have multi-backend disagreement evidence." in benchmark["evidence"]
     assert "AMPETP backend-disagreement metrics are available." in paper["evidence"]
+    assert "High-priority CPOSS backend-disagreement metrics are available." in paper["evidence"]
     assert "Backend-disagreement metrics provide the first uncalibrated uncertainty proxy." in uncertainty["evidence"]
+    assert "Uncertainty proxy v0 aggregates AMPETP sensitivity and high-priority CPOSS disagreement evidence." in uncertainty["evidence"]

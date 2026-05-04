@@ -23,6 +23,9 @@ def main() -> int:
     parser.add_argument("--cposs-candidate-cards", type=Path, default=Path("outputs/cposs_candidate_cards.json"))
     parser.add_argument("--cposs-evidence-workpack", type=Path, default=Path("outputs/cposs_evidence_workpack.json"))
     parser.add_argument("--backend-disagreement", type=Path, default=Path("outputs/ampetp_backend_disagreement.json"))
+    parser.add_argument("--cposs-backend-disagreement", type=Path, default=Path("outputs/cposs_high_priority_backend_disagreement.json"))
+    parser.add_argument("--model-guardrails", type=Path, default=Path("outputs/fairchem_model_guardrails.json"))
+    parser.add_argument("--uncertainty-proxy", type=Path, default=Path("outputs/crystalprobe_uncertainty_proxy_v0.json"))
     parser.add_argument("--json-out", type=Path, default=Path("outputs/crystalprobe_roadmap_status.json"))
     parser.add_argument("--md-out", type=Path, default=Path("outputs/crystalprobe_roadmap_status.md"))
     args = parser.parse_args()
@@ -40,6 +43,9 @@ def main() -> int:
         has_cposs_candidate_cards=args.cposs_candidate_cards.exists(),
         has_cposs_evidence_workpack=args.cposs_evidence_workpack.exists(),
         has_backend_disagreement=args.backend_disagreement.exists(),
+        has_cposs_backend_disagreement=args.cposs_backend_disagreement.exists(),
+        has_model_guardrails=args.model_guardrails.exists(),
+        has_uncertainty_proxy=args.uncertainty_proxy.exists(),
     )
     args.json_out.parent.mkdir(parents=True, exist_ok=True)
     args.json_out.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8", newline="\n")

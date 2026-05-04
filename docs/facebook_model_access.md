@@ -73,6 +73,14 @@ OMAT24 and OMol25 access are verified by model-repo inventory. CrystalProbe stil
 
 UMA can be selected in the structure and sensitivity inference scripts with `--backend uma`. The default checkpoint alias is `uma-s-1p2`, and the default task is `omc`.
 
+The current guardrail report is generated with:
+
+```powershell
+python scripts\build_model_guardrails_report.py
+```
+
+It writes `outputs/fairchem_model_guardrails.json` and `outputs/fairchem_model_guardrails.md`. In that report, OMAT24 and OMol25 are intentionally `access_verified_validation_blocked`: access is accepted, but CrystalProbe must not use them for organic molecular-crystal ranking, CPOSS benchmark claims, formation-energy claims, energy-above-hull claims, or therapeutic contrast claims until a task-specific validation path is implemented.
+
 ## Energy Reference Caution
 
 UMA models and legacy inorganic bulk models trained using OMat24 are trained with DFT and DFT+U total-energy labels. These are not directly compatible with Materials Project calculations.
