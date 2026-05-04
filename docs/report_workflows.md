@@ -1,0 +1,125 @@
+# CrystalProbe Report Workflows
+
+This guide records the local rebuild order for the current CrystalProbe research suite. It is meant to keep the AMPETP pilot, CPOSS bridge, therapeutic contrast, and writing artifacts reproducible without relying on memory of the overnight run.
+
+The companion manifest is `data/curation/report_workflows_v0.1.json`; tests check that the scripts named there still exist.
+
+From an uninstalled source checkout, set the local package path before running report generators:
+
+```powershell
+$env:PYTHONPATH='src'
+```
+
+## Guardrails
+
+- Keep raw CCDC exports in `data/sources/` or another ignored local directory.
+- Treat `outputs/` as reproducible generated evidence; hash or bundle outputs before using them in a paper draft.
+- Do not interpret perturbation sensitivity results as polymorph stability rankings.
+- Record exact backend names, checkpoints, input hashes, and blockers before promoting any claim beyond a pilot result.
+
+## AMPETP pilot research bundle
+
+AMPETP is the current proof case because it has local CCDC source evidence, extracted CIF output, MACE and AIMNet2 single-structure measurements, bond/contact diagnostics, sensitivity probes, figures, and a readiness gate.
+
+Rebuild order:
+
+```powershell
+python scripts\inspect_ccdc_cif.py data\sources\ccdc\ccdc_amphetamine_phosphate_1036952-978407.cif --json-out outputs\ccdc_amphetamine_bundle_index.json --extract-block AMPETP --extract-out outputs\ccdc_ampetp_extracted.cif
+python scripts\run_structure_inference.py data\sources\ccdc\ccdc_amphetamine_phosphate_1036952-978407.cif --cif-block AMPETP --structure-id ccdc_1102740_amphetamine_dihydrogen_phosphate --backend mace --output outputs\ccdc_ampetp_mace.json
+python scripts\run_structure_inference.py data\sources\ccdc\ccdc_amphetamine_phosphate_1036952-978407.cif --cif-block AMPETP --structure-id ccdc_1102740_amphetamine_dihydrogen_phosphate --backend aimnet2 --output outputs\ccdc_ampetp_aimnet2.json
+python scripts\build_ampetp_case_study.py
+python scripts\build_ampetp_sensitivity_set.py
+python scripts\run_sensitivity_inference.py outputs\ampetp_sensitivity_manifest.json --backend mace --output outputs\ampetp_sensitivity_mace.jsonl
+python scripts\run_sensitivity_inference.py outputs\ampetp_sensitivity_manifest.json --backend aimnet2 --output outputs\ampetp_sensitivity_aimnet2.jsonl --continue-on-error
+python scripts\summarize_sensitivity_predictions.py outputs\ampetp_sensitivity_mace.jsonl outputs\ampetp_sensitivity_aimnet2.jsonl --json-out outputs\ampetp_sensitivity_summary.json --md-out outputs\ampetp_sensitivity_summary.md
+python scripts\build_ampetp_figures.py
+python scripts\build_ampetp_research_bundle.py
+python scripts\build_chemrxiv_preprint_draft.py
+python scripts\build_ampetp_readiness_report.py
+```
+
+Primary paper-facing outputs:
+
+- `papers/ampetp_case_study.md`
+- `outputs/ampetp_case_study_report.md`
+- `outputs/ampetp_sensitivity_summary.md`
+- `outputs/ampetp_research_bundle_manifest.md`
+- `outputs/ampetp_readiness_report.md`
+- `outputs/figures/ampetp_provenance_flow.svg`
+- `outputs/figures/ampetp_structure_projection.svg`
+- `outputs/figures/ampetp_backend_force_diagnostics.svg`
+- `outputs/figures/ampetp_sensitivity_energy_deltas.svg`
+- `outputs/figures/ampetp_claim_guardrails.svg`
+
+## CPOSS mini-benchmark bridge
+
+The CPOSS bridge keeps the suite connected to polymorph-ranking work while the AMPETP case study remains a single-structure pilot.
+
+```powershell
+python scripts\build_cposs_mini_benchmark_report.py
+python scripts\build_cposs_pair_candidate_report.py
+python scripts\build_cposs_pair_triage_report.py
+python scripts\build_cposs_evidence_workpack.py
+```
+
+Primary outputs:
+
+- `outputs/cposs_mini_benchmark_report.json`
+- `outputs/cposs_mini_benchmark_report.md`
+- `outputs/cposs_pair_candidate_report.json`
+- `outputs/cposs_pair_candidate_report.md`
+- `outputs/cposs_pair_triage_report.json`
+- `outputs/cposs_pair_triage_report.md`
+- `outputs/cposs_evidence_workpack.json`
+- `outputs/cposs_evidence_workpack.md`
+
+## Therapeutic sensitivity contrast
+
+The current neutral contrast is ibuprofen CCDC 774097. It uses the same deterministic perturbation protocol as AMPETP so the report can compare local response profiles while keeping claims narrow.
+
+```powershell
+python scripts\build_ccdc_sensitivity_set.py data\sources\ccdc\ccdc_ibuprofen_bundle_1041369-776185.cif --block-id ibuprofen --title "Ibuprofen CCDC 774097 deterministic perturbation sensitivity set" --output-dir outputs\ibuprofen_sensitivity --manifest outputs\ibuprofen_sensitivity_manifest.json
+python scripts\run_sensitivity_inference.py outputs\ibuprofen_sensitivity_manifest.json --backend mace --output outputs\ibuprofen_sensitivity_mace.jsonl
+python scripts\summarize_sensitivity_predictions.py outputs\ibuprofen_sensitivity_mace.jsonl --json-out outputs\ibuprofen_sensitivity_summary_mace.json --md-out outputs\ibuprofen_sensitivity_summary_mace.md --title "Ibuprofen CCDC 774097 MACE perturbation sensitivity summary"
+python scripts\build_sensitivity_contrast_report.py
+```
+
+AIMNet2 ibuprofen contrast remains a Linux/Docker follow-up until the local backend can parse and run that reference path consistently.
+
+Primary outputs:
+
+- `outputs/ibuprofen_sensitivity_summary_mace.md`
+- `outputs/therapeutic_sensitivity_contrast_mace.md`
+
+## Writing and roadmap artifacts
+
+These commands rebuild the current manuscript-facing layer from the generated evidence reports.
+
+```powershell
+python scripts\build_preliminary_findings_memo.py
+python scripts\build_chemrxiv_preprint_draft.py
+python scripts\build_project_status_dashboard.py --test-summary "CURRENT_TEST_SUMMARY"
+python scripts\build_roadmap_status_report.py
+python scripts\build_release_boundary_report.py
+```
+
+Replace `CURRENT_TEST_SUMMARY` with the latest local pytest result, for example `54 passed, 3 skipped`.
+
+Primary outputs:
+
+- `outputs/crystalprobe_preliminary_findings_memo.md`
+- `outputs/crystalprobe_chemrxiv_preprint_draft.md`
+- `outputs/crystalprobe_project_status.md`
+- `outputs/crystalprobe_roadmap_status.md`
+- `outputs/crystalprobe_release_boundary.md`
+
+## Verification
+
+Run local verification after changing scripts, modules, tests, or paper-facing report logic:
+
+```powershell
+python -B -m pytest -q -p no:cacheprovider
+python -B -m compileall -q src scripts tests
+```
+
+For dependency-heavy verification, use the Linux/Docker path in `docs/linux_environment.md` and record any blocked backend, missing checkpoint, or gated dataset access in `BLOCKERS.md`.

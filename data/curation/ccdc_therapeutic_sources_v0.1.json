@@ -20,6 +20,7 @@
         "z": "2"
       },
       "local_source_path": "data/sources/ccdc/ccdc_amphetamine_phosphate_1036952-978407.cif",
+      "local_source_sha256": "9d8692b5f8921c6f1493b49960c766c6629721d9e8ffd4e0c085025dc56c6018",
       "index_output": "outputs/ccdc_amphetamine_bundle_index.json",
       "measurement_outputs": [
         "outputs/ccdc_ampetp_mace.json",

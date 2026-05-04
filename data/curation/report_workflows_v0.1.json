@@ -1,0 +1,82 @@
+{
+  "schema_version": "0.1",
+  "name": "CrystalProbe local report workflows",
+  "purpose": "Keep the AMPETP pilot, CPOSS bridge, contrast reports, and writing artifacts rebuildable from local commands.",
+  "workflows": [
+    {
+      "id": "ampetp_pilot_bundle",
+      "label": "AMPETP pilot research bundle",
+      "scripts": [
+        "scripts/inspect_ccdc_cif.py",
+        "scripts/run_structure_inference.py",
+        "scripts/build_ampetp_case_study.py",
+        "scripts/build_ampetp_sensitivity_set.py",
+        "scripts/run_sensitivity_inference.py",
+        "scripts/summarize_sensitivity_predictions.py",
+        "scripts/build_ampetp_figures.py",
+        "scripts/build_ampetp_research_bundle.py",
+        "scripts/build_ampetp_readiness_report.py"
+      ],
+      "primary_outputs": [
+        "outputs/ampetp_case_study_report.md",
+        "outputs/ampetp_sensitivity_summary.md",
+        "outputs/ampetp_research_bundle_manifest.md",
+        "outputs/ampetp_readiness_report.md"
+      ]
+    },
+    {
+      "id": "cposs_bridge",
+      "label": "CPOSS mini-benchmark bridge",
+      "scripts": [
+        "scripts/build_cposs_mini_benchmark_report.py",
+        "scripts/build_cposs_pair_candidate_report.py",
+        "scripts/build_cposs_pair_triage_report.py",
+        "scripts/build_cposs_evidence_workpack.py"
+      ],
+      "primary_outputs": [
+        "outputs/cposs_mini_benchmark_report.md",
+        "outputs/cposs_pair_candidate_report.md",
+        "outputs/cposs_pair_triage_report.md",
+        "outputs/cposs_evidence_workpack.md"
+      ]
+    },
+    {
+      "id": "therapeutic_contrast",
+      "label": "Therapeutic sensitivity contrast",
+      "scripts": [
+        "scripts/build_ccdc_sensitivity_set.py",
+        "scripts/run_sensitivity_inference.py",
+        "scripts/summarize_sensitivity_predictions.py",
+        "scripts/build_sensitivity_contrast_report.py"
+      ],
+      "primary_outputs": [
+        "outputs/ibuprofen_sensitivity_summary_mace.md",
+        "outputs/therapeutic_sensitivity_contrast_mace.md"
+      ]
+    },
+    {
+      "id": "writing_and_status",
+      "label": "Writing and roadmap artifacts",
+      "scripts": [
+        "scripts/build_preliminary_findings_memo.py",
+        "scripts/build_chemrxiv_preprint_draft.py",
+        "scripts/build_project_status_dashboard.py",
+        "scripts/build_roadmap_status_report.py",
+        "scripts/build_release_boundary_report.py"
+      ],
+      "primary_outputs": [
+        "outputs/crystalprobe_preliminary_findings_memo.md",
+        "outputs/crystalprobe_chemrxiv_preprint_draft.md",
+        "outputs/crystalprobe_project_status.md",
+        "outputs/crystalprobe_roadmap_status.md",
+        "outputs/crystalprobe_release_boundary.md"
+      ]
+    }
+  ],
+  "guardrails": [
+    "Raw gated CCDC source files stay local and ignored.",
+    "Generated outputs are reproducible artifacts, not source-controlled evidence by default.",
+    "Sensitivity probes are local perturbation diagnostics and must not be reported as polymorph rankings.",
+    "AIMNet2 and UMA/FastCSP follow-ups may require Linux or Docker depending on the host environment."
+  ]
+}

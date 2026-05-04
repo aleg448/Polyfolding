@@ -15,6 +15,24 @@ Foundation machine-learned interatomic potentials are increasingly used in cryst
 - Pairwise ranking metrics.
 - Model-agnostic ensemble uncertainty wrapper.
 - Calibration helper functions.
+- CCDC multi-CIF block inspection and extraction.
+- Single-structure case-study reports for backend agreement diagnostics.
+- Deterministic perturbation-set generation for sensitivity studies.
+- Deterministic SVG figure generation for provenance, structure projection, diagnostics, sensitivity, and claim guardrails.
+- Hashed research-bundle manifests for reproducible artifact trails.
+- Automated pilot-readiness reports for artifact completeness and paper guardrails.
+- Local CPOSS mini-benchmark reports that bridge single-structure pilots to polymorph-ranking workflows.
+- CPOSS pair-candidate reports that convert local bridge summaries into reviewable adjacent-pair curation queues.
+- CPOSS candidate triage reports that prioritize evidence-review work while preserving benchmark guardrails.
+- CPOSS evidence workpacks with curator-fillable fields for stability evidence, source-license decisions, disorder annotations, and promotion review.
+- Preliminary findings memo generation from local readiness, sensitivity, bundle, and bridge reports.
+- ChemRxiv-style draft scaffolding from local CrystalProbe reports.
+- Project status dashboards that summarize readiness, verification state, and remaining blockers.
+- Generic CCDC sensitivity-set generation for applying the same perturbation protocol to additional crystal targets.
+- Sensitivity contrast reports across therapeutic crystal targets.
+- Roadmap status reports that map local artifacts to benchmark, fingerprint, uncertainty, FastCSP, and software-paper deliverables.
+- Documented report workflows with manifest-backed tests for local rebuild order.
+- Conservative release-boundary reports that separate candidate public artifacts from CCDC-derived review-required and local-only coordinate artifacts.
 
 ## References To Add
 
@@ -23,4 +41,3 @@ Foundation machine-learned interatomic potentials are increasingly used in cryst
 - UMA or fairchem model documentation.
 - CPOSS209 dataset paper.
 - FastCSP/fairchem paper.
-

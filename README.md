@@ -54,6 +54,14 @@ The included `data/benchmark/v0.1/manifest.jsonl` file is a curation seed, not a
 - `tests`: unit tests for the current research contract.
 - `BLOCKERS.md`: current approval/dependency queue.
 
+## Model Energy Caution
+
+UMA models and legacy inorganic bulk models trained with OMat24 use DFT and DFT+U total-energy labels. These labels are not directly compatible with Materials Project calculations.
+
+If using UMA or OMat24-trained models for formation energies, energy above hull, reference-compound calculations, or related thermodynamic comparisons, use the OMat24-specific reference unary compounds and MP2020-style anion and GGA/GGA+U mixing corrections from the OMat24 Hugging Face repository. Do not apply Materials Project MP2020 corrections or Materials Project reference compounds directly to OMat24-trained model outputs.
+
+Additional care is required when computing energy differences or comparing with Materials Project calculations because DFT pseudopotentials and magnetic ground states can differ. CrystalProbe reports that use UMA or OMat24-derived models must record this compatibility boundary before making thermodynamic claims.
+
 ## Licensing
 
 Code is licensed under Apache-2.0. Dataset records must carry per-source licensing metadata; redistributable benchmark releases should use CC-BY-4.0 where allowed.

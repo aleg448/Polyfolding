@@ -95,6 +95,29 @@ Result:
 
 This is amphetamine-family crystal evidence, not lisdexamfetamine dimesylate evidence.
 
+### AMPETP Perturbation Sensitivity
+
+Command:
+
+```powershell
+python scripts\build_ampetp_sensitivity_set.py
+python scripts\run_sensitivity_inference.py outputs\ampetp_sensitivity_manifest.json --backend mace --output outputs\ampetp_sensitivity_mace.jsonl
+python scripts\run_sensitivity_inference.py outputs\ampetp_sensitivity_manifest.json --backend aimnet2 --output outputs\ampetp_sensitivity_aimnet2.jsonl --continue-on-error
+python scripts\summarize_sensitivity_predictions.py outputs\ampetp_sensitivity_mace.jsonl outputs\ampetp_sensitivity_aimnet2.jsonl --json-out outputs\ampetp_sensitivity_summary.json --md-out outputs\ampetp_sensitivity_summary.md
+```
+
+Result:
+
+- Generated 6 deterministic perturbation probes: reference, two coordinate-noise variants, two cell-scale variants, and one combined cell-scale plus coordinate-noise variant.
+- MACE-OFF23 small completed 6 of 6 probes.
+- AIMNet2 completed 6 of 6 probes locally with `needs_dispersion=False`.
+- MACE maximum absolute energy delta relative to its own reference: `6.103903788149182 eV`.
+- AIMNet2 maximum absolute energy delta relative to its own reference: `5.327166408751509 eV`.
+- The largest-response variant for both backends was `pos_sigma_0p03_seed_1`.
+- Both backends flagged that largest-response variant with `short_contact` and `high_force_atom`.
+
+Interpretation: this is a sensitivity-probe result, not a polymorph ranking. Energy deltas are within-backend deltas relative to each backend's own reference prediction.
+
 ### Ibuprofen (`ibuprofen`, CCDC 774097)
 
 Selected block: `ibuprofen`.
@@ -126,6 +149,27 @@ Result:
 - Severe short contacts: none reported.
 
 The AIMNet2 ibuprofen run was executed in the Linux Docker core environment to avoid the Windows Torch/Triton backend issue.
+
+### Ibuprofen Perturbation Sensitivity
+
+Command:
+
+```powershell
+python scripts\build_ccdc_sensitivity_set.py data\sources\ccdc\ccdc_ibuprofen_bundle_1041369-776185.cif --block-id ibuprofen --title "Ibuprofen CCDC 774097 deterministic perturbation sensitivity set" --output-dir outputs\ibuprofen_sensitivity --manifest outputs\ibuprofen_sensitivity_manifest.json
+python scripts\run_sensitivity_inference.py outputs\ibuprofen_sensitivity_manifest.json --backend mace --output outputs\ibuprofen_sensitivity_mace.jsonl
+python scripts\summarize_sensitivity_predictions.py outputs\ibuprofen_sensitivity_mace.jsonl --json-out outputs\ibuprofen_sensitivity_summary_mace.json --md-out outputs\ibuprofen_sensitivity_summary_mace.md --title "Ibuprofen CCDC 774097 MACE perturbation sensitivity summary"
+```
+
+Result:
+
+- Generated 6 deterministic perturbation probes for ibuprofen CCDC 774097.
+- MACE-OFF23 small completed 6 of 6 probes locally.
+- MACE maximum absolute energy delta relative to its own reference: `8.757581262339954 eV`.
+- MACE mean absolute energy delta relative to its own reference: `3.08479521132831 eV`.
+- Largest-response variant: `pos_sigma_0p03_seed_1`.
+- Diagnostic flags on the largest-response variant: `high_force_atom`.
+
+Interpretation: ibuprofen gives a neutral therapeutic contrast for the AMPETP sensitivity workflow. The same coordinate-noise probe is the strongest MACE response, but unlike AMPETP it did not trigger a `short_contact` flag in the local MACE run. AIMNet2 ibuprofen sensitivity remains a Linux/Docker follow-up because the ibuprofen AIMNet2 reference measurement was already routed through Docker.
 
 ## 2026-05-03: Lisdexamfetamine Parent Conformer
 

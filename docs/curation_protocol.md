@@ -24,6 +24,16 @@ The indexer supplies block IDs, molecule-family codes, form numbers, space group
 
 The adjacent-form pair queue from `All_Psi_Crys.cif` currently contains 189 candidate pairs across 20 families. Those candidates are a curation queue, not benchmark records, until experimental evidence is attached.
 
+The local CPOSS mini-benchmark bridge can also be converted into an adjacent relative-energy pair queue:
+
+```powershell
+python scripts\build_cposs_pair_candidate_report.py
+python scripts\build_cposs_pair_triage_report.py
+python scripts\build_cposs_evidence_workpack.py
+```
+
+This writes `outputs/cposs_pair_candidate_report.json`, `outputs/cposs_pair_candidate_report.md`, `outputs/cposs_pair_triage_report.json`, `outputs/cposs_pair_triage_report.md`, `outputs/cposs_evidence_workpack.json`, and `outputs/cposs_evidence_workpack.md`. These candidates are ranked by local model-relative energy only and remain `needs_experimental_evidence` until stability evidence, source-license review, and disorder annotations are attached.
+
 ## Promotion Rules
 
 - `draft`: placeholders allowed; never used for scientific claims.
