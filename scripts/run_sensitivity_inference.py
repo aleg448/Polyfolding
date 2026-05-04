@@ -10,6 +10,7 @@ from typing import Any
 
 from ase.io import read
 
+from crystalprobe.core.paths import portable_path
 from crystalprobe.foundry.optional_adapters import AIMNet2Adapter, MACEOffAdapter, UMAAdapter
 from crystalprobe.insight.local_geometry import analyze_local_geometry
 
@@ -66,13 +67,14 @@ def main() -> int:
     with args.output.open("w", encoding="utf-8", newline="\n") as handle:
         for variant in manifest["variants"]:
             try:
-                atoms = read(str(variant["path"]))
+                variant_path = portable_path(variant["path"])
+                atoms = read(str(variant_path))
                 prediction = model.predict(atoms)
                 row = {
                     "backend": args.backend,
                     "manifest": str(args.manifest),
                     "variant": variant["name"],
-                    "variant_path": variant["path"],
+                    "variant_path": str(variant_path),
                     "formula": atoms.get_chemical_formula(),
                     "natoms": len(atoms),
                     "pbc": [bool(value) for value in atoms.pbc],

@@ -34,6 +34,7 @@ ARTIFACTS = [
 
 OPTIONAL_ARTIFACTS = [
     ("outputs/ccdc_ampetp_uma.json", "uma_reference_prediction"),
+    ("outputs/ampetp_sensitivity_uma.jsonl", "uma_sensitivity_predictions"),
 ]
 
 
@@ -46,7 +47,8 @@ REBUILD_COMMANDS = [
     "python scripts\\build_ampetp_sensitivity_set.py",
     "python scripts\\run_sensitivity_inference.py outputs\\ampetp_sensitivity_manifest.json --backend mace --output outputs\\ampetp_sensitivity_mace.jsonl",
     "python scripts\\run_sensitivity_inference.py outputs\\ampetp_sensitivity_manifest.json --backend aimnet2 --output outputs\\ampetp_sensitivity_aimnet2.jsonl --continue-on-error",
-    "python scripts\\summarize_sensitivity_predictions.py outputs\\ampetp_sensitivity_mace.jsonl outputs\\ampetp_sensitivity_aimnet2.jsonl --json-out outputs\\ampetp_sensitivity_summary.json --md-out outputs\\ampetp_sensitivity_summary.md",
+    "docker compose run --rm crystalprobe-fairchem python scripts/run_sensitivity_inference.py outputs/ampetp_sensitivity_manifest.json --backend uma --output outputs/ampetp_sensitivity_uma.jsonl --continue-on-error",
+    "python scripts\\summarize_sensitivity_predictions.py outputs\\ampetp_sensitivity_mace.jsonl outputs\\ampetp_sensitivity_aimnet2.jsonl outputs\\ampetp_sensitivity_uma.jsonl --json-out outputs\\ampetp_sensitivity_summary.json --md-out outputs\\ampetp_sensitivity_summary.md",
     "python scripts\\build_ampetp_figures.py",
     "python scripts\\build_ampetp_research_bundle.py",
 ]

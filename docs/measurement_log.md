@@ -124,7 +124,8 @@ Command:
 python scripts\build_ampetp_sensitivity_set.py
 python scripts\run_sensitivity_inference.py outputs\ampetp_sensitivity_manifest.json --backend mace --output outputs\ampetp_sensitivity_mace.jsonl
 python scripts\run_sensitivity_inference.py outputs\ampetp_sensitivity_manifest.json --backend aimnet2 --output outputs\ampetp_sensitivity_aimnet2.jsonl --continue-on-error
-python scripts\summarize_sensitivity_predictions.py outputs\ampetp_sensitivity_mace.jsonl outputs\ampetp_sensitivity_aimnet2.jsonl --json-out outputs\ampetp_sensitivity_summary.json --md-out outputs\ampetp_sensitivity_summary.md
+docker compose run --rm crystalprobe-fairchem python scripts/run_sensitivity_inference.py outputs/ampetp_sensitivity_manifest.json --backend uma --output outputs/ampetp_sensitivity_uma.jsonl --continue-on-error
+python scripts\summarize_sensitivity_predictions.py outputs\ampetp_sensitivity_mace.jsonl outputs\ampetp_sensitivity_aimnet2.jsonl outputs\ampetp_sensitivity_uma.jsonl --json-out outputs\ampetp_sensitivity_summary.json --md-out outputs\ampetp_sensitivity_summary.md
 ```
 
 Result:
@@ -132,10 +133,12 @@ Result:
 - Generated 6 deterministic perturbation probes: reference, two coordinate-noise variants, two cell-scale variants, and one combined cell-scale plus coordinate-noise variant.
 - MACE-OFF23 small completed 6 of 6 probes.
 - AIMNet2 completed 6 of 6 probes locally with `needs_dispersion=False`.
+- UMA `uma-s-1p2` completed 6 of 6 probes in the Docker/fairchem CUDA environment.
 - MACE maximum absolute energy delta relative to its own reference: `6.103903788149182 eV`.
 - AIMNet2 maximum absolute energy delta relative to its own reference: `5.327166408751509 eV`.
-- The largest-response variant for both backends was `pos_sigma_0p03_seed_1`.
-- Both backends flagged that largest-response variant with `short_contact` and `high_force_atom`.
+- UMA maximum absolute energy delta relative to its own reference: `5.916418284348879 eV`.
+- The largest-response variant for all three backends was `pos_sigma_0p03_seed_1`.
+- All three backends flagged that largest-response variant with `short_contact` and `high_force_atom`.
 
 Interpretation: this is a sensitivity-probe result, not a polymorph ranking. Energy deltas are within-backend deltas relative to each backend's own reference prediction.
 
