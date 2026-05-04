@@ -16,7 +16,9 @@ def roadmap_status_report(
     has_release_boundary: bool = False,
     has_cposs_pair_candidates: bool = False,
     has_cposs_pair_triage: bool = False,
+    has_cposs_candidate_cards: bool = False,
     has_cposs_evidence_workpack: bool = False,
+    has_backend_disagreement: bool = False,
 ) -> dict[str, Any]:
     """Map current local artifacts to the four CrystalProbe roadmap deliverables."""
 
@@ -39,6 +41,9 @@ def roadmap_status_report(
                 "CPOSS pair candidates have a local evidence-review triage report."
                 if has_cposs_pair_triage
                 else "CPOSS pair-candidate triage report is missing.",
+                "CPOSS candidate cards include claim boundaries and follow-up backend commands."
+                if has_cposs_candidate_cards
+                else "CPOSS AGI-assisted candidate cards are missing.",
                 "CPOSS triage queue has curator-fillable evidence workpacks."
                 if has_cposs_evidence_workpack
                 else "CPOSS evidence workpack is missing.",
@@ -53,6 +58,9 @@ def roadmap_status_report(
                 "Work through the triage queue to add experimental stability labels and citations."
                 if has_cposs_pair_triage
                 else "Add experimental stability labels and citations.",
+                "Use candidate-card commands to run AIMNet2 and UMA on prioritized CPOSS pairs."
+                if has_cposs_candidate_cards
+                else "Create claim-safe candidate cards for prioritized CPOSS pairs.",
                 "Complete evidence workpack fields before promoting candidate pairs."
                 if has_cposs_evidence_workpack
                 else "Create curator-fillable evidence forms for candidate pairs.",
@@ -74,6 +82,9 @@ def roadmap_status_report(
                 if uma_therapeutic_contrast_verified
                 else "AMPETP-vs-ibuprofen UMA contrast is not yet recorded in project status.",
                 "ChemRxiv-style preprint scaffold exists." if has_preprint_draft else "ChemRxiv-style preprint scaffold is missing.",
+                "AMPETP backend-disagreement metrics are available."
+                if has_backend_disagreement
+                else "AMPETP backend-disagreement metrics are missing.",
                 "AMPETP has Docker/fairchem UMA reference and sensitivity measurements."
                 if uma_ampetp_sensitivity_verified
                 else (
@@ -100,6 +111,9 @@ def roadmap_status_report(
                     )
                 ),
                 "Scale from pilot/bridge results to curated pairwise benchmark slices.",
+                "Extend backend-disagreement metrics from AMPETP sensitivity to CPOSS candidate pairs."
+                if has_backend_disagreement
+                else "Build backend-disagreement metrics from the AMPETP sensitivity summary.",
             ],
         },
         {
@@ -108,6 +122,9 @@ def roadmap_status_report(
             "evidence": [
                 "Model-agnostic ensemble wrapper primitives exist.",
                 "Sensitivity and contrast reports now provide empirical inputs for later calibration work.",
+                "Backend-disagreement metrics provide the first uncalibrated uncertainty proxy."
+                if has_backend_disagreement
+                else "Backend-disagreement metrics are not yet available.",
             ],
             "remaining": [
                 "Calibrate uncertainty against verified benchmark pairs.",

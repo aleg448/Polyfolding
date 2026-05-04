@@ -54,3 +54,13 @@ def test_release_boundary_markdown_renders_policy():
     assert markdown.startswith("# CrystalProbe Release Boundary Report")
     assert "candidate_public" in markdown
     assert "local_only" in markdown
+
+
+def test_release_boundary_classifies_evidence_tier_outputs_public():
+    report = release_boundary_report(
+        artifact_paths=[
+            "outputs/crystalprobe_evidence_tiers.json",
+            "outputs/crystalprobe_evidence_tiers.md",
+        ]
+    )
+    assert {record["category"] for record in report["records"]} == {"candidate_public"}

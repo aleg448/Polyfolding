@@ -31,12 +31,14 @@
         "scripts/build_cposs_mini_benchmark_report.py",
         "scripts/build_cposs_pair_candidate_report.py",
         "scripts/build_cposs_pair_triage_report.py",
+        "scripts/build_cposs_candidate_cards.py",
         "scripts/build_cposs_evidence_workpack.py"
       ],
       "primary_outputs": [
         "outputs/cposs_mini_benchmark_report.md",
         "outputs/cposs_pair_candidate_report.md",
         "outputs/cposs_pair_triage_report.md",
+        "outputs/cposs_candidate_cards.md",
         "outputs/cposs_evidence_workpack.md"
       ]
     },
@@ -47,7 +49,8 @@
         "scripts/build_ccdc_sensitivity_set.py",
         "scripts/run_sensitivity_inference.py",
         "scripts/summarize_sensitivity_predictions.py",
-        "scripts/build_sensitivity_contrast_report.py"
+        "scripts/build_sensitivity_contrast_report.py",
+        "scripts/build_backend_disagreement_report.py"
       ],
       "primary_outputs": [
         "outputs/ibuprofen_sensitivity_summary_mace.md",
@@ -55,7 +58,8 @@
         "outputs/ibuprofen_sensitivity_summary_uma.md",
         "outputs/therapeutic_sensitivity_contrast_mace.md",
         "outputs/therapeutic_sensitivity_contrast_aimnet2_linux.md",
-        "outputs/therapeutic_sensitivity_contrast_uma.md"
+        "outputs/therapeutic_sensitivity_contrast_uma.md",
+        "outputs/ampetp_backend_disagreement.md"
       ]
     },
     {

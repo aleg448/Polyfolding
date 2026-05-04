@@ -89,3 +89,27 @@ def test_project_status_omits_aimnet2_contrast_step_when_verified():
     )
 
     assert "Run AIMNet2 on the ibuprofen sensitivity grid in Linux/Docker." not in report["next_recommended_steps"]
+
+
+def test_project_status_summarizes_evidence_tiers():
+    report = project_status_report(
+        readiness={"status": "paper_pilot_ready", "passed": 8, "failed": 0},
+        bundle={"artifacts": [{}, {}], "manifest_sha256": "a" * 64},
+        cposs_bridge={"family_count": 2, "structure_count": 16, "families": {"IBP": {}, "CBZ": {}}},
+        therapeutic_contrast={"backend": "mace", "target_count": 2},
+        evidence_tiers={
+            "status": "evidence_tiers_recorded",
+            "targets": [
+                {"target": "missing", "tier": {"tier": "blocked_no_coordinates"}},
+                {"target": "pilot", "tier": {"tier": "agi_assisted_guardrailed_pilot"}},
+            ],
+        },
+        blockers_text="## Remaining User Input\n\n## Other\n",
+        test_summary="1 passed",
+    )
+    markdown = project_status_markdown(report)
+
+    assert report["evidence_tiers"]["target_count"] == 2
+    assert report["evidence_tiers"]["guardrailed_pilot_count"] == 1
+    assert report["evidence_tiers"]["blocked_count"] == 1
+    assert "## Evidence Tiers" in markdown

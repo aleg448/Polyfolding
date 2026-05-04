@@ -13,6 +13,7 @@ def project_status_report(
     blockers_text: str,
     test_summary: str,
     therapeutic_contrast: dict[str, Any] | None = None,
+    evidence_tiers: dict[str, Any] | None = None,
     docker_status: str = "not_run",
     git_status: str = "not_recorded",
 ) -> dict[str, Any]:
@@ -43,6 +44,7 @@ def project_status_report(
             "families": sorted(cposs_bridge.get("families", {})),
         },
         "therapeutic_contrast": _contrast_status(therapeutic_contrast),
+        "evidence_tiers": _evidence_tier_status(evidence_tiers),
         "verification": {
             "latest_local_test_summary": test_summary,
             "docker_status": docker_status,
@@ -76,6 +78,13 @@ def project_status_markdown(report: dict[str, Any]) -> str:
         f"- Backend: `{report['therapeutic_contrast']['backend']}`",
         f"- Targets: `{report['therapeutic_contrast']['target_count']}`",
         f"- Status: `{report['therapeutic_contrast']['status']}`",
+        "",
+        "## Evidence Tiers",
+        "",
+        f"- Targets: `{report['evidence_tiers']['target_count']}`",
+        f"- Guardrailed pilots: `{report['evidence_tiers']['guardrailed_pilot_count']}`",
+        f"- Blocked targets: `{report['evidence_tiers']['blocked_count']}`",
+        f"- Verified benchmark candidates: `{report['evidence_tiers']['verified_candidate_count']}`",
         "",
         "## Verification",
         "",
@@ -116,4 +125,28 @@ def _contrast_status(report: dict[str, Any] | None) -> dict[str, Any]:
         "status": "mace_contrast_ready" if report.get("backend") == "mace" else "available",
         "backend": report.get("backend"),
         "target_count": report.get("target_count"),
+    }
+
+
+def _evidence_tier_status(report: dict[str, Any] | None) -> dict[str, Any]:
+    if not report:
+        return {
+            "status": "not_available",
+            "target_count": 0,
+            "guardrailed_pilot_count": 0,
+            "blocked_count": 0,
+            "verified_candidate_count": 0,
+            "tiers": {},
+        }
+    tiers = {}
+    for target in report.get("targets", []):
+        tier = target.get("tier", {}).get("tier", "unknown")
+        tiers[tier] = tiers.get(tier, 0) + 1
+    return {
+        "status": report.get("status"),
+        "target_count": len(report.get("targets", [])),
+        "guardrailed_pilot_count": tiers.get("agi_assisted_guardrailed_pilot", 0),
+        "blocked_count": tiers.get("blocked_no_coordinates", 0),
+        "verified_candidate_count": tiers.get("verified_benchmark_candidate", 0),
+        "tiers": tiers,
     }

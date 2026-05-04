@@ -91,6 +91,12 @@ def _classify(path: str) -> ReleaseRecord:
             category="local_only",
             reason="Coordinate-bearing gated CCDC/CSD source or extracted/generated CIF; keep local unless the license explicitly permits redistribution.",
         )
+    if normalized in {"outputs/crystalprobe_evidence_tiers.json", "outputs/crystalprobe_evidence_tiers.md"}:
+        return ReleaseRecord(
+            path=path,
+            category="candidate_public",
+            reason="Evidence-tier policy output contains claim-boundary metadata, not raw gated coordinates.",
+        )
     if normalized.startswith(("src/", "scripts/", "tests/", "docs/", "data/curation/")) or normalized in {
         "README.md",
         "BLOCKERS.md",

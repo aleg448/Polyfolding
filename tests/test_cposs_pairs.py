@@ -3,6 +3,8 @@ from crystalprobe.insight.cposs_pairs import (
     cposs_pair_candidate_report,
     cposs_evidence_workpack,
     cposs_evidence_workpack_markdown,
+    cposs_candidate_cards,
+    cposs_candidate_cards_markdown,
     cposs_pair_triage_markdown,
     cposs_pair_triage_report,
 )
@@ -113,3 +115,27 @@ def test_cposs_evidence_workpack_markdown_renders_form():
     assert markdown.startswith("# CPOSS pair evidence workpack")
     assert "experimental_stability_ordering" in markdown
     assert "No pair with unresolved ambiguity" in markdown
+
+
+def test_cposs_candidate_cards_keep_claim_safe_tier():
+    triage = cposs_pair_triage_report(cposs_pair_candidate_report(_bridge()))
+    cards = cposs_candidate_cards(triage, max_candidates=1)
+
+    assert cards["status"] == "claim_safe_candidate_cards"
+    assert cards["card_count"] == 1
+    assert cards["cards"][0]["evidence_tier"]["tier"] == "exploratory_local_measurement"
+    assert "verified benchmark" in cards["cards"][0]["evidence_tier"]["blocked_claims"]
+    assert "Run AIMNet2 and UMA" in cards["cards"][0]["next_actions"][-4]
+    assert "--block-id IBP01" in cards["cards"][0]["backend_commands"][0]
+    assert "--backend uma" in cards["cards"][0]["backend_commands"][2]
+
+
+def test_cposs_candidate_cards_markdown_renders_claim_boundary():
+    triage = cposs_pair_triage_report(cposs_pair_candidate_report(_bridge()))
+    markdown = cposs_candidate_cards_markdown(cposs_candidate_cards(triage, max_candidates=1))
+
+    assert markdown.startswith("# CPOSS AGI-assisted candidate cards")
+    assert "Evidence tier" in markdown
+    assert "Claim Boundary" in markdown
+    assert "Backend Commands" in markdown
+    assert "verified benchmark" in markdown

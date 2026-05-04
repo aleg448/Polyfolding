@@ -83,3 +83,31 @@ def test_readiness_report_includes_manuscript_claim_guardrails():
     assert report["status"] == "paper_pilot_ready"
     assert report["failed"] == 0
     assert any(check["name"] == "manuscript_cposs_bridge_guardrail" for check in report["checks"])
+
+
+def test_readiness_report_accepts_guardrailed_evidence_tier():
+    report = ampetp_readiness_report(
+        bundle_manifest=_bundle_manifest(),
+        case_study={
+            "backend_predictions": [
+                {"backend": "mace", "bond_count": 60},
+                {"backend": "aimnet2", "bond_count": 60},
+            ],
+            "agreement": {"notes": ["guardrail"]},
+        },
+        sensitivity_summary={
+            "backends": {"mace": {}, "aimnet2": {}},
+            "interpretation": ["guardrail"],
+        },
+        evidence_tiers={
+            "targets": [
+                {
+                    "target": "AMPETP CCDC 1102740",
+                    "tier": {"tier": "agi_assisted_guardrailed_pilot", "status": "usable_with_guardrails"},
+                }
+            ]
+        },
+    )
+
+    assert report["status"] == "paper_pilot_ready"
+    assert any(check["name"] == "evidence_tier_guardrail" and check["status"] == "pass" for check in report["checks"])

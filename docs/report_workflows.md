@@ -62,6 +62,7 @@ The CPOSS bridge keeps the suite connected to polymorph-ranking work while the A
 python scripts\build_cposs_mini_benchmark_report.py
 python scripts\build_cposs_pair_candidate_report.py
 python scripts\build_cposs_pair_triage_report.py
+python scripts\build_cposs_candidate_cards.py
 python scripts\build_cposs_evidence_workpack.py
 ```
 
@@ -73,8 +74,12 @@ Primary outputs:
 - `outputs/cposs_pair_candidate_report.md`
 - `outputs/cposs_pair_triage_report.json`
 - `outputs/cposs_pair_triage_report.md`
+- `outputs/cposs_candidate_cards.json`
+- `outputs/cposs_candidate_cards.md`
 - `outputs/cposs_evidence_workpack.json`
 - `outputs/cposs_evidence_workpack.md`
+
+The candidate cards include exact MACE, AIMNet2, and UMA commands for follow-up measurements on each pair. They remain AGI-assisted planning artifacts, not benchmark records.
 
 ## Therapeutic sensitivity contrast
 
@@ -91,6 +96,7 @@ python scripts\summarize_sensitivity_predictions.py outputs\ibuprofen_sensitivit
 python scripts\build_sensitivity_contrast_report.py
 python scripts\build_sensitivity_contrast_report.py --ibuprofen outputs\ibuprofen_sensitivity_summary_aimnet2_linux.json --backend aimnet2 --json-out outputs\therapeutic_sensitivity_contrast_aimnet2_linux.json --md-out outputs\therapeutic_sensitivity_contrast_aimnet2_linux.md
 python scripts\build_sensitivity_contrast_report.py --ibuprofen outputs\ibuprofen_sensitivity_summary_uma.json --backend uma --json-out outputs\therapeutic_sensitivity_contrast_uma.json --md-out outputs\therapeutic_sensitivity_contrast_uma.md
+python scripts\build_backend_disagreement_report.py
 ```
 
 Primary outputs:
@@ -101,6 +107,7 @@ Primary outputs:
 - `outputs/therapeutic_sensitivity_contrast_mace.md`
 - `outputs/therapeutic_sensitivity_contrast_aimnet2_linux.md`
 - `outputs/therapeutic_sensitivity_contrast_uma.md`
+- `outputs/ampetp_backend_disagreement.md`
 
 ## AGI-assisted evidence-tier policy
 

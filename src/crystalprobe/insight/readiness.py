@@ -25,6 +25,7 @@ def ampetp_readiness_report(
     bundle_manifest: dict[str, Any],
     case_study: dict[str, Any],
     sensitivity_summary: dict[str, Any],
+    evidence_tiers: dict[str, Any] | None = None,
     manuscript_text: str | None = None,
 ) -> dict[str, Any]:
     """Assess whether the AMPETP pilot has the expected reproducibility artifacts."""
@@ -87,6 +88,8 @@ def ampetp_readiness_report(
             "Missing case-study or sensitivity interpretation guardrails.",
         ),
     ]
+    if evidence_tiers is not None:
+        checks.append(_evidence_tier_check(evidence_tiers))
     if manuscript_text is not None:
         checks.extend(
             ReadinessCheck(
@@ -146,3 +149,22 @@ def _remaining_blockers(failed: int) -> list[str]:
     if failed:
         return ["Resolve failed readiness checks before treating AMPETP as a paper pilot artifact bundle."]
     return []
+
+
+def _evidence_tier_check(report: dict[str, Any]) -> ReadinessCheck:
+    for target in report.get("targets", []):
+        if target.get("target") == "AMPETP CCDC 1102740":
+            tier = target.get("tier", {}).get("tier")
+            status = target.get("tier", {}).get("status")
+            return _check(
+                "evidence_tier_guardrail",
+                tier in {"agi_assisted_guardrailed_pilot", "verified_benchmark_candidate"},
+                f"AMPETP evidence tier is `{tier}` with status `{status}`.",
+                f"AMPETP evidence tier `{tier}` is not ready for a paper pilot.",
+            )
+    return _check(
+        "evidence_tier_guardrail",
+        False,
+        "AMPETP evidence tier is recorded.",
+        "AMPETP evidence tier is missing from the evidence-tier report.",
+    )

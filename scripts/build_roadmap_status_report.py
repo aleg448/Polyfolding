@@ -20,7 +20,9 @@ def main() -> int:
     parser.add_argument("--release-boundary", type=Path, default=Path("outputs/crystalprobe_release_boundary.json"))
     parser.add_argument("--cposs-pair-candidates", type=Path, default=Path("outputs/cposs_pair_candidate_report.json"))
     parser.add_argument("--cposs-pair-triage", type=Path, default=Path("outputs/cposs_pair_triage_report.json"))
+    parser.add_argument("--cposs-candidate-cards", type=Path, default=Path("outputs/cposs_candidate_cards.json"))
     parser.add_argument("--cposs-evidence-workpack", type=Path, default=Path("outputs/cposs_evidence_workpack.json"))
+    parser.add_argument("--backend-disagreement", type=Path, default=Path("outputs/ampetp_backend_disagreement.json"))
     parser.add_argument("--json-out", type=Path, default=Path("outputs/crystalprobe_roadmap_status.json"))
     parser.add_argument("--md-out", type=Path, default=Path("outputs/crystalprobe_roadmap_status.md"))
     args = parser.parse_args()
@@ -35,7 +37,9 @@ def main() -> int:
         has_release_boundary=args.release_boundary.exists(),
         has_cposs_pair_candidates=args.cposs_pair_candidates.exists(),
         has_cposs_pair_triage=args.cposs_pair_triage.exists(),
+        has_cposs_candidate_cards=args.cposs_candidate_cards.exists(),
         has_cposs_evidence_workpack=args.cposs_evidence_workpack.exists(),
+        has_backend_disagreement=args.backend_disagreement.exists(),
     )
     args.json_out.parent.mkdir(parents=True, exist_ok=True)
     args.json_out.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8", newline="\n")

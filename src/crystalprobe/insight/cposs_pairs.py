@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from crystalprobe.insight.evidence_tiers import classify_evidence_tier
+
 
 def cposs_pair_candidate_report(cposs_bridge: dict[str, Any]) -> dict[str, Any]:
     """Convert a CPOSS mini-benchmark bridge into adjacent pair candidates."""
@@ -207,6 +209,66 @@ def cposs_evidence_workpack_markdown(workpack: dict[str, Any]) -> str:
     return "\n".join(lines).rstrip() + "\n"
 
 
+def cposs_candidate_cards(triage_report: dict[str, Any], *, max_candidates: int | None = None) -> dict[str, Any]:
+    """Create AGI-reviewable candidate cards without benchmark promotion."""
+
+    candidates = triage_report.get("top_candidates", [])
+    if max_candidates is not None:
+        candidates = candidates[:max_candidates]
+    cards = [_candidate_card(candidate) for candidate in candidates]
+    return {
+        "schema_version": "0.1.0",
+        "title": "CPOSS AGI-assisted candidate cards",
+        "status": "claim_safe_candidate_cards",
+        "card_count": len(cards),
+        "cards": cards,
+        "guardrails": [
+            "Cards are designed for AGI-assisted review and planning, not benchmark promotion.",
+            "Every card keeps the evidence tier below verified benchmark status until stability evidence is attached.",
+            "Use cards to choose the next backend measurements, literature searches, and release-boundary checks.",
+        ],
+    }
+
+
+def cposs_candidate_cards_markdown(report: dict[str, Any]) -> str:
+    """Render CPOSS AGI-assisted candidate cards as Markdown."""
+
+    lines = [
+        f"# {report['title']}",
+        "",
+        f"- Status: `{report['status']}`",
+        f"- Cards: `{report['card_count']}`",
+        "",
+        "## Guardrails",
+        "",
+    ]
+    lines.extend(f"- {guardrail}" for guardrail in report["guardrails"])
+    for card in report["cards"]:
+        tier = card["evidence_tier"]
+        lines.extend(
+            [
+                "",
+                f"## {card['candidate_id']}",
+                "",
+                f"- Family: `{card['family']}`",
+                f"- Priority: `{card['priority']}`",
+                f"- Evidence tier: `{tier['tier']}` (`{tier['status']}`)",
+                f"- Local model gap: `{float(card['model_gap_kj_mol_per_formula_unit']):.3f}` kJ/mol/f.u.",
+                f"- Model lower-energy structure: `{card['model_lower_energy_structure']}`",
+                f"- Diagnostic flags: `{', '.join(card['diagnostic_flags']) or 'none'}`",
+                "",
+                "### Claim Boundary",
+                "",
+            ]
+        )
+        lines.extend(f"- Blocked: {claim}" for claim in tier["blocked_claims"])
+        lines.extend(["", "### Next Actions", ""])
+        lines.extend(f"- {action}" for action in card["next_actions"])
+        lines.extend(["", "### Backend Commands", ""])
+        lines.extend(f"- `{command}`" for command in card["backend_commands"])
+    return "\n".join(lines).rstrip() + "\n"
+
+
 def _structure_stub(row: dict[str, Any]) -> dict[str, Any]:
     return {
         "block_id": row["block_id"],
@@ -310,3 +372,58 @@ def _side_from_candidate(candidate_id: str, *, side: str) -> str:
         parts = token.split("_", 1)
         return parts[1].upper() if len(parts) == 2 else token.upper()
     return token.upper()
+
+
+def _candidate_card(candidate: dict[str, Any]) -> dict[str, Any]:
+    tier = classify_evidence_tier(
+        {
+            "target": candidate["candidate_id"],
+            "has_atom_coordinates": True,
+            "backend_count": 1,
+            "has_sensitivity_grid": False,
+            "has_therapeutic_contrast": False,
+            "has_source_provenance": True,
+            "license_clean_for_redistribution": True,
+            "human_database_validation": False,
+            "experimental_stability_evidence": False,
+        }
+    )
+    next_actions = [
+        "Run AIMNet2 and UMA single-point checks before using the candidate for backend-disagreement analysis.",
+        "Search for experimental stability evidence and record the citation in the evidence workpack.",
+        "Inspect diagnostic flags before using the local model gap for any qualitative narrative.",
+        "Keep the card below verified benchmark status until the evidence tier changes.",
+    ]
+    if candidate.get("diagnostic_flags"):
+        next_actions.insert(0, "Prioritize local geometry review because diagnostic flags are present.")
+    return {
+        "candidate_id": candidate["candidate_id"],
+        "family": candidate["family"],
+        "priority": candidate["priority"],
+        "priority_score": candidate["priority_score"],
+        "rank_index": candidate.get("rank_index"),
+        "model_gap_kj_mol_per_formula_unit": candidate["model_gap_kj_mol_per_formula_unit"],
+        "model_lower_energy_structure": candidate.get("model_lower_energy_structure"),
+        "structure_a": candidate.get("structure_a", {}),
+        "structure_b": candidate.get("structure_b", {}),
+        "diagnostic_flags": candidate.get("diagnostic_flags", []),
+        "triage_reasons": candidate.get("triage_reasons", []),
+        "evidence_tier": tier.as_dict(),
+        "next_actions": next_actions,
+        "backend_commands": _backend_commands(candidate),
+    }
+
+
+def _backend_commands(candidate: dict[str, Any]) -> list[str]:
+    block_ids = [
+        candidate.get("structure_a", {}).get("block_id"),
+        candidate.get("structure_b", {}).get("block_id"),
+    ]
+    powershell_block_args = " ".join(f"--block-id {block_id}" for block_id in block_ids if block_id)
+    docker_block_args = powershell_block_args
+    stem = candidate["candidate_id"]
+    return [
+        f"python scripts\\run_cposs_structure_inference.py --backend mace {powershell_block_args} --output outputs\\cposs_candidates_{stem}_mace.jsonl",
+        f"docker compose run --rm crystalprobe-core python scripts/run_cposs_structure_inference.py --backend aimnet2 {docker_block_args} --output outputs/cposs_candidates_{stem}_aimnet2.jsonl --continue-on-error",
+        f"docker compose run --rm crystalprobe-fairchem python scripts/run_cposs_structure_inference.py --backend uma {docker_block_args} --output outputs/cposs_candidates_{stem}_uma.jsonl --continue-on-error",
+    ]

@@ -15,6 +15,7 @@ def main() -> int:
     parser.add_argument("--bundle", type=Path, default=Path("outputs/ampetp_research_bundle_manifest.json"))
     parser.add_argument("--cposs", type=Path, default=Path("outputs/cposs_mini_benchmark_report.json"))
     parser.add_argument("--contrast", type=Path, default=Path("outputs/therapeutic_sensitivity_contrast_mace.json"))
+    parser.add_argument("--evidence-tiers", type=Path, default=Path("outputs/crystalprobe_evidence_tiers.json"))
     parser.add_argument("--blockers", type=Path, default=Path("BLOCKERS.md"))
     parser.add_argument("--test-summary", default="54 passed, 1 skipped")
     parser.add_argument("--docker-status", default="not_run")
@@ -28,6 +29,7 @@ def main() -> int:
         bundle=json.loads(args.bundle.read_text(encoding="utf-8")),
         cposs_bridge=json.loads(args.cposs.read_text(encoding="utf-8")),
         therapeutic_contrast=json.loads(args.contrast.read_text(encoding="utf-8")) if args.contrast.exists() else None,
+        evidence_tiers=json.loads(args.evidence_tiers.read_text(encoding="utf-8")) if args.evidence_tiers.exists() else None,
         blockers_text=args.blockers.read_text(encoding="utf-8"),
         test_summary=args.test_summary,
         docker_status=args.docker_status,
