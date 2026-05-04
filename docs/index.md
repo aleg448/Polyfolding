@@ -16,6 +16,7 @@ CrystalProbe is organized around one principle: every polymorph prediction shoul
 - `docs/measurement_log.md`: source-level measurement results and interpretation guardrails.
 - `docs/local_diagnostics.md`: bond/contact/force hot-spot diagnostics for structure measurements.
 - `docs/report_workflows.md`: local rebuild order for AMPETP, CPOSS, contrast, and writing reports.
+- `docs/publication_readiness_review.md`: go/no-go review for release-boundary and CPOSS evidence artifacts.
 - `docs/environments.md`: local environment split for MACE/AIMNet versus fairchem.
 - `docs/linux_environment.md`: Docker/WSL path for clean Linux runs.
 - `BLOCKERS.md`: dependency and approval queue.
