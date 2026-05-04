@@ -24,6 +24,7 @@ def roadmap_status_report(
     docker_verified = "verified" in docker_status or "ok" in docker_status
     uma_ampetp_verified = "uma_ampetp" in docker_status
     uma_ampetp_sensitivity_verified = "uma_ampetp_sensitivity" in docker_status
+    uma_therapeutic_contrast_verified = "uma_therapeutic_contrast" in docker_status
     deliverables = [
         {
             "deliverable": "Polymorph-pair benchmark",
@@ -65,6 +66,9 @@ def roadmap_status_report(
             "evidence": [
                 f"AMPETP readiness status is {readiness.get('status')}.",
                 "AMPETP-vs-ibuprofen MACE contrast is available.",
+                "AMPETP-vs-ibuprofen UMA contrast is available."
+                if uma_therapeutic_contrast_verified
+                else "AMPETP-vs-ibuprofen UMA contrast is not yet recorded in project status.",
                 "ChemRxiv-style preprint scaffold exists." if has_preprint_draft else "ChemRxiv-style preprint scaffold is missing.",
                 "AMPETP has Docker/fairchem UMA reference and sensitivity measurements."
                 if uma_ampetp_sensitivity_verified
@@ -76,12 +80,18 @@ def roadmap_status_report(
             ],
             "remaining": [
                 "Run AIMNet2 ibuprofen sensitivity in Linux/Docker.",
-                "Extend UMA from AMPETP sensitivity into therapeutic contrast workflows."
-                if uma_ampetp_sensitivity_verified
-                else (
-                    "Extend UMA from AMPETP reference measurement to sensitivity and therapeutic contrast workflows."
-                    if uma_ampetp_verified
-                    else "Add UMA measurements now that Hugging Face access is approved and Docker/fairchem initializes UMA."
+                (
+                    "Scale UMA contrast to curated pairwise benchmark slices."
+                    if uma_therapeutic_contrast_verified
+                    else (
+                        "Extend UMA from AMPETP sensitivity into therapeutic contrast workflows."
+                        if uma_ampetp_sensitivity_verified
+                        else (
+                            "Extend UMA from AMPETP reference measurement to sensitivity and therapeutic contrast workflows."
+                            if uma_ampetp_verified
+                            else "Add UMA measurements now that Hugging Face access is approved and Docker/fairchem initializes UMA."
+                        )
+                    )
                 ),
                 "Scale from pilot/bridge results to curated pairwise benchmark slices.",
             ],

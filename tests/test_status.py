@@ -61,3 +61,17 @@ def test_project_status_markdown_handles_empty_remaining_input():
     markdown = project_status_markdown(report)
     assert "- None currently recorded." in markdown
     assert "Extend UMA from AMPETP sensitivity into therapeutic contrast workflows." in markdown
+
+
+def test_project_status_omits_uma_contrast_step_when_verified():
+    report = project_status_report(
+        readiness={"status": "paper_pilot_ready", "passed": 8, "failed": 0},
+        bundle={"artifacts": [{}, {}], "manifest_sha256": "a" * 64},
+        cposs_bridge={"family_count": 2, "structure_count": 16, "families": {"IBP": {}, "CBZ": {}}},
+        therapeutic_contrast={"backend": "mace", "target_count": 2},
+        blockers_text="## Remaining User Input\n\n## Other\n",
+        test_summary="1 passed",
+        docker_status="fairchem_omc25_uma_ampetp_sensitivity_uma_therapeutic_contrast_cuda_verified",
+    )
+
+    assert "Extend UMA from AMPETP sensitivity into therapeutic contrast workflows." not in report["next_recommended_steps"]

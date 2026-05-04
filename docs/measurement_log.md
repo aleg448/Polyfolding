@@ -182,18 +182,25 @@ Command:
 python scripts\build_ccdc_sensitivity_set.py data\sources\ccdc\ccdc_ibuprofen_bundle_1041369-776185.cif --block-id ibuprofen --title "Ibuprofen CCDC 774097 deterministic perturbation sensitivity set" --output-dir outputs\ibuprofen_sensitivity --manifest outputs\ibuprofen_sensitivity_manifest.json
 python scripts\run_sensitivity_inference.py outputs\ibuprofen_sensitivity_manifest.json --backend mace --output outputs\ibuprofen_sensitivity_mace.jsonl
 python scripts\summarize_sensitivity_predictions.py outputs\ibuprofen_sensitivity_mace.jsonl --json-out outputs\ibuprofen_sensitivity_summary_mace.json --md-out outputs\ibuprofen_sensitivity_summary_mace.md --title "Ibuprofen CCDC 774097 MACE perturbation sensitivity summary"
+docker compose run --rm crystalprobe-fairchem python scripts/run_sensitivity_inference.py outputs/ibuprofen_sensitivity_manifest.json --backend uma --output outputs/ibuprofen_sensitivity_uma.jsonl --continue-on-error
+python scripts\summarize_sensitivity_predictions.py outputs\ibuprofen_sensitivity_uma.jsonl --json-out outputs\ibuprofen_sensitivity_summary_uma.json --md-out outputs\ibuprofen_sensitivity_summary_uma.md --title "Ibuprofen CCDC 774097 UMA perturbation sensitivity summary"
+python scripts\build_sensitivity_contrast_report.py --ibuprofen outputs\ibuprofen_sensitivity_summary_uma.json --backend uma --json-out outputs\therapeutic_sensitivity_contrast_uma.json --md-out outputs\therapeutic_sensitivity_contrast_uma.md
 ```
 
 Result:
 
 - Generated 6 deterministic perturbation probes for ibuprofen CCDC 774097.
 - MACE-OFF23 small completed 6 of 6 probes locally.
+- UMA `uma-s-1p2` completed 6 of 6 probes in the Docker/fairchem CUDA environment.
 - MACE maximum absolute energy delta relative to its own reference: `8.757581262339954 eV`.
 - MACE mean absolute energy delta relative to its own reference: `3.08479521132831 eV`.
-- Largest-response variant: `pos_sigma_0p03_seed_1`.
+- UMA maximum absolute energy delta relative to its own reference: `8.672648645601143 eV`.
+- UMA mean absolute energy delta relative to its own reference: `3.2832498728584766 eV`.
+- Largest-response variant for both MACE and UMA: `pos_sigma_0p03_seed_1`.
 - Diagnostic flags on the largest-response variant: `high_force_atom`.
+- UMA therapeutic contrast report now covers AMPETP and ibuprofen. AMPETP has maximum absolute UMA delta `5.916418284348879 eV` and flags `short_contact, high_force_atom`; ibuprofen has maximum absolute UMA delta `8.672648645601143 eV` and flags `high_force_atom`.
 
-Interpretation: ibuprofen gives a neutral therapeutic contrast for the AMPETP sensitivity workflow. The same coordinate-noise probe is the strongest MACE response, but unlike AMPETP it did not trigger a `short_contact` flag in the local MACE run. AIMNet2 ibuprofen sensitivity remains a Linux/Docker follow-up because the ibuprofen AIMNet2 reference measurement was already routed through Docker.
+Interpretation: ibuprofen gives a neutral therapeutic contrast for the AMPETP sensitivity workflow. The same coordinate-noise probe is the strongest MACE and UMA response, but unlike AMPETP it did not trigger a `short_contact` flag in the local MACE run or the Docker UMA run. AIMNet2 ibuprofen sensitivity remains a Linux/Docker follow-up because the ibuprofen AIMNet2 reference measurement was already routed through Docker.
 
 ## 2026-05-03: Lisdexamfetamine Parent Conformer
 

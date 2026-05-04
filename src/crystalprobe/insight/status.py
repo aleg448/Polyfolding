@@ -19,6 +19,13 @@ def project_status_report(
     """Build a compact status report for a CrystalProbe work session."""
 
     blockers = _extract_bullets(blockers_text, heading="## Remaining User Input")
+    next_steps = [
+        "Design OMAT24 and OMol25 validation paths before using those models for scientific claims.",
+        "Promote CPOSS bridge records into curated pair records with experimental stability evidence.",
+        "Run AIMNet2 on the ibuprofen sensitivity grid in Linux/Docker.",
+    ]
+    if "uma_therapeutic_contrast" not in docker_status:
+        next_steps.insert(0, "Extend UMA from AMPETP sensitivity into therapeutic contrast workflows.")
     return {
         "schema_version": "0.1.0",
         "status": "active_research_pilot",
@@ -41,12 +48,7 @@ def project_status_report(
             "git_status": git_status,
         },
         "remaining_user_input": blockers,
-        "next_recommended_steps": [
-            "Extend UMA from AMPETP sensitivity into therapeutic contrast workflows.",
-            "Design OMAT24 and OMol25 validation paths before using those models for scientific claims.",
-            "Promote CPOSS bridge records into curated pair records with experimental stability evidence.",
-            "Run AIMNet2 on the ibuprofen sensitivity grid in Linux/Docker.",
-        ],
+        "next_recommended_steps": next_steps,
     }
 
 
