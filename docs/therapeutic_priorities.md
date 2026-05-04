@@ -12,7 +12,7 @@ CrystalProbe should start visible measurements with medicines that people unders
 
 - Atomoxetine hydrochloride: highest initial ADHD curation target. Public literature reports stable and metastable polymorphic forms, and a later commercial powder-diffraction structure. The blocker is license-compatible CIF access and primary-evidence extraction.
 - Methylphenidate hydrochloride: important target, but currently in source-discovery state for open polymorph CIFs.
-- Lisdexamfetamine dimesylate: important salt-form target, but currently in source-discovery state for solid-form structures.
+- Lisdexamfetamine dimesylate: promoted to active proof target. Patent evidence supports a crystalline dimesylate solid form; computable crystal measurements are blocked until a license-compatible CIF or atom-coordinate table is found.
 - Modafinil: not a first-line ADHD benchmark target, but useful adjacent neuropharmaceutical polymorph evidence exists and may be a good early external-CIF curation exercise.
 
 ## Immediate CPOSS Measurements

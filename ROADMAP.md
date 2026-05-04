@@ -14,6 +14,7 @@
 - [x] Add CPOSS209 adjacent-form candidate pair queue.
 - [x] Add ADHD and high-use medicine therapeutic priority queue.
 - [x] Add local bond/contact/force diagnostics to structure measurements.
+- [x] Promote lisdexamfetamine dimesylate to active proof target.
 - [ ] Replace draft placeholders with 5 verified records.
 
 ## Month 1

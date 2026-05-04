@@ -53,3 +53,53 @@ Result:
 - Total crystal energies must be normalized before comparing structures with different cell contents.
 - Local bond/contact/force diagnostics should be inspected before attributing an energy gap to molecular identity.
 - Any publication-facing ranking number still requires verified form labels and experimental stability evidence.
+
+## 2026-05-03: Lisdexamfetamine Parent Conformer
+
+Target: lisdexamfetamine parent conformer from PubChem CID `11597698`.
+
+Source file: `data/sources/pubchem/lisdexamfetamine_11597698_3d.sdf`.
+
+This is a molecule-level diagnostic measurement. It is not a dimesylate crystal-packing measurement.
+
+### MACE-OFF23 Small
+
+Command:
+
+```powershell
+python scripts\run_structure_inference.py data\sources\pubchem\lisdexamfetamine_11597698_3d.sdf --structure-id lisdexamfetamine_parent_pubchem_11597698 --backend mace --output outputs\lisdexamfetamine_parent_mace.json
+```
+
+Result:
+
+- Formula: `C15H25N3O`.
+- Atoms: 44.
+- Energy: `-22496.379770707095 eV`.
+- Max force: `1.3198525597858526 eV/Ang`.
+- Diagnostic flags: `high_force_atom`.
+- Top force hotspot: atom `0`, oxygen, `1.3198525597858526 eV/Ang`.
+- Top bond-geometry outlier: O-C, `1.2294253495027667 Ang`, covalent-radius ratio `0.8657924996498357`.
+- Severe short contacts: none reported.
+
+### AIMNet2
+
+Command:
+
+```powershell
+python scripts\run_structure_inference.py data\sources\pubchem\lisdexamfetamine_11597698_3d.sdf --structure-id lisdexamfetamine_parent_pubchem_11597698 --backend aimnet2 --output outputs\lisdexamfetamine_parent_aimnet2.json
+```
+
+Result:
+
+- Formula: `C15H25N3O`.
+- Atoms: 44.
+- Energy: `-22494.29040775406 eV`.
+- Max force: `1.247026870117706 eV/Ang`.
+- Diagnostic flags: `high_force_atom`.
+- Top force hotspot: atom `0`, oxygen, `1.247026870117706 eV/Ang`.
+- Top bond-geometry outlier: O-C, `1.2294253495027667 Ang`, covalent-radius ratio `0.8657924996498357`.
+- Severe short contacts: none reported.
+
+### Interpretation
+
+Both backends identify the same local region as the main diagnostic hotspot: the amide/carbonyl O-C environment in the parent conformer. This is exactly the kind of local agreement we want before moving to the dimesylate crystal. The current blocker remains coordinate access for the crystalline dimesylate salt.

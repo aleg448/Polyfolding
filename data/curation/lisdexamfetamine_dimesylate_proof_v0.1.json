@@ -1,0 +1,55 @@
+{
+  "schema_version": "0.1.0",
+  "target": {
+    "name": "lisdexamfetamine dimesylate",
+    "normalized_name": "lisdexamfetamine dimesylate",
+    "common_brand_examples": [
+      "Vyvanse"
+    ],
+    "pubchem_cid": 11597697,
+    "parent_pubchem_cid": 11597698,
+    "molecular_formula_salt": "C17H33N3O7S2",
+    "molecular_formula_parent": "C15H25N3O"
+  },
+  "proof_layers": [
+    {
+      "layer": "identity",
+      "status": "verified_public_source",
+      "evidence": [
+        "PubChem CID 11597697 identifies lisdexamfetamine dimesylate, formula C17H33N3O7S2, parent CID 11597698, and component methanesulfonic acid."
+      ]
+    },
+    {
+      "layer": "crystalline_solid_form",
+      "status": "patent_evidence_present",
+      "evidence": [
+        "US7659253 reports crystalline lisdexamfetamine dimesylate with XRPD peaks, DSC onset around 194.7 C, and single-crystal lattice parameters."
+      ],
+      "blocker": "Accessible patent text gives lattice/spectroscopic evidence but not a redistributable CIF or atom-coordinate table."
+    },
+    {
+      "layer": "computable_coordinates",
+      "status": "parent_conformer_measured",
+      "evidence": [
+        "PubChem provides a 3D conformer for parent lisdexamfetamine CID 11597698.",
+        "MACE-OFF23 small and AIMNet2 both completed local diagnostic measurements on the parent conformer."
+      ],
+      "local_source_path": "data/sources/pubchem/lisdexamfetamine_11597698_3d.sdf",
+      "measurement_outputs": [
+        "outputs/lisdexamfetamine_parent_mace.json",
+        "outputs/lisdexamfetamine_parent_aimnet2.json"
+      ],
+      "blocker": "The dimesylate salt page exposes a 3D conformer of the parent, not a full crystal/salt packing model."
+    },
+    {
+      "layer": "benchmark_ready",
+      "status": "not_ready",
+      "blocker": "Needs license-compatible crystal atom coordinates and at least one comparison form or experimentally meaningful solid-form endpoint."
+    }
+  ],
+  "next_actions": [
+    "Search CCDC or patent supplementary files for atom coordinates corresponding to the reported single-crystal structure.",
+    "If coordinates are available and license-compatible, reconstruct or import CIF and run MACE/AIMNet/fairchem crystal measurements.",
+    "Until then, use PubChem parent conformer measurements only as molecule-level diagnostics, not polymorph ranking evidence."
+  ]
+}
