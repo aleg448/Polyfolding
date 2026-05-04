@@ -10,7 +10,7 @@ from typing import Any
 from ase.io import read
 
 from crystalprobe.datahub.ccdc import write_ccdc_block
-from crystalprobe.foundry.optional_adapters import AIMNet2Adapter, MACEOffAdapter
+from crystalprobe.foundry.optional_adapters import AIMNet2Adapter, MACEOffAdapter, UMAAdapter
 from crystalprobe.insight.local_geometry import analyze_local_geometry
 
 
@@ -23,6 +23,12 @@ def _adapter(args: argparse.Namespace) -> Any:
             device=args.device,
             needs_dispersion=args.aimnet_dispersion,
         )
+    if args.backend == "uma":
+        return UMAAdapter(
+            checkpoint=args.uma_checkpoint,
+            task_name=args.uma_task_name,
+            device=args.device,
+        )
     raise ValueError(f"unsupported backend: {args.backend}")
 
 
@@ -32,11 +38,13 @@ def main() -> int:
     parser.add_argument("--structure-id", required=True)
     parser.add_argument("--cif-block", help="Extract this data block from a multi-block CIF before reading")
     parser.add_argument("--cif-block-index", type=int, help="Extract this zero-based data block index before reading")
-    parser.add_argument("--backend", choices=["mace", "aimnet2"], default="mace")
+    parser.add_argument("--backend", choices=["mace", "aimnet2", "uma"], default="mace")
     parser.add_argument("--device", default=None)
     parser.add_argument("--mace-model", default="small")
     parser.add_argument("--aimnet-model", default="aimnet2")
     parser.add_argument("--aimnet-dispersion", action="store_true")
+    parser.add_argument("--uma-checkpoint", default="uma-s-1p2")
+    parser.add_argument("--uma-task-name", default="omc")
     parser.add_argument("--index", default="0")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--no-local-geometry", action="store_true")

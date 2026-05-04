@@ -82,9 +82,38 @@ class AIMNet2Adapter(MLIPAdapter):
 class UMAAdapter(MLIPAdapter):
     name = "uma"
 
-    def __init__(self, checkpoint: str | None = None) -> None:
+    def __init__(
+        self,
+        checkpoint: str = "uma-s-1p2",
+        *,
+        task_name: str = "omc",
+        device: str | None = None,
+    ) -> None:
         require_adapter("uma")
+        import torch
+        from fairchem.core import FAIRChemCalculator
+
         self.checkpoint = checkpoint
+        self.task_name = task_name
+        self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
+        self.calculator = FAIRChemCalculator.from_model_checkpoint(
+            checkpoint,
+            task_name=task_name,
+            device=self.device,
+        )
 
     def predict(self, structure: StructureInput) -> EnergyForcePrediction:
-        raise NotImplementedError("UMA prediction wiring requires fairchem model configuration.")
+        atoms = structure.copy()
+        atoms.calc = self.calculator
+        energy = float(atoms.get_potential_energy())
+        forces = tuple(tuple(float(value) for value in row) for row in atoms.get_forces())
+        return EnergyForcePrediction(
+            energy=energy,
+            forces=forces,
+            metadata={
+                "adapter": self.name,
+                "checkpoint": self.checkpoint,
+                "task_name": self.task_name,
+                "device": self.device,
+            },
+        )

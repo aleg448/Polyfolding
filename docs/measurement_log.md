@@ -95,6 +95,27 @@ Result:
 
 This is amphetamine-family crystal evidence, not lisdexamfetamine dimesylate evidence.
 
+### AMPETP UMA Reference Measurement
+
+Command:
+
+```powershell
+docker compose run --rm crystalprobe-fairchem python scripts/run_structure_inference.py data/sources/ccdc/ccdc_amphetamine_phosphate_1036952-978407.cif --cif-block AMPETP --structure-id ccdc_1102740_amphetamine_dihydrogen_phosphate --backend uma --output outputs/ccdc_ampetp_uma.json
+```
+
+Result:
+
+- UMA checkpoint alias: `uma-s-1p2`.
+- Task name: `omc`.
+- Device: `cuda`.
+- Energy: `-363.8153716439631 eV`.
+- Max force: `17.192061172123992 eV/Ang`; mean force: `5.299576569577903 eV/Ang`.
+- Bond diagnostics: `60` covalent-radius candidate bonds.
+- Diagnostic flags: `high_force_atom`.
+- Severe short contacts: none reported.
+
+Interpretation: UMA now works as a third AMPETP backend reference in the Docker/fairchem environment. Its absolute energy scale must not be compared directly to MACE or AIMNet2 as a physical stability gap.
+
 ### AMPETP Perturbation Sensitivity
 
 Command:

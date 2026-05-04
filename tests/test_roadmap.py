@@ -5,7 +5,7 @@ def test_roadmap_status_report_maps_deliverables():
     report = roadmap_status_report(
         project_status={
             "ampetp": {"readiness_status": "paper_pilot_ready"},
-            "verification": {"latest_local_test_summary": "1 passed"},
+            "verification": {"latest_local_test_summary": "1 passed", "docker_status": "fairchem_omc25_uma_ampetp_cuda_verified"},
         },
         readiness={"status": "paper_pilot_ready"},
         cposs_bridge={"family_count": 2, "structure_count": 16},
@@ -26,7 +26,7 @@ def test_roadmap_status_markdown_contains_remaining_work():
     report = roadmap_status_report(
         project_status={
             "ampetp": {"readiness_status": "paper_pilot_ready"},
-            "verification": {"latest_local_test_summary": "1 passed"},
+            "verification": {"latest_local_test_summary": "1 passed", "docker_status": "fairchem_omc25_uma_ampetp_cuda_verified"},
         },
         readiness={"status": "paper_pilot_ready"},
         cposs_bridge={"family_count": 2, "structure_count": 16},
@@ -41,9 +41,10 @@ def test_roadmap_status_markdown_contains_remaining_work():
     markdown = roadmap_status_markdown(report)
     assert markdown.startswith("# CrystalProbe Roadmap Status")
     assert "Polymorph-pair benchmark" in markdown
-    assert "Run Docker verification" in markdown
+    assert "Keep Docker/fairchem verification current" in markdown
     assert "Release-boundary report" in markdown
     assert "pair-candidate records" in markdown
     assert "triage report" in markdown
     assert "evidence workpacks" in markdown
     assert "UMA access now verifies" in markdown
+    assert "UMA reference measurement" in markdown

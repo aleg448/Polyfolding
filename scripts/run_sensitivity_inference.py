@@ -10,7 +10,7 @@ from typing import Any
 
 from ase.io import read
 
-from crystalprobe.foundry.optional_adapters import AIMNet2Adapter, MACEOffAdapter
+from crystalprobe.foundry.optional_adapters import AIMNet2Adapter, MACEOffAdapter, UMAAdapter
 from crystalprobe.insight.local_geometry import analyze_local_geometry
 
 
@@ -22,6 +22,12 @@ def _adapter(args: argparse.Namespace) -> Any:
             model=args.aimnet_model,
             device=args.device,
             needs_dispersion=args.aimnet_dispersion,
+        )
+    if args.backend == "uma":
+        return UMAAdapter(
+            checkpoint=args.uma_checkpoint,
+            task_name=args.uma_task_name,
+            device=args.device,
         )
     raise ValueError(f"unsupported backend: {args.backend}")
 
@@ -39,11 +45,13 @@ def _force_summary(forces: tuple[tuple[float, ...], ...]) -> dict[str, float]:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("manifest", type=Path)
-    parser.add_argument("--backend", choices=["mace", "aimnet2"], default="mace")
+    parser.add_argument("--backend", choices=["mace", "aimnet2", "uma"], default="mace")
     parser.add_argument("--device", default=None)
     parser.add_argument("--mace-model", default="small")
     parser.add_argument("--aimnet-model", default="aimnet2")
     parser.add_argument("--aimnet-dispersion", action="store_true")
+    parser.add_argument("--uma-checkpoint", default="uma-s-1p2")
+    parser.add_argument("--uma-task-name", default="omc")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--no-local-geometry", action="store_true")
     parser.add_argument("--continue-on-error", action="store_true")

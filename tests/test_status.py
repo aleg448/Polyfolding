@@ -60,4 +60,4 @@ def test_project_status_markdown_handles_empty_remaining_input():
     )
     markdown = project_status_markdown(report)
     assert "- None currently recorded." in markdown
-    assert "Wire UMA into a CrystalProbe fairchem prediction adapter." in markdown
+    assert "Extend UMA from the AMPETP reference measurement" in markdown

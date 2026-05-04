@@ -32,6 +32,8 @@ The next adapter implementations should land in this order:
 
 AMPETP, CCDC 1102740, is now the first research-grade pilot target. It is not a polymorph-pair benchmark record, but it proves the vertical slice needed before the full benchmark paper: local CCDC source handling, block extraction, ASE parsing, MACE/AIMNet execution, bond-level diagnostics, backend-agreement reporting, and a paper-ready case-study draft.
 
+UMA access is now accepted and Docker/fairchem initializes `uma-s-1p2`. The AMPETP structure inference workflow can run UMA with `--backend uma`, producing `outputs/ccdc_ampetp_uma.json` as an optional third backend reference measurement.
+
 The AMPETP pilot now also has a generated perturbation grid under `outputs/ampetp_sensitivity/` with a manifest at `outputs/ampetp_sensitivity_manifest.json`. MACE-OFF23 small and AIMNet2 both run across the six generated probes locally. The strongest response for both backends is the `pos_sigma_0p03_seed_1` coordinate-noise probe, which both backends flag with `short_contact` and `high_force_atom`.
 
 Deterministic AMPETP SVG figures are generated under `outputs/figures/` from the extracted CIF plus case-study and sensitivity JSON outputs. These cover provenance, a 2D structure projection, backend force diagnostics, sensitivity energy deltas, and claim guardrails.

@@ -1,4 +1,5 @@
 from crystalprobe.insight.case_study import build_single_structure_case_study, case_study_markdown
+from scripts.build_ampetp_case_study import DEFAULT_PREDICTIONS, OPTIONAL_PREDICTIONS
 
 
 def _prediction(backend, energy, hotspots):
@@ -49,3 +50,8 @@ def test_case_study_markdown_contains_guardrails():
     assert markdown.startswith("# Fixture")
     assert "Backend Measurements" in markdown
     assert "not a calibrated physical stability gap" in markdown
+
+
+def test_ampetp_case_study_keeps_uma_optional():
+    assert [path.name for path in DEFAULT_PREDICTIONS] == ["ccdc_ampetp_mace.json", "ccdc_ampetp_aimnet2.json"]
+    assert OPTIONAL_PREDICTIONS[0].name == "ccdc_ampetp_uma.json"

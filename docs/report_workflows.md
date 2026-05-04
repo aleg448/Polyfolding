@@ -27,6 +27,7 @@ Rebuild order:
 python scripts\inspect_ccdc_cif.py data\sources\ccdc\ccdc_amphetamine_phosphate_1036952-978407.cif --json-out outputs\ccdc_amphetamine_bundle_index.json --extract-block AMPETP --extract-out outputs\ccdc_ampetp_extracted.cif
 python scripts\run_structure_inference.py data\sources\ccdc\ccdc_amphetamine_phosphate_1036952-978407.cif --cif-block AMPETP --structure-id ccdc_1102740_amphetamine_dihydrogen_phosphate --backend mace --output outputs\ccdc_ampetp_mace.json
 python scripts\run_structure_inference.py data\sources\ccdc\ccdc_amphetamine_phosphate_1036952-978407.cif --cif-block AMPETP --structure-id ccdc_1102740_amphetamine_dihydrogen_phosphate --backend aimnet2 --output outputs\ccdc_ampetp_aimnet2.json
+docker compose run --rm crystalprobe-fairchem python scripts/run_structure_inference.py data/sources/ccdc/ccdc_amphetamine_phosphate_1036952-978407.cif --cif-block AMPETP --structure-id ccdc_1102740_amphetamine_dihydrogen_phosphate --backend uma --output outputs/ccdc_ampetp_uma.json
 python scripts\build_ampetp_case_study.py
 python scripts\build_ampetp_sensitivity_set.py
 python scripts\run_sensitivity_inference.py outputs\ampetp_sensitivity_manifest.json --backend mace --output outputs\ampetp_sensitivity_mace.jsonl

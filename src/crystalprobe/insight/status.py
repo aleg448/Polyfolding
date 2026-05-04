@@ -43,7 +43,7 @@ def project_status_report(
         "remaining_user_input": blockers,
         "next_recommended_steps": [
             "Commit new access-state documentation after review.",
-            "Wire UMA into a CrystalProbe fairchem prediction adapter.",
+            "Extend UMA from the AMPETP reference measurement to sensitivity and contrast workflows.",
             "Design OMAT24 and OMol25 validation paths before using those models for scientific claims.",
             "Promote CPOSS bridge records into curated pair records with experimental stability evidence.",
             "Run AIMNet2 on the ibuprofen sensitivity grid in Linux/Docker.",

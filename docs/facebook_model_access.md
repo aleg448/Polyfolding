@@ -71,6 +71,8 @@ UMA is no longer blocked by Hugging Face access. OMC25 and UMA are locally verif
 
 OMAT24 and OMol25 access are verified by model-repo inventory. CrystalProbe still needs dedicated calculation paths before these become scientific workflow evidence.
 
+UMA can be selected in the structure and sensitivity inference scripts with `--backend uma`. The default checkpoint alias is `uma-s-1p2`, and the default task is `omc`.
+
 ## Energy Reference Caution
 
 UMA models and legacy inorganic bulk models trained using OMat24 are trained with DFT and DFT+U total-energy labels. These are not directly compatible with Materials Project calculations.

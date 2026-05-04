@@ -22,6 +22,7 @@ def roadmap_status_report(
 
     docker_status = str(project_status.get("verification", {}).get("docker_status") or "")
     docker_verified = "verified" in docker_status or "ok" in docker_status
+    uma_ampetp_verified = "uma_ampetp" in docker_status
     deliverables = [
         {
             "deliverable": "Polymorph-pair benchmark",
@@ -64,10 +65,15 @@ def roadmap_status_report(
                 f"AMPETP readiness status is {readiness.get('status')}.",
                 "AMPETP-vs-ibuprofen MACE contrast is available.",
                 "ChemRxiv-style preprint scaffold exists." if has_preprint_draft else "ChemRxiv-style preprint scaffold is missing.",
+                "AMPETP has a Docker/fairchem UMA reference measurement."
+                if uma_ampetp_verified
+                else "UMA reference measurement for AMPETP is not yet recorded in project status.",
             ],
             "remaining": [
                 "Run AIMNet2 ibuprofen sensitivity in Linux/Docker.",
-                "Add UMA measurements now that Hugging Face access is approved and Docker/fairchem initializes UMA.",
+                "Extend UMA from AMPETP reference measurement to sensitivity and therapeutic contrast workflows."
+                if uma_ampetp_verified
+                else "Add UMA measurements now that Hugging Face access is approved and Docker/fairchem initializes UMA.",
                 "Scale from pilot/bridge results to curated pairwise benchmark slices.",
             ],
         },

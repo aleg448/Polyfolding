@@ -14,6 +14,10 @@ DEFAULT_PREDICTIONS = [
     Path("outputs/ccdc_ampetp_aimnet2.json"),
 ]
 
+OPTIONAL_PREDICTIONS = [
+    Path("outputs/ccdc_ampetp_uma.json"),
+]
+
 
 def main() -> int:
     parser = argparse.ArgumentParser()
@@ -23,7 +27,7 @@ def main() -> int:
     parser.add_argument("--output-md", type=Path, default=Path("outputs/ampetp_case_study_report.md"))
     args = parser.parse_args()
 
-    prediction_paths = args.prediction or DEFAULT_PREDICTIONS
+    prediction_paths = args.prediction or DEFAULT_PREDICTIONS + [path for path in OPTIONAL_PREDICTIONS if path.exists()]
     predictions = [load_prediction(path) for path in prediction_paths]
     source_record = _ampetp_source_record(args.curation)
     report = build_single_structure_case_study(
