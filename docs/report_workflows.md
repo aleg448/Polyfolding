@@ -16,6 +16,7 @@ $env:PYTHONPATH='src'
 - Treat `outputs/` as reproducible generated evidence; hash or bundle outputs before using them in a paper draft.
 - Do not interpret perturbation sensitivity results as polymorph stability rankings.
 - Record exact backend names, checkpoints, input hashes, and blockers before promoting any claim beyond a pilot result.
+- When human database validation is unavailable, rebuild the evidence-tier report and keep the target below benchmark-grade claims.
 
 ## AMPETP pilot research bundle
 
@@ -32,7 +33,8 @@ python scripts\build_ampetp_case_study.py
 python scripts\build_ampetp_sensitivity_set.py
 python scripts\run_sensitivity_inference.py outputs\ampetp_sensitivity_manifest.json --backend mace --output outputs\ampetp_sensitivity_mace.jsonl
 python scripts\run_sensitivity_inference.py outputs\ampetp_sensitivity_manifest.json --backend aimnet2 --output outputs\ampetp_sensitivity_aimnet2.jsonl --continue-on-error
-python scripts\summarize_sensitivity_predictions.py outputs\ampetp_sensitivity_mace.jsonl outputs\ampetp_sensitivity_aimnet2.jsonl --json-out outputs\ampetp_sensitivity_summary.json --md-out outputs\ampetp_sensitivity_summary.md
+docker compose run --rm crystalprobe-fairchem python scripts/run_sensitivity_inference.py outputs/ampetp_sensitivity_manifest.json --backend uma --output outputs/ampetp_sensitivity_uma.jsonl --continue-on-error
+python scripts\summarize_sensitivity_predictions.py outputs\ampetp_sensitivity_mace.jsonl outputs\ampetp_sensitivity_aimnet2.jsonl outputs\ampetp_sensitivity_uma.jsonl --json-out outputs\ampetp_sensitivity_summary.json --md-out outputs\ampetp_sensitivity_summary.md
 python scripts\build_ampetp_figures.py
 python scripts\build_ampetp_research_bundle.py
 python scripts\build_chemrxiv_preprint_draft.py
@@ -82,15 +84,36 @@ The current neutral contrast is ibuprofen CCDC 774097. It uses the same determin
 python scripts\build_ccdc_sensitivity_set.py data\sources\ccdc\ccdc_ibuprofen_bundle_1041369-776185.cif --block-id ibuprofen --title "Ibuprofen CCDC 774097 deterministic perturbation sensitivity set" --output-dir outputs\ibuprofen_sensitivity --manifest outputs\ibuprofen_sensitivity_manifest.json
 python scripts\run_sensitivity_inference.py outputs\ibuprofen_sensitivity_manifest.json --backend mace --output outputs\ibuprofen_sensitivity_mace.jsonl
 python scripts\summarize_sensitivity_predictions.py outputs\ibuprofen_sensitivity_mace.jsonl --json-out outputs\ibuprofen_sensitivity_summary_mace.json --md-out outputs\ibuprofen_sensitivity_summary_mace.md --title "Ibuprofen CCDC 774097 MACE perturbation sensitivity summary"
+docker compose run --rm crystalprobe-core python scripts/run_sensitivity_inference.py outputs/ibuprofen_sensitivity_manifest.json --backend aimnet2 --output outputs/ibuprofen_sensitivity_aimnet2_linux.jsonl --continue-on-error
+python scripts\summarize_sensitivity_predictions.py outputs\ibuprofen_sensitivity_aimnet2_linux.jsonl --json-out outputs\ibuprofen_sensitivity_summary_aimnet2_linux.json --md-out outputs\ibuprofen_sensitivity_summary_aimnet2_linux.md --title "Ibuprofen CCDC 774097 AIMNet2 Linux perturbation sensitivity summary"
+docker compose run --rm crystalprobe-fairchem python scripts/run_sensitivity_inference.py outputs/ibuprofen_sensitivity_manifest.json --backend uma --output outputs/ibuprofen_sensitivity_uma.jsonl --continue-on-error
+python scripts\summarize_sensitivity_predictions.py outputs\ibuprofen_sensitivity_uma.jsonl --json-out outputs\ibuprofen_sensitivity_summary_uma.json --md-out outputs\ibuprofen_sensitivity_summary_uma.md --title "Ibuprofen CCDC 774097 UMA perturbation sensitivity summary"
 python scripts\build_sensitivity_contrast_report.py
+python scripts\build_sensitivity_contrast_report.py --ibuprofen outputs\ibuprofen_sensitivity_summary_aimnet2_linux.json --backend aimnet2 --json-out outputs\therapeutic_sensitivity_contrast_aimnet2_linux.json --md-out outputs\therapeutic_sensitivity_contrast_aimnet2_linux.md
+python scripts\build_sensitivity_contrast_report.py --ibuprofen outputs\ibuprofen_sensitivity_summary_uma.json --backend uma --json-out outputs\therapeutic_sensitivity_contrast_uma.json --md-out outputs\therapeutic_sensitivity_contrast_uma.md
 ```
-
-AIMNet2 ibuprofen contrast remains a Linux/Docker follow-up until the local backend can parse and run that reference path consistently.
 
 Primary outputs:
 
 - `outputs/ibuprofen_sensitivity_summary_mace.md`
+- `outputs/ibuprofen_sensitivity_summary_aimnet2_linux.md`
+- `outputs/ibuprofen_sensitivity_summary_uma.md`
 - `outputs/therapeutic_sensitivity_contrast_mace.md`
+- `outputs/therapeutic_sensitivity_contrast_aimnet2_linux.md`
+- `outputs/therapeutic_sensitivity_contrast_uma.md`
+
+## AGI-assisted evidence-tier policy
+
+Use this report when lisdexamfetamine coordinates or human validation are unavailable. It keeps AGI-assisted evidence usable while preventing automatic promotion into benchmark claims.
+
+```powershell
+python scripts\build_evidence_tier_report.py
+```
+
+Primary outputs:
+
+- `outputs/crystalprobe_evidence_tiers.json`
+- `outputs/crystalprobe_evidence_tiers.md`
 
 ## Writing and roadmap artifacts
 
@@ -102,6 +125,7 @@ python scripts\build_chemrxiv_preprint_draft.py
 python scripts\build_project_status_dashboard.py --test-summary "CURRENT_TEST_SUMMARY"
 python scripts\build_roadmap_status_report.py
 python scripts\build_release_boundary_report.py
+python scripts\build_evidence_tier_report.py
 ```
 
 Replace `CURRENT_TEST_SUMMARY` with the latest local pytest result, for example `54 passed, 3 skipped`.
@@ -113,6 +137,7 @@ Primary outputs:
 - `outputs/crystalprobe_project_status.md`
 - `outputs/crystalprobe_roadmap_status.md`
 - `outputs/crystalprobe_release_boundary.md`
+- `outputs/crystalprobe_evidence_tiers.md`
 
 ## Verification
 

@@ -51,7 +51,21 @@
       ],
       "primary_outputs": [
         "outputs/ibuprofen_sensitivity_summary_mace.md",
-        "outputs/therapeutic_sensitivity_contrast_mace.md"
+        "outputs/ibuprofen_sensitivity_summary_aimnet2_linux.md",
+        "outputs/ibuprofen_sensitivity_summary_uma.md",
+        "outputs/therapeutic_sensitivity_contrast_mace.md",
+        "outputs/therapeutic_sensitivity_contrast_aimnet2_linux.md",
+        "outputs/therapeutic_sensitivity_contrast_uma.md"
+      ]
+    },
+    {
+      "id": "evidence_tiers",
+      "label": "AGI-assisted evidence-tier policy",
+      "scripts": [
+        "scripts/build_evidence_tier_report.py"
+      ],
+      "primary_outputs": [
+        "outputs/crystalprobe_evidence_tiers.md"
       ]
     },
     {
@@ -62,14 +76,16 @@
         "scripts/build_chemrxiv_preprint_draft.py",
         "scripts/build_project_status_dashboard.py",
         "scripts/build_roadmap_status_report.py",
-        "scripts/build_release_boundary_report.py"
+        "scripts/build_release_boundary_report.py",
+        "scripts/build_evidence_tier_report.py"
       ],
       "primary_outputs": [
         "outputs/crystalprobe_preliminary_findings_memo.md",
         "outputs/crystalprobe_chemrxiv_preprint_draft.md",
         "outputs/crystalprobe_project_status.md",
         "outputs/crystalprobe_roadmap_status.md",
-        "outputs/crystalprobe_release_boundary.md"
+        "outputs/crystalprobe_release_boundary.md",
+        "outputs/crystalprobe_evidence_tiers.md"
       ]
     }
   ],
@@ -77,6 +93,7 @@
     "Raw gated CCDC source files stay local and ignored.",
     "Generated outputs are reproducible artifacts, not source-controlled evidence by default.",
     "Sensitivity probes are local perturbation diagnostics and must not be reported as polymorph rankings.",
-    "AIMNet2 and UMA/FastCSP follow-ups may require Linux or Docker depending on the host environment."
+    "AIMNet2 and UMA/FastCSP follow-ups may require Linux or Docker depending on the host environment.",
+    "AGI-assisted evidence without human database validation must remain below verified benchmark status."
   ]
 }

@@ -39,7 +39,8 @@ def chemrxiv_preprint_draft(
             "This draft reports the current pilot rather than the full benchmark. The pilot target is AMPETP, "
             "CCDC 1102740, a medication-adjacent amphetamine dihydrogen phosphate crystal. AMPETP is used here "
             "as a reproducibility and diagnostics target, not as a polymorph-ranking benchmark and not as a "
-            "proxy for lisdexamfetamine dimesylate."
+            "proxy for lisdexamfetamine dimesylate. The current pilot evidence is AGI-assisted and not "
+            "human-validated, so the manuscript keeps benchmark and stability claims out of scope."
         ),
         "",
         "## 2. Methods",
@@ -78,8 +79,8 @@ def chemrxiv_preprint_draft(
         "",
         (
             "The same deterministic perturbation protocol is applied to ibuprofen CCDC 774097 as a neutral "
-            "therapeutic contrast. The current local contrast is MACE-only; AIMNet2 contrast remains a Linux/Docker "
-            "follow-up."
+            "therapeutic contrast. MACE, AIMNet2, and UMA contrast reports now use the same AMPETP-vs-ibuprofen "
+            "perturbation protocol while preserving within-backend interpretation boundaries."
         ),
         "",
         "## 3. Results",
@@ -117,10 +118,10 @@ def chemrxiv_preprint_draft(
             "",
             (
                 "The AMPETP pilot demonstrates that CrystalProbe can produce a complete, auditable evidence trail "
-                "for one real crystal structure: source extraction, two-backend inference, local diagnostics, "
+                "for one real crystal structure: source extraction, multi-backend inference, local diagnostics, "
                 "perturbation sensitivity, generated figures, hashed artifacts, and readiness checks. The strongest "
-                "sensitivity response appears in the same coordinate-noise probe for both MACE-OFF23 and AIMNet2, "
-                "and both backends attach short-contact and high-force diagnostics to that probe."
+                "sensitivity response appears in the same coordinate-noise probe for MACE-OFF23, AIMNet2, and UMA, "
+                "and all three backends attach short-contact and high-force diagnostics to that probe."
             ),
             "",
             (
@@ -130,20 +131,20 @@ def chemrxiv_preprint_draft(
             ),
             "",
             (
-                "The ibuprofen contrast is an early failure-mode comparison. Under the shared MACE perturbation grid, "
-                "the same coordinate-noise probe gives the largest response for AMPETP and ibuprofen, but only AMPETP "
-                "adds a short-contact diagnostic flag. This kind of contrast is the intended substrate for the later "
-                "behavioural fingerprint paper."
+                "The ibuprofen contrast is an early failure-mode comparison. Under the shared perturbation grid, "
+                "the same coordinate-noise probe gives the largest response for AMPETP and ibuprofen across the "
+                "pilot backends, but only AMPETP adds a short-contact diagnostic flag. This kind of contrast is the "
+                "intended substrate for the later behavioural fingerprint paper."
             ),
             "",
             "## 5. Limitations",
             "",
             "- AMPETP is a single crystal structure and does not support polymorph ranking claims by itself.",
             "- AMPETP is not lisdexamfetamine dimesylate.",
+            "- The current pilot is AGI-assisted and not human-validated.",
             "- Cross-backend absolute energy differences are not calibrated thermodynamic uncertainties.",
             "- Generated perturbation structures are sensitivity probes, not experimentally observed forms.",
             "- CPOSS bridge rankings still require curated experimental stability labels before publication as benchmark results.",
-            "- Ibuprofen sensitivity is currently MACE-only; AIMNet2 contrast requires the Linux/Docker route.",
             "",
             "## 6. Reproducibility",
             "",
@@ -154,6 +155,7 @@ def chemrxiv_preprint_draft(
             "- AMPETP readiness report: `outputs/ampetp_readiness_report.json` and `outputs/ampetp_readiness_report.md`.",
             "- CPOSS bridge report: `outputs/cposs_mini_benchmark_report.json` and `outputs/cposs_mini_benchmark_report.md`.",
             "- Therapeutic contrast report: `outputs/therapeutic_sensitivity_contrast_mace.json` and `outputs/therapeutic_sensitivity_contrast_mace.md`.",
+            "- Evidence-tier report: `outputs/crystalprobe_evidence_tiers.json` and `outputs/crystalprobe_evidence_tiers.md`.",
             "",
             "## 7. Source Memo",
             "",
@@ -191,6 +193,7 @@ def _backend_label(backend: str) -> str:
     return {
         "mace": "MACE-OFF23 small",
         "aimnet2": "AIMNet2",
+        "uma": "UMA",
     }.get(backend, backend)
 
 

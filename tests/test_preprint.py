@@ -50,4 +50,5 @@ def test_chemrxiv_preprint_draft_renders_expected_sections():
     assert "## Abstract" in draft
     assert "## 5. Limitations" in draft
     assert "Therapeutic Sensitivity Contrast" in draft
+    assert "AGI-assisted and not human-validated" in draft
     assert "Seed text." in draft

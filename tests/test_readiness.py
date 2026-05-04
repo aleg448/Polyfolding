@@ -74,11 +74,12 @@ def test_readiness_report_includes_manuscript_claim_guardrails():
         manuscript_text=(
             "AMPETP is a single crystal structure and does not support polymorph ranking claims. "
             "AMPETP is not lisdexamfetamine dimesylate. "
-            "Generated perturbation structures are probes, not experimentally observed forms. "
-            "Cross-backend absolute energy differences are not calibrated thermodynamic uncertainties. "
-            "The CPOSS bridge still requires curated experimental stability evidence."
-        ),
-    )
+                "Generated perturbation structures are probes, not experimentally observed forms. "
+                "Cross-backend absolute energy differences are not calibrated thermodynamic uncertainties. "
+                "The CPOSS bridge still requires curated experimental stability evidence. "
+                "This pilot evidence is AGI-assisted and not human-validated."
+            ),
+        )
     assert report["status"] == "paper_pilot_ready"
     assert report["failed"] == 0
     assert any(check["name"] == "manuscript_cposs_bridge_guardrail" for check in report["checks"])

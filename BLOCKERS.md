@@ -23,14 +23,14 @@ This file tracks work that cannot be completed inside the current local sandbox 
 - AIMNet full DFT-D3/Triton path works in Linux.
 - `HF_TOKEN` is visible inside Docker Compose containers through `.env`.
 - CPOSS209 source indexing and MACE structure-level inference both run locally and in the Linux core container.
-- Lisdexamfetamine parent conformer is measured with MACE-OFF23 small and AIMNet2; crystalline dimesylate measurement still needs license-clean atom coordinates or CIF.
+- Lisdexamfetamine parent conformer is measured with MACE-OFF23 small and AIMNet2; crystalline dimesylate measurement is treated as unavailable for this project phase because no license-clean atom coordinates or CIF have been found.
 - Local CCDC/CSD multi-block CIF exports for amphetamine-family salts and ibuprofen are present under ignored `data/sources/ccdc/`.
 - CCDC block extraction and measurement now work for amphetamine dihydrogen phosphate (`AMPETP`, CCDC 1102740) and ibuprofen (`ibuprofen`, CCDC 774097).
 
 ## Remaining User Input
 
-- Locate or obtain license-compatible crystalline lisdexamfetamine dimesylate atom coordinates/CIF. Patent evidence exists, but the accessible patent text does not provide a reusable coordinate file.
-- For CCDC/CSD: complete human validation in CCDC Access Structures or install/configure licensed CSD Python API access, then search the lisdexamfetamine terms and lattice window recorded in `docs/crystallographic_database_search.md`.
+- Treat crystalline lisdexamfetamine dimesylate as blocked for measurement unless a new license-compatible coordinate source appears. Patent evidence exists, but the accessible patent text does not provide a reusable coordinate file.
+- Human CCDC/CSD validation is unlikely for this phase. Use `scripts/build_evidence_tier_report.py` to keep AGI-assisted, non-human-validated evidence explicitly downgraded from benchmark-grade claims.
 - Keep raw CCDC CIFs local and ignored unless the applicable CCDC/CSD license explicitly permits redistribution.
 
 ## Linux Environment Files Added

@@ -17,11 +17,14 @@ DEFAULT_REPO_PATHS = [
     "docs/facebook_model_access.md",
     "docs/full_suite_plan.md",
     "docs/sources.md",
+    "scripts/build_evidence_tier_report.py",
     "papers/ampetp_case_study.md",
     "papers/joss_paper.md",
     "src/crystalprobe/insight/claims.py",
+    "src/crystalprobe/insight/evidence_tiers.py",
     "src/crystalprobe/insight/release.py",
     "tests/test_claims.py",
+    "tests/test_evidence_tiers.py",
     "tests/test_release.py",
 ]
 

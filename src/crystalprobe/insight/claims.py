@@ -58,6 +58,13 @@ def manuscript_guardrail_checks(text: str) -> list[ClaimGuardrail]:
             pass_detail="Manuscript states that CPOSS bridge results still need curated experimental stability evidence.",
             fail_detail="Manuscript must state that CPOSS bridge results still need curated experimental stability evidence.",
         ),
+        _contains_all(
+            normalized,
+            name="agi_assisted_validation_guardrail",
+            terms=["agi-assisted", "not human-validated"],
+            pass_detail="Manuscript states that the current pilot evidence is AGI-assisted and not human-validated.",
+            fail_detail="Manuscript must state when pilot evidence is AGI-assisted and not human-validated.",
+        ),
     ]
     return checks
 
