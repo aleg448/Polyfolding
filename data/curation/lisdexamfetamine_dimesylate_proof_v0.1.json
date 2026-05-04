@@ -28,6 +28,16 @@
       "blocker": "Accessible patent text gives lattice/spectroscopic evidence but not a redistributable CIF or atom-coordinate table."
     },
     {
+      "layer": "crystallographic_database_search",
+      "status": "cod_negative_ccdc_pending",
+      "evidence": [
+        "COD direct text and exact formula queries did not return lisdexamfetamine dimesylate.",
+        "CCDC Access Structures requires manual validation/terms or CSD Python/API access."
+      ],
+      "local_report_path": "outputs/lisdexamfetamine_crystal_database_search.json",
+      "blocker": "CSD/CCDC search requires user-side browser/API access."
+    },
+    {
       "layer": "computable_coordinates",
       "status": "parent_conformer_measured",
       "evidence": [

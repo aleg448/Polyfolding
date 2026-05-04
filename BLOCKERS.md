@@ -28,6 +28,7 @@ This file tracks work that cannot be completed inside the current local sandbox 
 - Request access to [facebook/UMA](https://huggingface.co/facebook/UMA) from the Hugging Face account associated with the token in `.env`.
 - After access is approved, rerun `docker compose run --rm crystalprobe-fairchem python scripts/fairchem_omc25_smoke.py --try-uma` to verify UMA.
 - Locate or obtain license-compatible crystalline lisdexamfetamine dimesylate atom coordinates/CIF. Patent evidence exists, but the accessible patent text does not provide a reusable coordinate file.
+- For CCDC/CSD: complete human validation in CCDC Access Structures or install/configure licensed CSD Python API access, then search the terms and lattice window recorded in `docs/crystallographic_database_search.md`.
 
 ## Linux Environment Files Added
 

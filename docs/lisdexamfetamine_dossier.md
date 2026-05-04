@@ -45,6 +45,12 @@ python scripts\run_structure_inference.py data\sources\pubchem\lisdexamfetamine_
 
 The core blocker is not model execution. It is source coordinates. The patent proves a crystalline dimesylate form exists, but the accessible text does not provide a redistributable coordinate file. Without coordinates, CrystalProbe cannot honestly claim a crystal-packing or polymorph measurement.
 
+## Crystallographic Database Search
+
+Open COD queries are negative for direct target-name and exact-formula searches. A loose CHNOS cell-volume query around the patent lattice returns 1401 broad candidates, but the first inspected hits are unrelated by formula/title and no direct target-name hit is present.
+
+CCDC/CSD remains the likely source for coordinates, but the public Access Structures page requires human validation and terms acceptance, and systematic retrieval should use the CSD System/Python API. Search terms and lattice windows are recorded in `docs/crystallographic_database_search.md`.
+
 ## Completed Parent-Conformer Measurements
 
 MACE-OFF23 small and AIMNet2 both successfully measured the PubChem parent conformer from CID `11597698`.
