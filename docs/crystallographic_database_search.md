@@ -46,3 +46,14 @@ For this project, the CCDC/CSD path is:
 ## Current Lisdexamfetamine Status
 
 Patent evidence proves a crystal form was characterized, but an open coordinate file has not been found. COD appears negative. CCDC/CSD remains the next likely source, requiring manual/API access.
+
+## Local CCDC Exports Received
+
+Two CCDC/CSD exports are now present locally under ignored `data/sources/ccdc/`:
+
+- Amphetamine-family export, selected block `AMPETP`, CCDC `1102740`, `(+)-Amphetamine dihydrogen phosphate`.
+- Ibuprofen export, selected block `ibuprofen`, CCDC `774097`.
+
+These are enough to prove the CCDC ingestion, block extraction, and crystal-measurement path on real CCDC structures. They do not resolve the lisdexamfetamine dimesylate coordinate blocker. The amphetamine phosphate crystal is adjacent family evidence, not the target salt.
+
+The operational workflow is documented in `docs/ccdc_source_ingestion.md`.

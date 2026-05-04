@@ -22,13 +22,16 @@ This file tracks work that cannot be completed inside the current local sandbox 
 - `HF_TOKEN` is visible inside Docker Compose containers through `.env`.
 - CPOSS209 source indexing and MACE structure-level inference both run locally and in the Linux core container.
 - Lisdexamfetamine parent conformer is measured with MACE-OFF23 small and AIMNet2; crystalline dimesylate measurement still needs license-clean atom coordinates or CIF.
+- Local CCDC/CSD multi-block CIF exports for amphetamine-family salts and ibuprofen are present under ignored `data/sources/ccdc/`.
+- CCDC block extraction and measurement now work for amphetamine dihydrogen phosphate (`AMPETP`, CCDC 1102740) and ibuprofen (`ibuprofen`, CCDC 774097).
 
 ## Remaining User Input
 
 - Request access to [facebook/UMA](https://huggingface.co/facebook/UMA) from the Hugging Face account associated with the token in `.env`.
 - After access is approved, rerun `docker compose run --rm crystalprobe-fairchem python scripts/fairchem_omc25_smoke.py --try-uma` to verify UMA.
 - Locate or obtain license-compatible crystalline lisdexamfetamine dimesylate atom coordinates/CIF. Patent evidence exists, but the accessible patent text does not provide a reusable coordinate file.
-- For CCDC/CSD: complete human validation in CCDC Access Structures or install/configure licensed CSD Python API access, then search the terms and lattice window recorded in `docs/crystallographic_database_search.md`.
+- For CCDC/CSD: complete human validation in CCDC Access Structures or install/configure licensed CSD Python API access, then search the lisdexamfetamine terms and lattice window recorded in `docs/crystallographic_database_search.md`.
+- Keep raw CCDC CIFs local and ignored unless the applicable CCDC/CSD license explicitly permits redistribution.
 
 ## Linux Environment Files Added
 

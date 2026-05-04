@@ -45,6 +45,23 @@ OMC25 is a large molecular-crystal DFT dataset for model development and OOD con
 
 The data is described as CC-BY-4.0, but Hugging Face access approval may be required.
 
+## CCDC/CSD Local Exports
+
+CCDC/CSD exports are treated as local, license-controlled source files. Raw CIFs must remain under ignored `data/sources/ccdc/` and should not be redistributed through this repository.
+
+Current local proof exports:
+
+- Amphetamine-family bundle: `ccdc_amphetamine_phosphate_1036952-978407.cif`, selected block `AMPETP`, CCDC `1102740`.
+- Ibuprofen bundle: `ccdc_ibuprofen_bundle_1041369-776185.cif`, selected block `ibuprofen`, CCDC `774097`.
+
+Use:
+
+```powershell
+python scripts\inspect_ccdc_cif.py data\sources\ccdc\ccdc_ibuprofen_bundle_1041369-776185.cif --json-out outputs\ccdc_ibuprofen_bundle_index.json
+```
+
+The checked-in record of these sources is `data/curation/ccdc_therapeutic_sources_v0.1.json`; derived measurements are logged in `docs/measurement_log.md`.
+
 ## MACE-OFF
 
 MACE-OFF23 is exposed through the MACE ASE calculator.

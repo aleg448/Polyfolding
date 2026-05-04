@@ -9,6 +9,7 @@ from typing import Any
 
 from ase.io import read
 
+from crystalprobe.datahub.ccdc import write_ccdc_block
 from crystalprobe.foundry.optional_adapters import AIMNet2Adapter, MACEOffAdapter
 from crystalprobe.insight.local_geometry import analyze_local_geometry
 
@@ -29,6 +30,8 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("structure", type=Path)
     parser.add_argument("--structure-id", required=True)
+    parser.add_argument("--cif-block", help="Extract this data block from a multi-block CIF before reading")
+    parser.add_argument("--cif-block-index", type=int, help="Extract this zero-based data block index before reading")
     parser.add_argument("--backend", choices=["mace", "aimnet2"], default="mace")
     parser.add_argument("--device", default=None)
     parser.add_argument("--mace-model", default="small")
@@ -39,13 +42,20 @@ def main() -> int:
     parser.add_argument("--no-local-geometry", action="store_true")
     args = parser.parse_args()
 
+    structure_path = args.structure
+    if args.cif_block is not None or args.cif_block_index is not None:
+        extracted = Path("outputs") / "_structure_inference_blocks" / f"{args.structure_id}.cif"
+        write_ccdc_block(args.structure, extracted, block_id=args.cif_block, index=args.cif_block_index)
+        structure_path = extracted
+
     index: int | str = int(args.index) if args.index.isdigit() else args.index
-    atoms = read(str(args.structure), index=index)
+    atoms = read(str(structure_path), index=index)
     model = _adapter(args)
     prediction = model.predict(atoms)
     row = {
         "structure_id": args.structure_id,
         "structure_path": str(args.structure),
+        "read_structure_path": str(structure_path),
         "backend": args.backend,
         "formula": atoms.get_chemical_formula(),
         "natoms": len(atoms),

@@ -12,6 +12,7 @@ CrystalProbe is organized around one principle: every polymorph prediction shoul
 - `docs/therapeutic_priorities.md`: ADHD and high-use medicine curation priority queue.
 - `docs/lisdexamfetamine_dossier.md`: proof dossier for the lisdexamfetamine dimesylate target.
 - `docs/crystallographic_database_search.md`: open COD and gated CCDC/CSD source-discovery procedure.
+- `docs/ccdc_source_ingestion.md`: local CCDC multi-CIF inspection, extraction, and measurement workflow.
 - `docs/measurement_log.md`: source-level measurement results and interpretation guardrails.
 - `docs/local_diagnostics.md`: bond/contact/force hot-spot diagnostics for structure measurements.
 - `docs/environments.md`: local environment split for MACE/AIMNet versus fairchem.

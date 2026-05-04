@@ -26,6 +26,7 @@ US patent `US7659253` reports a crystalline lisdexamfetamine dimesylate form. Th
 | Computable crystal coordinates | Blocked | We do not yet have a license-clean CIF or atom-coordinate table. |
 | MLIP crystal ranking | Not ready | Needs coordinates and a comparison form or verified endpoint. |
 | Molecule-level diagnostics | Ready | PubChem parent 3D conformer can be measured now. |
+| Adjacent amphetamine-family crystal | Ready | Local CCDC `AMPETP` amphetamine dihydrogen phosphate can be measured, but is not the target dimesylate salt. |
 
 ## Measurement Plan
 
@@ -50,6 +51,12 @@ The core blocker is not model execution. It is source coordinates. The patent pr
 Open COD queries are negative for direct target-name and exact-formula searches. A loose CHNOS cell-volume query around the patent lattice returns 1401 broad candidates, but the first inspected hits are unrelated by formula/title and no direct target-name hit is present.
 
 CCDC/CSD remains the likely source for coordinates, but the public Access Structures page requires human validation and terms acceptance, and systematic retrieval should use the CSD System/Python API. Search terms and lattice windows are recorded in `docs/crystallographic_database_search.md`.
+
+## Adjacent CCDC Crystal Evidence
+
+The local CCDC amphetamine-family export includes block `AMPETP`, CCDC `1102740`, `(+)-Amphetamine dihydrogen phosphate`. CrystalProbe can now extract and measure that block directly from the multi-block CCDC CIF export with MACE and AIMNet2.
+
+This is important for proving the CCDC ingestion and crystal-measurement workflow on a medication-adjacent amphetamine salt. It does not prove lisdexamfetamine dimesylate crystal packing because the API and counterion are different.
 
 ## Completed Parent-Conformer Measurements
 

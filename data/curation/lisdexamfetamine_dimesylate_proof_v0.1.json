@@ -52,6 +52,20 @@
       "blocker": "The dimesylate salt page exposes a 3D conformer of the parent, not a full crystal/salt packing model."
     },
     {
+      "layer": "adjacent_amphetamine_family_crystal",
+      "status": "measured_not_target",
+      "evidence": [
+        "Local CCDC/CSD export contains AMPETP, CCDC 1102740, (+)-Amphetamine dihydrogen phosphate.",
+        "CrystalProbe extracts AMPETP from the multi-block CCDC CIF and measures it with MACE-OFF23 small and AIMNet2."
+      ],
+      "local_source_path": "data/sources/ccdc/ccdc_amphetamine_phosphate_1036952-978407.cif",
+      "measurement_outputs": [
+        "outputs/ccdc_ampetp_mace.json",
+        "outputs/ccdc_ampetp_aimnet2.json"
+      ],
+      "limitation": "Amphetamine dihydrogen phosphate is medication-family adjacent evidence, not lisdexamfetamine dimesylate crystal-packing proof."
+    },
+    {
       "layer": "benchmark_ready",
       "status": "not_ready",
       "blocker": "Needs license-compatible crystal atom coordinates and at least one comparison form or experimentally meaningful solid-form endpoint."
@@ -60,6 +74,7 @@
   "next_actions": [
     "Search CCDC or patent supplementary files for atom coordinates corresponding to the reported single-crystal structure.",
     "If coordinates are available and license-compatible, reconstruct or import CIF and run MACE/AIMNet/fairchem crystal measurements.",
+    "Use the measured AMPETP CCDC workflow as the closest validated amphetamine-family crystal ingestion path while the lisdexamfetamine dimesylate CIF remains unavailable.",
     "Until then, use PubChem parent conformer measurements only as molecule-level diagnostics, not polymorph ranking evidence."
   ]
 }

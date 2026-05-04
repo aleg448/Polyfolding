@@ -1,0 +1,56 @@
+{
+  "schema_version": "0.1.0",
+  "license_policy": "Raw CCDC/CSD CIF exports remain local under ignored data/sources/ccdc and are not redistributed in git.",
+  "records": [
+    {
+      "source_family": "ccdc_csd_local_export",
+      "therapeutic_context": "amphetamine-family medication-adjacent salt",
+      "selected_block_id": "AMPETP",
+      "ccdc_deposition": "CCDC 1102740",
+      "csd_refcode": "AMPETP",
+      "name": "(+)-Amphetamine dihydrogen phosphate",
+      "formula_moiety": "C9 H14 N1 1+,H2 O4 P1 1-",
+      "space_group": "P 21",
+      "cell": {
+        "a_ang": "13.022(7)",
+        "b_ang": "6.025(4)",
+        "c_ang": "7.920(5)",
+        "beta_deg": "102.62(5)",
+        "volume_ang3": "606.372",
+        "z": "2"
+      },
+      "local_source_path": "data/sources/ccdc/ccdc_amphetamine_phosphate_1036952-978407.cif",
+      "index_output": "outputs/ccdc_amphetamine_bundle_index.json",
+      "measurement_outputs": [
+        "outputs/ccdc_ampetp_mace.json",
+        "outputs/ccdc_ampetp_aimnet2.json"
+      ],
+      "interpretation": "Useful adjacent amphetamine-family crystal evidence; not lisdexamfetamine dimesylate."
+    },
+    {
+      "source_family": "ccdc_csd_local_export",
+      "therapeutic_context": "ibuprofen",
+      "selected_block_id": "ibuprofen",
+      "ccdc_deposition": "CCDC 774097",
+      "audit_doi": "10.5517/cctzhw4",
+      "name": "ibuprofen",
+      "formula_sum": "C13 H18 O2",
+      "space_group": "P 21/c",
+      "cell": {
+        "a_ang": "12.3794(9)",
+        "b_ang": "5.8723(5)",
+        "c_ang": "17.5615(15)",
+        "beta_deg": "94.873(4)",
+        "volume_ang3": "1272.03(18)",
+        "z": "4"
+      },
+      "local_source_path": "data/sources/ccdc/ccdc_ibuprofen_bundle_1041369-776185.cif",
+      "index_output": "outputs/ccdc_ibuprofen_bundle_index.json",
+      "measurement_outputs": [
+        "outputs/ccdc_ibuprofen_774097_mace.json",
+        "outputs/ccdc_ibuprofen_774097_aimnet2_linux.json"
+      ],
+      "interpretation": "Real CCDC therapeutic-priority crystal proof target for ingestion, extraction, and backend measurement."
+    }
+  ]
+}

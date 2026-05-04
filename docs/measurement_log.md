@@ -54,6 +54,79 @@ Result:
 - Local bond/contact/force diagnostics should be inspected before attributing an energy gap to molecular identity.
 - Any publication-facing ranking number still requires verified form labels and experimental stability evidence.
 
+## 2026-05-03: Local CCDC Crystal Measurements
+
+Source files are local CCDC/CSD exports under ignored `data/sources/ccdc/`. Raw coordinates are not redistributed in git.
+
+The source-ingestion path now measures selected blocks directly from multi-block CCDC CIF exports using `--cif-block`. Inspection reports are written to:
+
+- `outputs/ccdc_amphetamine_bundle_index.json`
+- `outputs/ccdc_ibuprofen_bundle_index.json`
+
+### Amphetamine Dihydrogen Phosphate (`AMPETP`, CCDC 1102740)
+
+Selected block: `AMPETP`.
+
+Identity:
+
+- Systematic name: `(+)-Amphetamine dihydrogen phosphate`.
+- Formula moiety: `C9 H14 N1 1+,H2 O4 P1 1-`.
+- ASE-read crystal formula: `C18H32N2O8P2`.
+- Atoms: `62`.
+- PBC: `true,true,true`.
+
+Commands:
+
+```powershell
+python scripts\run_structure_inference.py data\sources\ccdc\ccdc_amphetamine_phosphate_1036952-978407.cif --cif-block AMPETP --structure-id ccdc_1102740_amphetamine_dihydrogen_phosphate --backend mace --output outputs\ccdc_ampetp_mace.json
+python scripts\run_structure_inference.py data\sources\ccdc\ccdc_amphetamine_phosphate_1036952-978407.cif --cif-block AMPETP --structure-id ccdc_1102740_amphetamine_dihydrogen_phosphate --backend aimnet2 --output outputs\ccdc_ampetp_aimnet2.json
+```
+
+Result:
+
+- MACE-OFF23 small energy: `-57155.287154708 eV`.
+- MACE max force: `13.700041629526446 eV/Ang`; mean force: `4.960498200876906 eV/Ang`.
+- AIMNet2 energy: `-57100.65066873132 eV`.
+- AIMNet2 max force: `16.209012494432024 eV/Ang`; mean force: `5.491289741943641 eV/Ang`.
+- Bond diagnostics: `60` covalent-radius candidate bonds.
+- Shared local flag: `high_force_atom`.
+- Leading geometric bond outlier: O-H at `0.8030833515834079 Ang`, covalent-radius ratio `0.8279209810138226`.
+- Severe short contacts: none reported.
+
+This is amphetamine-family crystal evidence, not lisdexamfetamine dimesylate evidence.
+
+### Ibuprofen (`ibuprofen`, CCDC 774097)
+
+Selected block: `ibuprofen`.
+
+Identity:
+
+- Common name: `ibuprofen`.
+- Formula: `C13 H18 O2`.
+- ASE-read crystal formula: `C52H72O8`.
+- Atoms: `132`.
+- PBC: `true,true,true`.
+
+Commands:
+
+```powershell
+python scripts\run_structure_inference.py data\sources\ccdc\ccdc_ibuprofen_bundle_1041369-776185.cif --cif-block ibuprofen --structure-id ccdc_774097_ibuprofen --backend mace --output outputs\ccdc_ibuprofen_774097_mace.json
+docker compose run --rm crystalprobe-core python scripts/run_structure_inference.py data/sources/ccdc/ccdc_ibuprofen_bundle_1041369-776185.cif --cif-block ibuprofen --structure-id ccdc_774097_ibuprofen --backend aimnet2 --output outputs/ccdc_ibuprofen_774097_aimnet2_linux.json
+```
+
+Result:
+
+- MACE-OFF23 small energy: `-71492.39595945076 eV`.
+- MACE max force: `9.67071040963126 eV/Ang`; mean force: `4.717689571590105 eV/Ang`.
+- AIMNet2 Linux energy: `-71408.09825360133 eV`.
+- AIMNet2 Linux max force: `13.707494859673373 eV/Ang`; mean force: `5.027964111771895 eV/Ang`.
+- Bond diagnostics: `132` covalent-radius candidate bonds.
+- Shared local flag: `high_force_atom`.
+- Leading geometric bond outlier: C-O at `1.2112225125261484 Ang`, covalent-radius ratio `0.852973600370527`.
+- Severe short contacts: none reported.
+
+The AIMNet2 ibuprofen run was executed in the Linux Docker core environment to avoid the Windows Torch/Triton backend issue.
+
 ## 2026-05-03: Lisdexamfetamine Parent Conformer
 
 Target: lisdexamfetamine parent conformer from PubChem CID `11597698`.
