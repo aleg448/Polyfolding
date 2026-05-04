@@ -75,3 +75,17 @@ def test_project_status_omits_uma_contrast_step_when_verified():
     )
 
     assert "Extend UMA from AMPETP sensitivity into therapeutic contrast workflows." not in report["next_recommended_steps"]
+
+
+def test_project_status_omits_aimnet2_contrast_step_when_verified():
+    report = project_status_report(
+        readiness={"status": "paper_pilot_ready", "passed": 8, "failed": 0},
+        bundle={"artifacts": [{}, {}], "manifest_sha256": "a" * 64},
+        cposs_bridge={"family_count": 2, "structure_count": 16, "families": {"IBP": {}, "CBZ": {}}},
+        therapeutic_contrast={"backend": "mace", "target_count": 2},
+        blockers_text="## Remaining User Input\n\n## Other\n",
+        test_summary="1 passed",
+        docker_status="fairchem_omc25_aimnet2_therapeutic_contrast_cuda_verified",
+    )
+
+    assert "Run AIMNet2 on the ibuprofen sensitivity grid in Linux/Docker." not in report["next_recommended_steps"]

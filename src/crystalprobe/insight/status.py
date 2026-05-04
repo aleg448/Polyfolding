@@ -22,8 +22,9 @@ def project_status_report(
     next_steps = [
         "Design OMAT24 and OMol25 validation paths before using those models for scientific claims.",
         "Promote CPOSS bridge records into curated pair records with experimental stability evidence.",
-        "Run AIMNet2 on the ibuprofen sensitivity grid in Linux/Docker.",
     ]
+    if "aimnet2_therapeutic_contrast" not in docker_status:
+        next_steps.append("Run AIMNet2 on the ibuprofen sensitivity grid in Linux/Docker.")
     if "uma_therapeutic_contrast" not in docker_status:
         next_steps.insert(0, "Extend UMA from AMPETP sensitivity into therapeutic contrast workflows.")
     return {

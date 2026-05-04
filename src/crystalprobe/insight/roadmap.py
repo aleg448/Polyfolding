@@ -25,6 +25,7 @@ def roadmap_status_report(
     uma_ampetp_verified = "uma_ampetp" in docker_status
     uma_ampetp_sensitivity_verified = "uma_ampetp_sensitivity" in docker_status
     uma_therapeutic_contrast_verified = "uma_therapeutic_contrast" in docker_status
+    aimnet2_therapeutic_contrast_verified = "aimnet2_therapeutic_contrast" in docker_status
     deliverables = [
         {
             "deliverable": "Polymorph-pair benchmark",
@@ -66,6 +67,9 @@ def roadmap_status_report(
             "evidence": [
                 f"AMPETP readiness status is {readiness.get('status')}.",
                 "AMPETP-vs-ibuprofen MACE contrast is available.",
+                "AMPETP-vs-ibuprofen AIMNet2 contrast is available."
+                if aimnet2_therapeutic_contrast_verified
+                else "AMPETP-vs-ibuprofen AIMNet2 contrast is not yet recorded in project status.",
                 "AMPETP-vs-ibuprofen UMA contrast is available."
                 if uma_therapeutic_contrast_verified
                 else "AMPETP-vs-ibuprofen UMA contrast is not yet recorded in project status.",
@@ -79,7 +83,9 @@ def roadmap_status_report(
                 ),
             ],
             "remaining": [
-                "Run AIMNet2 ibuprofen sensitivity in Linux/Docker.",
+                "Run AIMNet2 ibuprofen sensitivity in Linux/Docker."
+                if not aimnet2_therapeutic_contrast_verified
+                else "Scale AIMNet2 contrast to curated pairwise benchmark slices.",
                 (
                     "Scale UMA contrast to curated pairwise benchmark slices."
                     if uma_therapeutic_contrast_verified
