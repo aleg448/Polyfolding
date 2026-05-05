@@ -51,10 +51,12 @@
       "id": "source_discovery",
       "label": "Source discovery",
       "scripts": [
-        "scripts/build_source_discovery_report.py"
+        "scripts/build_source_discovery_report.py",
+        "scripts/build_source_acquisition_report.py"
       ],
       "primary_outputs": [
-        "outputs/crystalprobe_source_discovery.md"
+        "outputs/crystalprobe_source_discovery.md",
+        "outputs/crystalprobe_source_acquisition.md"
       ]
     },
     {
@@ -129,6 +131,7 @@
         "scripts/build_roadmap_status_report.py",
         "scripts/build_release_boundary_report.py",
         "scripts/build_source_discovery_report.py",
+        "scripts/build_source_acquisition_report.py",
         "scripts/build_evidence_tier_report.py",
         "scripts/build_substance_profiles.py",
         "scripts/build_measurement_queue.py",
@@ -142,6 +145,7 @@
         "outputs/crystalprobe_roadmap_status.md",
         "outputs/crystalprobe_release_boundary.md",
         "outputs/crystalprobe_source_discovery.md",
+        "outputs/crystalprobe_source_acquisition.md",
         "outputs/crystalprobe_evidence_tiers.md",
         "outputs/crystalprobe_substance_profiles.md",
         "outputs/crystalprobe_measurement_queue.md",

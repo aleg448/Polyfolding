@@ -62,6 +62,27 @@ python scripts\inspect_ccdc_cif.py data\sources\ccdc\ccdc_ibuprofen_bundle_10413
 
 The checked-in record of these sources is `data/curation/ccdc_therapeutic_sources_v0.1.json`; derived measurements are logged in `docs/measurement_log.md`.
 
+## Medication Source Acquisition
+
+Medication-priority source discovery is split into two layers:
+
+- `data/curation/source_discovery_targets_v0.1.json` records public identity and structure leads.
+- `data/curation/source_acquisition_attempts_v0.1.json` records concrete download/access attempts and exact manual input still needed.
+
+Current acquisition status:
+
+- Modafinil: ACS lists CIF supporting-information files for DOI `10.1021/cg030069t`, and the article cites CCDC `229171`; direct local shell download did not produce a usable CIF, so manual ACS or CCDC Access Structures download is still required.
+- Atomoxetine hydrochloride: the Powder Diffraction article DOI `10.1017/S0885715614000517` and secondary CSD `1519130` clue identify a coordinate route, but a CIF has not been validated locally.
+- Methylphenidate hydrochloride: deeper search found a Pharm. Res. 1995 parent-salt crystal-data route, DOI `10.1023/A:1016262815984`, plus analogue crystal papers; parent-salt coordinates are still not obtained.
+
+Use:
+
+```powershell
+python scripts\build_source_acquisition_report.py
+```
+
+Do not use medication analogue CIFs as parent-medication benchmark proof.
+
 ## MACE-OFF
 
 MACE-OFF23 is exposed through the MACE ASE calculator.

@@ -15,6 +15,7 @@ from crystalprobe.insight.cposs_inspection import (
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--disagreement", type=Path, default=Path("outputs/cposs_high_priority_backend_disagreement.json"))
+    parser.add_argument("--mace-summary", type=Path, default=Path("outputs/cposs_cbz_mace_summary.json"))
     parser.add_argument("--family", default="CBZ")
     parser.add_argument("--json-out", type=Path, default=Path("outputs/cposs_cbz_disagreement_inspection.json"))
     parser.add_argument("--md-out", type=Path, default=Path("outputs/cposs_cbz_disagreement_inspection.md"))
@@ -23,6 +24,7 @@ def main() -> int:
     report = cposs_disagreement_inspection_report(
         json.loads(args.disagreement.read_text(encoding="utf-8")),
         family=args.family,
+        mace_summary=json.loads(args.mace_summary.read_text(encoding="utf-8")) if args.mace_summary.exists() else None,
     )
     args.json_out.parent.mkdir(parents=True, exist_ok=True)
     args.json_out.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8", newline="\n")

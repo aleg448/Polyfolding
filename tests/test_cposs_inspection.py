@@ -47,3 +47,42 @@ def test_cposs_disagreement_inspection_markdown_renders_guardrail():
 
     assert markdown.startswith("# CPOSS CBZ Backend-Disagreement Inspection")
     assert "backend_behaviour_inspection_only" in markdown
+
+
+def test_cposs_disagreement_inspection_adds_mace_family_screen():
+    report = cposs_disagreement_inspection_report(
+        _disagreement(),
+        mace_summary={
+            "families": {
+                "CBZ": {
+                    "formula_unit": "C30H24N4O2",
+                    "structures": [
+                        {
+                            "block_id": "CBZ01",
+                            "relative_kj_mol_per_formula_unit": 0.0,
+                            "max_force_ev_per_ang": 1.1,
+                            "local_diagnostic_flags": ["high_force_atom"],
+                            "top_force_hotspot": {"symbol": "C", "atom_index": 1},
+                            "top_bond_geometry_outlier": {"symbols": "C-O", "distance_ang": 1.24},
+                        },
+                        {
+                            "block_id": "CBZ03",
+                            "relative_kj_mol_per_formula_unit": 2.0,
+                            "max_force_ev_per_ang": 1.0,
+                            "local_diagnostic_flags": ["high_force_atom"],
+                        },
+                        {
+                            "block_id": "CBZ02",
+                            "relative_kj_mol_per_formula_unit": 3.0,
+                            "max_force_ev_per_ang": 1.2,
+                            "local_diagnostic_flags": ["high_force_atom"],
+                        },
+                    ],
+                }
+            }
+        },
+    )
+
+    assert report["mace_family_screen"]["structure_count"] == 3
+    assert report["mace_family_screen"]["recommended_adjacent_pairs"] == ["CBZ03-CBZ02 (1.000 kJ/mol/f.u.)"]
+    assert any("additional close CBZ adjacent pairs" in finding for finding in report["findings"])

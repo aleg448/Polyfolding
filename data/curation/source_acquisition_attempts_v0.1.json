@@ -1,0 +1,111 @@
+{
+  "schema_version": "0.1.0",
+  "status": "source_acquisition_attempts_recorded",
+  "generated_from": "public source access pass on 2026-05-05",
+  "targets": [
+    {
+      "name": "modafinil",
+      "task": "download_public_cif_candidate",
+      "status": "download_not_completed_manual_access_required",
+      "source_evidence": [
+        {
+          "label": "ACS supporting information for 10.1021/cg030069t",
+          "url": "https://pubs.acs.org/doi/10.1021/cg030069t",
+          "evidence": "ACS lists free supporting-information CIF files cg030069t1.cif, cg030069t2.cif, and cg030069t3.cif for modafinil daughter, mother, and minimized mother phases."
+        },
+        {
+          "label": "CCDC deposition clue",
+          "url": "https://pubs.acs.org/doi/abs/10.1021/cg030069t",
+          "evidence": "The article states that crystallographic data are deposited at CCDC under number 229171."
+        },
+        {
+          "label": "CCDC Access Structures route",
+          "url": "https://www.ccdc.cam.ac.uk/structures/Home/",
+          "evidence": "CCDC Access Structures can search by deposition number or DOI and can provide CIF downloads after accepting use conditions."
+        }
+      ],
+      "download_attempts": [
+        {
+          "method": "powershell_invoke_webrequest",
+          "url": "https://pubs.acs.org/doi/suppl/10.1021/cg030069t/suppl_file/cg030069t1.cif",
+          "destination": "data/sources/modafinil/cg030069t1.cif",
+          "result": "failed",
+          "observed_issue": "ACS direct supporting-information request did not return a usable CIF in the local shell session.",
+          "artifact_present": false
+        }
+      ],
+      "candidate_files": [
+        "cg030069t1.cif",
+        "cg030069t2.cif",
+        "cg030069t3.cif"
+      ],
+      "required_user_input": [
+        "Open CCDC Access Structures or the ACS supporting-information page in a browser, search for DOI 10.1021/cg030069t or CCDC 229171, accept the terms if appropriate, and save the CIF files under data/sources/modafinil/.",
+        "Confirm whether the downloaded CIFs may be used only locally or may also be referenced in a public evidence bundle."
+      ],
+      "claim_boundary": "source_acquisition_only_no_local_coordinates_downloaded"
+    },
+    {
+      "name": "atomoxetine hydrochloride",
+      "task": "validate_coordinate_access",
+      "status": "coordinate_route_identified_manual_validation_required",
+      "source_evidence": [
+        {
+          "label": "Powder Diffraction article",
+          "url": "https://www.cambridge.org/core/journals/powder-diffraction/article/crystal-structure-of-atomoxetine-hydrochloride-strattera-c17h22nocl/7D6D94A8FB8058C6FD6A61BB7E24E99A",
+          "evidence": "Reports commercial atomoxetine hydrochloride in P212121 with cell parameters and a solved/refined powder-diffraction structure."
+        },
+        {
+          "label": "Secondary CSD clue",
+          "url": "https://commons.wikimedia.org/wiki/File:Atomoxetine_ball-and-stick_model_from_xtal_2014.png",
+          "evidence": "Secondary rendering cites CCDC CSD 1519130 for the 2014 atomoxetine hydrochloride structure."
+        },
+        {
+          "label": "CCDC Access Structures route",
+          "url": "https://www.ccdc.cam.ac.uk/structures/Home/",
+          "evidence": "Search by CSD number, DOI, compound name, or publication details should validate whether coordinates can be downloaded."
+        }
+      ],
+      "download_attempts": [],
+      "required_user_input": [
+        "Search CCDC Access Structures for CSD 1519130 and DOI 10.1017/S0885715614000517, then record whether a CIF download is available.",
+        "If available and terms are acceptable, save the CIF under data/sources/atomoxetine_hcl/ and keep redistribution status local-only until reviewed."
+      ],
+      "claim_boundary": "source_route_identified_coordinates_not_obtained"
+    },
+    {
+      "name": "methylphenidate hydrochloride",
+      "task": "deeper_source_search",
+      "status": "literature_route_identified_coordinates_not_obtained",
+      "source_evidence": [
+        {
+          "label": "threo-methylphenidate hydrochloride crystal-data clue",
+          "url": "https://commons.wikimedia.org/wiki/File:Dextromethylphenidate-based-on-hydrochloride-xtal-1995-3D-balls.png",
+          "evidence": "A Wikimedia rendering cites X-ray diffraction data from Pharm. Res. (1995) 12, 1430-1434, DOI 10.1023/A:1016262815984, for (-)-threo-methylphenidate hydrochloride."
+        },
+        {
+          "label": "N-methyl methylphenidate derivative paper",
+          "url": "https://pubs.acs.org/doi/abs/10.1021/jo971063b",
+          "evidence": "Reports single-crystal structures for N-methyl derivatives of threo-methylphenidate hydrochloride salts; useful as proxy chemistry, not parent methylphenidate proof."
+        },
+        {
+          "label": "Alkyl analogue paper and COD examples",
+          "url": "https://pubs.acs.org/doi/10.1021/jo201415h",
+          "evidence": "Reports X-ray crystallographic studies of alkyl analogues of methylphenidate salts; COD has open analogue entries such as 4026734, but these are not the target parent salt."
+        }
+      ],
+      "download_attempts": [],
+      "required_user_input": [
+        "Search CCDC Access Structures by DOI 10.1023/A:1016262815984, compound name, and Pharm. Res. 1995 12 1430-1434 to determine whether the parent salt coordinates can be downloaded.",
+        "Do not substitute methylphenidate analogues for methylphenidate hydrochloride in benchmark claims; keep analogues as source-search clues only."
+      ],
+      "claim_boundary": "candidate_literature_route_no_license_clean_parent_cif"
+    }
+  ],
+  "policy": [
+    "A public article page or rendering is not equivalent to reusable crystal coordinates.",
+    "CIF downloads from CCDC Access Structures require accepting conditions of use and recording local redistribution limits.",
+    "Analogue crystal structures may guide source discovery but cannot validate a parent medication benchmark.",
+    "Failed automated downloads must remain visible so the next operator knows exactly where manual input is needed."
+  ]
+}

@@ -100,14 +100,17 @@ Use this report for medication-priority targets that need coordinates before mea
 
 ```powershell
 python scripts\build_source_discovery_report.py
+python scripts\build_source_acquisition_report.py
 ```
 
 Primary outputs:
 
 - `outputs/crystalprobe_source_discovery.json`
 - `outputs/crystalprobe_source_discovery.md`
+- `outputs/crystalprobe_source_acquisition.json`
+- `outputs/crystalprobe_source_acquisition.md`
 
-The current report classifies atomoxetine hydrochloride as coordinate-access validation, methylphenidate hydrochloride as deeper source search, and modafinil as a public supporting-information CIF candidate pending license review.
+The current reports classify atomoxetine hydrochloride as coordinate-access validation, methylphenidate hydrochloride as a literature route that still needs coordinate validation, and modafinil as a public supporting-information CIF candidate whose direct ACS shell download did not complete. Manual CCDC/ACS browser input is still required before any of those targets can become measured crystal cases.
 
 ## Therapeutic sensitivity contrast
 
@@ -210,6 +213,7 @@ python scripts\build_project_status_dashboard.py --test-summary "CURRENT_TEST_SU
 python scripts\build_roadmap_status_report.py
 python scripts\build_release_boundary_report.py
 python scripts\build_source_discovery_report.py
+python scripts\build_source_acquisition_report.py
 python scripts\build_evidence_tier_report.py
 python scripts\build_substance_profiles.py
 python scripts\build_measurement_queue.py
@@ -227,6 +231,7 @@ Primary outputs:
 - `outputs/crystalprobe_roadmap_status.md`
 - `outputs/crystalprobe_release_boundary.md`
 - `outputs/crystalprobe_source_discovery.md`
+- `outputs/crystalprobe_source_acquisition.md`
 - `outputs/crystalprobe_evidence_tiers.md`
 - `outputs/crystalprobe_substance_profiles.md`
 - `outputs/crystalprobe_measurement_queue.md`

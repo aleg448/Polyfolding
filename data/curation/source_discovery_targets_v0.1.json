@@ -51,8 +51,8 @@
     {
       "name": "methylphenidate hydrochloride",
       "normalized_name": "methylphenidate hydrochloride",
-      "source_status": "identity_known_no_open_crystal_source_found",
-      "priority_reason": "ADHD stimulant with strong project relevance but no obvious open crystallographic CIF found in the first pass.",
+      "source_status": "literature_structure_route_identified_coordinates_access_unclear",
+      "priority_reason": "ADHD stimulant with strong project relevance; deeper search found a parent-salt crystal-data literature route but no license-clean CIF yet.",
       "identity_sources": [
         {
           "source_type": "pubchem_identity",
@@ -63,16 +63,25 @@
       ],
       "structure_sources": [
         {
-          "source_type": "negative_quick_pass",
-          "label": "Open web/COD-style query",
-          "url": "https://pubchem.ncbi.nlm.nih.gov/compound/Methylphenidate-Hydrochloride",
-          "evidence": "Quick open-web pass found identity and physical-description records but no directly reusable crystal CIF or polymorph structure page.",
-          "coordinate_access": "not_found"
+          "source_type": "journal_article_clue",
+          "label": "(-)-threo-methylphenidate hydrochloride Pharm. Res. crystal-data route",
+          "doi": "10.1023/A:1016262815984",
+          "url": "https://commons.wikimedia.org/wiki/File:Dextromethylphenidate-based-on-hydrochloride-xtal-1995-3D-balls.png",
+          "evidence": "Secondary rendering cites X-ray diffraction data from Pharm. Res. (1995) 12, 1430-1434 for (-)-threo-methylphenidate hydrochloride.",
+          "coordinate_access": "publication_known_cif_not_confirmed"
+        },
+        {
+          "source_type": "analogue_crystal_source",
+          "label": "Methylphenidate analogue crystal-structure literature",
+          "doi": "10.1021/jo201415h",
+          "url": "https://pubs.acs.org/doi/10.1021/jo201415h",
+          "evidence": "Reports X-ray crystallographic studies of alkyl analogues of methylphenidate salts; useful as a source-search clue, not parent-salt proof.",
+          "coordinate_access": "analogue_only_not_target_coordinates"
         }
       ],
-      "claim_boundary": "identity_only_until_crystal_coordinates_are_found",
+      "claim_boundary": "literature_route_only_until_parent_crystal_coordinates_are_obtained",
       "recommended_next_actions": [
-        "Run a deeper CSD/CCDC or patent supplementary search for methylphenidate HCl polymorph or salt structures.",
+        "Validate whether DOI 10.1023/A:1016262815984 or the Pharm. Res. 1995 citation resolves to a downloadable parent methylphenidate hydrochloride CIF through CCDC Access Structures.",
         "If only PubChem parent conformers are available, keep them as molecule-level diagnostics and exclude from crystal benchmark claims.",
         "Consider adjacent piperidyl ester hydrochloride crystal examples only as proxy chemistry, not methylphenidate proof."
       ]
