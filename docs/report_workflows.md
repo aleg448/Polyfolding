@@ -68,6 +68,7 @@ docker compose run --rm crystalprobe-core python scripts/run_cposs_structure_inf
 docker compose run --rm crystalprobe-core python scripts/run_cposs_structure_inference.py --backend aimnet2 --block-id IBP01_PsiCrys --block-id IBP06_PsiCrys --block-id CBZ01_PsiCrys --block-id CBZ03_PsiCrys --output outputs/cposs_candidates_high_priority_aimnet2.jsonl --continue-on-error
 docker compose run --rm crystalprobe-fairchem python scripts/run_cposs_structure_inference.py --backend uma --block-id IBP01_PsiCrys --block-id IBP06_PsiCrys --block-id CBZ01_PsiCrys --block-id CBZ03_PsiCrys --output outputs/cposs_candidates_high_priority_uma.jsonl --continue-on-error
 python scripts\build_cposs_backend_disagreement_report.py
+python scripts\build_cposs_disagreement_inspection.py
 ```
 
 Primary outputs:
@@ -84,10 +85,29 @@ Primary outputs:
 - `outputs/cposs_evidence_workpack.md`
 - `outputs/cposs_high_priority_backend_disagreement.json`
 - `outputs/cposs_high_priority_backend_disagreement.md`
+- `outputs/cposs_cbz_disagreement_inspection.json`
+- `outputs/cposs_cbz_disagreement_inspection.md`
 
 The candidate cards include exact MACE, AIMNet2, and UMA commands for follow-up measurements on each pair. They remain AGI-assisted planning artifacts, not benchmark records.
 
 The high-priority disagreement report compares the current ibuprofen and carbamazepine CPOSS candidate pairs across MACE, AIMNet2, and UMA. It is a backend-behavior inspection report, not an experimental stability result.
+
+The CBZ inspection report focuses that disagreement into findings and follow-up actions for carbamazepine.
+
+## Source discovery
+
+Use this report for medication-priority targets that need coordinates before measurement.
+
+```powershell
+python scripts\build_source_discovery_report.py
+```
+
+Primary outputs:
+
+- `outputs/crystalprobe_source_discovery.json`
+- `outputs/crystalprobe_source_discovery.md`
+
+The current report classifies atomoxetine hydrochloride as coordinate-access validation, methylphenidate hydrochloride as deeper source search, and modafinil as a public supporting-information CIF candidate pending license review.
 
 ## Therapeutic sensitivity contrast
 
@@ -189,6 +209,7 @@ python scripts\build_chemrxiv_preprint_draft.py
 python scripts\build_project_status_dashboard.py --test-summary "CURRENT_TEST_SUMMARY"
 python scripts\build_roadmap_status_report.py
 python scripts\build_release_boundary_report.py
+python scripts\build_source_discovery_report.py
 python scripts\build_evidence_tier_report.py
 python scripts\build_substance_profiles.py
 python scripts\build_measurement_queue.py
@@ -205,6 +226,7 @@ Primary outputs:
 - `outputs/crystalprobe_project_status.md`
 - `outputs/crystalprobe_roadmap_status.md`
 - `outputs/crystalprobe_release_boundary.md`
+- `outputs/crystalprobe_source_discovery.md`
 - `outputs/crystalprobe_evidence_tiers.md`
 - `outputs/crystalprobe_substance_profiles.md`
 - `outputs/crystalprobe_measurement_queue.md`

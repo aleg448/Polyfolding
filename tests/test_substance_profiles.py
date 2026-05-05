@@ -121,6 +121,35 @@ def test_substance_profile_report_applies_cposs_bridge_tier_to_both_families():
     assert by_name["carbamazepine"]["evidence_tier"] == "exploratory_local_measurement"
 
 
+def test_substance_profile_report_merges_source_discovery_actionability():
+    report = substance_profile_report(
+        therapeutic_priority={
+            "priority_groups": [
+                {
+                    "group_id": "adhd",
+                    "targets": [{"name": "modafinil", "next_action": "review"}],
+                }
+            ]
+        },
+        source_discovery={
+            "targets": [
+                {
+                    "name": "modafinil",
+                    "actionability": "download_candidate",
+                    "coordinate_access_summary": "public_si_candidate",
+                    "structure_sources": [{"label": "ACS SI", "evidence": "CIFs listed"}],
+                    "recommended_next_actions": ["download CIFs"],
+                }
+            ]
+        },
+    )
+    profile = report["profiles"][0]
+
+    assert profile["readiness"] == "source_download_candidate"
+    assert profile["source_discovery_actionability"] == "download_candidate"
+    assert "download CIFs" in profile["next_actions"]
+
+
 def test_substance_profile_markdown_renders_policy():
     report = substance_profile_report(
         therapeutic_priority={

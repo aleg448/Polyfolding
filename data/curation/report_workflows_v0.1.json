@@ -34,7 +34,8 @@
         "scripts/build_cposs_candidate_cards.py",
         "scripts/build_cposs_evidence_workpack.py",
         "scripts/run_cposs_structure_inference.py",
-        "scripts/build_cposs_backend_disagreement_report.py"
+        "scripts/build_cposs_backend_disagreement_report.py",
+        "scripts/build_cposs_disagreement_inspection.py"
       ],
       "primary_outputs": [
         "outputs/cposs_mini_benchmark_report.md",
@@ -42,7 +43,18 @@
         "outputs/cposs_pair_triage_report.md",
         "outputs/cposs_candidate_cards.md",
         "outputs/cposs_evidence_workpack.md",
-        "outputs/cposs_high_priority_backend_disagreement.md"
+        "outputs/cposs_high_priority_backend_disagreement.md",
+        "outputs/cposs_cbz_disagreement_inspection.md"
+      ]
+    },
+    {
+      "id": "source_discovery",
+      "label": "Source discovery",
+      "scripts": [
+        "scripts/build_source_discovery_report.py"
+      ],
+      "primary_outputs": [
+        "outputs/crystalprobe_source_discovery.md"
       ]
     },
     {
@@ -116,6 +128,7 @@
         "scripts/build_project_status_dashboard.py",
         "scripts/build_roadmap_status_report.py",
         "scripts/build_release_boundary_report.py",
+        "scripts/build_source_discovery_report.py",
         "scripts/build_evidence_tier_report.py",
         "scripts/build_substance_profiles.py",
         "scripts/build_measurement_queue.py",
@@ -128,6 +141,7 @@
         "outputs/crystalprobe_project_status.md",
         "outputs/crystalprobe_roadmap_status.md",
         "outputs/crystalprobe_release_boundary.md",
+        "outputs/crystalprobe_source_discovery.md",
         "outputs/crystalprobe_evidence_tiers.md",
         "outputs/crystalprobe_substance_profiles.md",
         "outputs/crystalprobe_measurement_queue.md",

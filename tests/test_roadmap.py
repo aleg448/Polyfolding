@@ -19,6 +19,8 @@ def test_roadmap_status_report_maps_deliverables():
         has_cposs_evidence_workpack=True,
         has_backend_disagreement=True,
         has_cposs_backend_disagreement=True,
+        has_cposs_disagreement_inspection=True,
+        has_source_discovery=True,
         has_model_guardrails=True,
         has_uncertainty_proxy=True,
         has_substance_profiles=True,
@@ -47,6 +49,8 @@ def test_roadmap_status_markdown_contains_remaining_work():
         has_cposs_evidence_workpack=True,
         has_backend_disagreement=True,
         has_cposs_backend_disagreement=True,
+        has_cposs_disagreement_inspection=True,
+        has_source_discovery=True,
         has_model_guardrails=True,
         has_uncertainty_proxy=True,
         has_substance_profiles=True,
@@ -67,6 +71,8 @@ def test_roadmap_status_markdown_contains_remaining_work():
     assert "OMAT24/OMol25 model guardrails" in markdown
     assert "Substance profiles" in markdown
     assert "Measurement queue" in markdown
+    assert "Source-discovery report" in markdown
+    assert "CBZ backend-disagreement inspection" in markdown
     assert "UMA access now verifies" in markdown
     assert "UMA reference measurement" in markdown
 
@@ -92,6 +98,8 @@ def test_roadmap_status_records_completed_uma_contrast():
         has_cposs_evidence_workpack=True,
         has_backend_disagreement=True,
         has_cposs_backend_disagreement=True,
+        has_cposs_disagreement_inspection=True,
+        has_source_discovery=True,
         has_model_guardrails=True,
         has_uncertainty_proxy=True,
         has_substance_profiles=True,
@@ -124,6 +132,8 @@ def test_roadmap_status_records_completed_aimnet2_contrast():
         has_cposs_evidence_workpack=True,
         has_backend_disagreement=True,
         has_cposs_backend_disagreement=True,
+        has_cposs_disagreement_inspection=True,
+        has_source_discovery=True,
         has_model_guardrails=True,
         has_uncertainty_proxy=True,
         has_substance_profiles=True,
@@ -153,6 +163,8 @@ def test_roadmap_status_records_candidate_cards_and_disagreement():
         has_cposs_evidence_workpack=True,
         has_backend_disagreement=True,
         has_cposs_backend_disagreement=True,
+        has_cposs_disagreement_inspection=True,
+        has_source_discovery=True,
         has_model_guardrails=True,
         has_uncertainty_proxy=True,
         has_substance_profiles=True,
@@ -164,8 +176,10 @@ def test_roadmap_status_records_candidate_cards_and_disagreement():
     uncertainty = report["deliverables"][2]
     assert "CPOSS candidate cards include claim boundaries and follow-up backend commands." in benchmark["evidence"]
     assert "Prioritized CPOSS pairs have multi-backend disagreement evidence." in benchmark["evidence"]
+    assert "CBZ backend-disagreement inspection report records the ordering flip and follow-up actions." in benchmark["evidence"]
     assert "Substance profiles consolidate medication-priority source, measurement, and claim-boundary status." in benchmark["evidence"]
     assert "Measurement queue ranks the next source, inspection, and measurement actions." in benchmark["evidence"]
+    assert "Source-discovery report differentiates modafinil download, atomoxetine validation, and methylphenidate deeper search." in benchmark["evidence"]
     assert "AMPETP backend-disagreement metrics are available." in paper["evidence"]
     assert "High-priority CPOSS backend-disagreement metrics are available." in paper["evidence"]
     assert "Backend-disagreement metrics provide the first uncalibrated uncertainty proxy." in uncertainty["evidence"]

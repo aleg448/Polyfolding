@@ -20,6 +20,7 @@ def main() -> int:
     parser.add_argument("--lisdexamfetamine-proof", type=Path, default=Path("data/curation/lisdexamfetamine_dimesylate_proof_v0.1.json"))
     parser.add_argument("--evidence-tiers", type=Path, default=Path("outputs/crystalprobe_evidence_tiers.json"))
     parser.add_argument("--cposs-disagreement", type=Path, default=Path("outputs/cposs_high_priority_backend_disagreement.json"))
+    parser.add_argument("--source-discovery", type=Path, default=Path("outputs/crystalprobe_source_discovery.json"))
     parser.add_argument("--json-out", type=Path, default=Path("outputs/crystalprobe_substance_profiles.json"))
     parser.add_argument("--md-out", type=Path, default=Path("outputs/crystalprobe_substance_profiles.md"))
     args = parser.parse_args()
@@ -30,6 +31,7 @@ def main() -> int:
         lisdexamfetamine_proof=_load_optional(args.lisdexamfetamine_proof),
         evidence_tiers=_load_optional(args.evidence_tiers),
         cposs_disagreement=_load_optional(args.cposs_disagreement),
+        source_discovery=_load_optional(args.source_discovery),
     )
     args.json_out.parent.mkdir(parents=True, exist_ok=True)
     args.json_out.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8", newline="\n")

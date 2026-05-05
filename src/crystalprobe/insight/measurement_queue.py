@@ -94,6 +94,7 @@ def _classify(profile: dict[str, Any], readiness: str, evidence_tier: str) -> tu
     priority_group = str(profile.get("priority_group") or "")
     has_public_evidence = bool(profile.get("known_public_evidence"))
     has_measurements = bool(profile.get("measurement_outputs"))
+    actionability = str(profile.get("source_discovery_actionability") or "")
 
     if readiness == "blocked_no_crystal_coordinates":
         return (
@@ -102,6 +103,13 @@ def _classify(profile: dict[str, Any], readiness: str, evidence_tier: str) -> tu
             True,
             "high-value target is blocked by missing license-compatible crystal coordinates",
         )
+    if actionability == "download_candidate" or readiness == "source_download_candidate":
+        return (
+            "download_public_cif_candidate",
+            90,
+            False,
+            "source discovery found a public supporting-information CIF candidate for local measurement",
+        )
     if readiness == "backend_disagreement_inspection":
         base = 88 if "carbamazepine" in name else 76
         return (
@@ -109,6 +117,20 @@ def _classify(profile: dict[str, Any], readiness: str, evidence_tier: str) -> tu
             base,
             False,
             "backend disagreement can sharpen the uncertainty wrapper and paper case selection",
+        )
+    if actionability == "validate_coordinate_access" or readiness == "coordinate_access_validation":
+        return (
+            "validate_coordinate_access",
+            86,
+            False,
+            "literature reports a structure but coordinate access and license terms are unresolved",
+        )
+    if actionability == "deeper_source_search" or readiness == "deeper_source_search":
+        return (
+            "deeper_source_search",
+            78,
+            False,
+            "identity is known but the quick pass did not find usable crystal coordinates",
         )
     if readiness == "source_discovery_profile" and priority_group == "adhd_core":
         return (
@@ -151,8 +173,14 @@ def _first_step(profile: dict[str, Any], action_type: str) -> str:
         backend = profile.get("cposs_backend_profile") or {}
         family = backend.get("family") or profile.get("cposs_family_code") or "unknown"
         return f"Open the CPOSS disagreement details for family {family} and decide whether to run more adjacent pairs."
+    if action_type == "download_public_cif_candidate":
+        return "Download the public supporting-information CIFs into ignored local sources after license review, then inspect the CIF blocks."
     if action_type == "coordinate_acquisition":
         return "Search for license-compatible CIF or atom-coordinate evidence; do not run crystal MLIP without coordinates."
+    if action_type == "validate_coordinate_access":
+        return "Validate the cited CSD/CCDC or publication coordinate route and record license constraints before measurement."
+    if action_type == "deeper_source_search":
+        return "Run a deeper CSD/CCDC, patent supplementary, and journal supporting-data search for crystal coordinates."
     if action_type == "source_discovery":
         return "Create a source-discovery proof record with DOI, structure availability, license status, and next measurement command."
     if action_type == "seed_source_discovery":

@@ -20,6 +20,8 @@ def roadmap_status_report(
     has_cposs_evidence_workpack: bool = False,
     has_backend_disagreement: bool = False,
     has_cposs_backend_disagreement: bool = False,
+    has_cposs_disagreement_inspection: bool = False,
+    has_source_discovery: bool = False,
     has_model_guardrails: bool = False,
     has_uncertainty_proxy: bool = False,
     has_substance_profiles: bool = False,
@@ -55,6 +57,9 @@ def roadmap_status_report(
                 "Prioritized CPOSS pairs have multi-backend disagreement evidence."
                 if has_cposs_backend_disagreement
                 else "Prioritized CPOSS pairs still need multi-backend disagreement evidence.",
+                "CBZ backend-disagreement inspection report records the ordering flip and follow-up actions."
+                if has_cposs_disagreement_inspection
+                else "CBZ backend-disagreement inspection report is missing.",
                 "Release-boundary report separates candidate public, review-required, and local-only artifacts."
                 if has_release_boundary
                 else "Release-boundary report is missing.",
@@ -64,6 +69,9 @@ def roadmap_status_report(
                 "Measurement queue ranks the next source, inspection, and measurement actions."
                 if has_measurement_queue
                 else "Measurement queue is missing.",
+                "Source-discovery report differentiates modafinil download, atomoxetine validation, and methylphenidate deeper search."
+                if has_source_discovery
+                else "Medication source-discovery report is missing.",
             ],
             "remaining": [
                 "Promote pair candidates into curated records after experimental stability evidence is attached."
@@ -85,6 +93,9 @@ def roadmap_status_report(
                 "Inspect CPOSS backend-disagreement families before selecting paper-facing examples."
                 if has_cposs_backend_disagreement
                 else "Run candidate-card commands with AIMNet2 and UMA for top CPOSS pairs.",
+                "Run additional CBZ adjacent-pair measurements or atom-level force inspections from the CBZ inspection report."
+                if has_cposs_disagreement_inspection
+                else "Build the focused CBZ disagreement inspection report.",
                 "Human-review the release-boundary report before publishing CCDC-derived artifacts."
                 if has_release_boundary
                 else "Separate redistributable source records from restricted local CCDC evidence.",
@@ -94,6 +105,9 @@ def roadmap_status_report(
                 "Execute the top measurement-queue actions while keeping blocked coordinate targets in curation status."
                 if has_measurement_queue
                 else "Generate the measurement queue from substance profiles.",
+                "Download and inspect modafinil SI CIFs after license review; validate atomoxetine coordinate access; continue methylphenidate deeper search."
+                if has_source_discovery
+                else "Create source-discovery records for the next medication targets.",
             ],
         },
         {

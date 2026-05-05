@@ -24,6 +24,8 @@ def main() -> int:
     parser.add_argument("--cposs-evidence-workpack", type=Path, default=Path("outputs/cposs_evidence_workpack.json"))
     parser.add_argument("--backend-disagreement", type=Path, default=Path("outputs/ampetp_backend_disagreement.json"))
     parser.add_argument("--cposs-backend-disagreement", type=Path, default=Path("outputs/cposs_high_priority_backend_disagreement.json"))
+    parser.add_argument("--cposs-disagreement-inspection", type=Path, default=Path("outputs/cposs_cbz_disagreement_inspection.json"))
+    parser.add_argument("--source-discovery", type=Path, default=Path("outputs/crystalprobe_source_discovery.json"))
     parser.add_argument("--model-guardrails", type=Path, default=Path("outputs/fairchem_model_guardrails.json"))
     parser.add_argument("--uncertainty-proxy", type=Path, default=Path("outputs/crystalprobe_uncertainty_proxy_v0.json"))
     parser.add_argument("--substance-profiles", type=Path, default=Path("outputs/crystalprobe_substance_profiles.json"))
@@ -46,6 +48,8 @@ def main() -> int:
         has_cposs_evidence_workpack=args.cposs_evidence_workpack.exists(),
         has_backend_disagreement=args.backend_disagreement.exists(),
         has_cposs_backend_disagreement=args.cposs_backend_disagreement.exists(),
+        has_cposs_disagreement_inspection=args.cposs_disagreement_inspection.exists(),
+        has_source_discovery=args.source_discovery.exists(),
         has_model_guardrails=args.model_guardrails.exists(),
         has_uncertainty_proxy=args.uncertainty_proxy.exists(),
         has_substance_profiles=args.substance_profiles.exists(),

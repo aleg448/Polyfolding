@@ -75,6 +75,10 @@ The CPOSS candidate-card report is generated at `outputs/cposs_candidate_cards.j
 
 The high-priority CPOSS candidate-card commands have been executed for ibuprofen (`IBP01_PsiCrys` vs `IBP06_PsiCrys`) and carbamazepine (`CBZ01_PsiCrys` vs `CBZ03_PsiCrys`) across MACE, AIMNet2, and UMA. The generated report is `outputs/cposs_high_priority_backend_disagreement.json` and `outputs/cposs_high_priority_backend_disagreement.md`. Ibuprofen currently shows cross-backend ordering consensus, while carbamazepine shows a backend-ordering disagreement: MACE and AIMNet2 place `CBZ01_PsiCrys` lower and UMA places `CBZ03_PsiCrys` lower. This is an inspection trigger, not an experimental stability claim.
 
+The carbamazepine disagreement inspection is generated at `outputs/cposs_cbz_disagreement_inspection.json` and `outputs/cposs_cbz_disagreement_inspection.md`. It records the ordering flip, the AIMNet2 gap outlier, and diagnostic-flag mismatch as uncertainty-wrapper and case-selection evidence only.
+
+The source-discovery report is generated at `outputs/crystalprobe_source_discovery.json` and `outputs/crystalprobe_source_discovery.md`. It records atomoxetine hydrochloride as a coordinate-access validation target, methylphenidate hydrochloride as a deeper source-search target, and modafinil as a public supporting-information CIF candidate pending license review.
+
 The FAIR Chemistry model guardrail report is generated at `outputs/fairchem_model_guardrails.json` and `outputs/fairchem_model_guardrails.md`. It records that UMA and OMC25 are locally smoke-verified for current CrystalProbe paths, while OMAT24 and OMol25 remain validation-blocked for CrystalProbe scientific claims until task-specific workflows and reference policies are implemented.
 
 The uncertainty proxy v0 report is generated at `outputs/crystalprobe_uncertainty_proxy_v0.json` and `outputs/crystalprobe_uncertainty_proxy_v0.md`. It aggregates AMPETP sensitivity disagreement and CPOSS high-priority disagreement evidence into target-level inspection decisions. It is an uncalibrated backend-behavior proxy, not a thermodynamic uncertainty estimate.

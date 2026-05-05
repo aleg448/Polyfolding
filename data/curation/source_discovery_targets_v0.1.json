@@ -1,0 +1,126 @@
+{
+  "schema_version": "0.1.0",
+  "status": "source_discovery_targets_recorded",
+  "generated_from": "manual open-web source discovery pass on 2026-05-05",
+  "targets": [
+    {
+      "name": "atomoxetine hydrochloride",
+      "normalized_name": "atomoxetine hydrochloride",
+      "source_status": "literature_structure_known_coordinates_access_unclear",
+      "priority_reason": "ADHD nonstimulant with reported stable and metastable polymorphs plus a commercial powder-diffraction structure.",
+      "identity_sources": [
+        {
+          "source_type": "pubchem_identity",
+          "label": "PubChem CID 54840",
+          "url": "https://pubchem.ncbi.nlm.nih.gov/compound/Atomoxetine-Hydrochloride",
+          "evidence": "PubChem records atomoxetine hydrochloride identity, formula C17H22ClNO, parent atomoxetine, and hydrochloride components."
+        }
+      ],
+      "structure_sources": [
+        {
+          "source_type": "journal_article",
+          "label": "Stable and metastable atomoxetine HCl forms",
+          "doi": "10.1002/jps.20643",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/16732589/",
+          "evidence": "Reports two polymorphic forms and an amorphous form; stable form has single-crystal diffraction and metastable form was solved by powder diffraction.",
+          "coordinate_access": "not_verified_open"
+        },
+        {
+          "source_type": "journal_article",
+          "label": "Commercial atomoxetine hydrochloride powder-diffraction structure",
+          "doi": "10.1017/S0885715614000517",
+          "url": "https://www.cambridge.org/core/journals/powder-diffraction/article/crystal-structure-of-atomoxetine-hydrochloride-strattera-c17h22nocl/7D6D94A8FB8058C6FD6A61BB7E24E99A",
+          "evidence": "Reports orthorhombic P212121 commercial atomoxetine hydrochloride with cell parameters and ICDD powder-pattern submission.",
+          "coordinate_access": "publication_known_cif_not_confirmed"
+        },
+        {
+          "source_type": "secondary_clue",
+          "label": "Wikimedia structure rendering cites CSD 1519130",
+          "url": "https://commons.wikimedia.org/wiki/File:Atomoxetine_ball-and-stick_model_from_xtal_2014.png",
+          "evidence": "Secondary clue that the 2014 atomoxetine structure may correspond to CSD/CCDC record 1519130.",
+          "coordinate_access": "requires_primary_database_validation"
+        }
+      ],
+      "claim_boundary": "source_discovery_only_until_license_clean_coordinates_are_obtained",
+      "recommended_next_actions": [
+        "Validate whether CSD/CCDC record 1519130 exists and can be used under local access terms.",
+        "Check whether the 2014 Powder Diffraction article exposes a downloadable CIF or only a PDF/ICDD pattern.",
+        "If coordinates are obtained, create an atomoxetine HCl single-structure proof measurement before any polymorph-ranking claim."
+      ]
+    },
+    {
+      "name": "methylphenidate hydrochloride",
+      "normalized_name": "methylphenidate hydrochloride",
+      "source_status": "identity_known_no_open_crystal_source_found",
+      "priority_reason": "ADHD stimulant with strong project relevance but no obvious open crystallographic CIF found in the first pass.",
+      "identity_sources": [
+        {
+          "source_type": "pubchem_identity",
+          "label": "PubChem CID 9280",
+          "url": "https://pubchem.ncbi.nlm.nih.gov/compound/Methylphenidate-Hydrochloride",
+          "evidence": "PubChem records methylphenidate hydrochloride identity, formula C14H20ClNO2, parent methylphenidate, and hydrochloride components."
+        }
+      ],
+      "structure_sources": [
+        {
+          "source_type": "negative_quick_pass",
+          "label": "Open web/COD-style query",
+          "url": "https://pubchem.ncbi.nlm.nih.gov/compound/Methylphenidate-Hydrochloride",
+          "evidence": "Quick open-web pass found identity and physical-description records but no directly reusable crystal CIF or polymorph structure page.",
+          "coordinate_access": "not_found"
+        }
+      ],
+      "claim_boundary": "identity_only_until_crystal_coordinates_are_found",
+      "recommended_next_actions": [
+        "Run a deeper CSD/CCDC or patent supplementary search for methylphenidate HCl polymorph or salt structures.",
+        "If only PubChem parent conformers are available, keep them as molecule-level diagnostics and exclude from crystal benchmark claims.",
+        "Consider adjacent piperidyl ester hydrochloride crystal examples only as proxy chemistry, not methylphenidate proof."
+      ]
+    },
+    {
+      "name": "modafinil",
+      "normalized_name": "modafinil",
+      "source_status": "public_supporting_information_cif_candidate",
+      "priority_reason": "Neuropharmaceutical polymorph target with ACS supporting-information CIFs and a CCDC deposition clue.",
+      "identity_sources": [
+        {
+          "source_type": "journal_article",
+          "label": "Modafinil polymorph study",
+          "doi": "10.1021/cg030069t",
+          "url": "https://pubs.acs.org/doi/10.1021/cg030069t",
+          "evidence": "Crystal Growth & Design article studies forms I and III of racemic modafinil."
+        }
+      ],
+      "structure_sources": [
+        {
+          "source_type": "journal_supporting_information",
+          "label": "ACS supporting information CIF set",
+          "doi": "10.1021/cg030069t",
+          "url": "https://pubs.acs.org/doi/10.1021/cg030069t",
+          "evidence": "ACS page lists free supporting-information CIF files cg030069t1.cif, cg030069t2.cif, and cg030069t3.cif for daughter, mother, and minimized mother phases.",
+          "coordinate_access": "public_si_candidate"
+        },
+        {
+          "source_type": "ccdc_deposition_clue",
+          "label": "CCDC 229171",
+          "doi": "10.1021/cg030069t",
+          "url": "https://pubs.acs.org/doi/abs/10.1021/cg030069t",
+          "evidence": "ACS abstract page states crystallographic data are deposited at CCDC under number 229171.",
+          "coordinate_access": "requires_license_review_before_redistribution"
+        }
+      ],
+      "claim_boundary": "candidate_for_download_and_local_measurement_after_license_review",
+      "recommended_next_actions": [
+        "Download ACS supporting-information CIF files into ignored local sources if license review permits.",
+        "Run CIF inspection and single-structure measurements for the available forms.",
+        "Keep form I/form III stability claims separate from backend measurements until the article evidence is curated."
+      ]
+    }
+  ],
+  "policy": [
+    "Source discovery records are not medical advice.",
+    "A DOI or PubChem page is not equivalent to license-clean atom coordinates.",
+    "CrystalProbe may plan measurements only after coordinate availability and redistribution limits are recorded.",
+    "Negative quick-pass results should remain open for deeper CSD, CCDC, patent, or supplementary-data searches."
+  ]
+}

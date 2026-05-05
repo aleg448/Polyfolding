@@ -12,6 +12,7 @@ def substance_profile_report(
     lisdexamfetamine_proof: dict[str, Any] | None = None,
     evidence_tiers: dict[str, Any] | None = None,
     cposs_disagreement: dict[str, Any] | None = None,
+    source_discovery: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Merge local curation and measurement artifacts into substance profiles."""
 
@@ -25,6 +26,7 @@ def substance_profile_report(
     _merge_lisdexamfetamine_proof(profiles, lisdexamfetamine_proof or {})
     _merge_evidence_tiers(profiles, evidence_tiers or {})
     _merge_cposs_disagreement(profiles, cposs_disagreement or {})
+    _merge_source_discovery(profiles, source_discovery or {})
 
     for profile in profiles.values():
         profile["readiness"] = _readiness(profile)
@@ -95,6 +97,12 @@ def substance_profile_markdown(report: dict[str, Any]) -> str:
                 f"family `{backend['family']}`, ranking consensus `{backend['ranking_consensus']}`, "
                 f"mean flag Jaccard `{float(backend['mean_flag_jaccard']):.3f}`, "
                 f"decision `{backend['decision']}`."
+            )
+        if profile.get("source_discovery_actionability"):
+            lines.append(
+                "- Source discovery: "
+                f"`{profile['source_discovery_actionability']}` with coordinate access "
+                f"`{profile.get('coordinate_access_summary', 'not_recorded')}`."
             )
         if profile.get("blocked_claims"):
             lines.append("- Blocked claims:")
@@ -226,10 +234,32 @@ def _merge_cposs_disagreement(profiles: dict[str, dict[str, Any]], disagreement:
             _append_unique(profile["next_actions"], "Inspect CPOSS backend disagreement before using this family as a paper-facing example.")
 
 
+def _merge_source_discovery(profiles: dict[str, dict[str, Any]], source_discovery: dict[str, Any]) -> None:
+    for target in source_discovery.get("targets", []):
+        profile = profiles.get(_key(str(target.get("name", ""))))
+        if not profile:
+            continue
+        profile["source_discovery_actionability"] = target.get("actionability")
+        profile["coordinate_access_summary"] = target.get("coordinate_access_summary")
+        profile["source_discovery_status"] = target.get("source_status")
+        for source in target.get("identity_sources", []):
+            _append_unique(profile["known_public_evidence"], f"{source.get('label')}: {source.get('evidence')}")
+        for source in target.get("structure_sources", []):
+            _append_unique(profile["known_public_evidence"], f"{source.get('label')}: {source.get('evidence')}")
+        for action in target.get("recommended_next_actions", []):
+            _append_unique(profile["next_actions"], action)
+
+
 def _readiness(profile: dict[str, Any]) -> str:
     tier = profile.get("evidence_tier")
     if tier == "blocked_no_coordinates":
         return "blocked_no_crystal_coordinates"
+    if profile.get("source_discovery_actionability") == "download_candidate":
+        return "source_download_candidate"
+    if profile.get("source_discovery_actionability") == "validate_coordinate_access":
+        return "coordinate_access_validation"
+    if profile.get("source_discovery_actionability") == "deeper_source_search":
+        return "deeper_source_search"
     if profile.get("cposs_backend_profile", {}).get("decision") == "inspect":
         return "backend_disagreement_inspection"
     if tier == "agi_assisted_guardrailed_pilot":
