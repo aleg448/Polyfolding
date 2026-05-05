@@ -22,6 +22,7 @@ def roadmap_status_report(
     has_cposs_backend_disagreement: bool = False,
     has_model_guardrails: bool = False,
     has_uncertainty_proxy: bool = False,
+    has_substance_profiles: bool = False,
 ) -> dict[str, Any]:
     """Map current local artifacts to the four CrystalProbe roadmap deliverables."""
 
@@ -56,6 +57,9 @@ def roadmap_status_report(
                 "Release-boundary report separates candidate public, review-required, and local-only artifacts."
                 if has_release_boundary
                 else "Release-boundary report is missing.",
+                "Substance profiles consolidate medication-priority source, measurement, and claim-boundary status."
+                if has_substance_profiles
+                else "Substance profiles are missing.",
             ],
             "remaining": [
                 "Promote pair candidates into curated records after experimental stability evidence is attached."
@@ -80,6 +84,9 @@ def roadmap_status_report(
                 "Human-review the release-boundary report before publishing CCDC-derived artifacts."
                 if has_release_boundary
                 else "Separate redistributable source records from restricted local CCDC evidence.",
+                "Use substance profiles to choose the next source-discovery or measurement target."
+                if has_substance_profiles
+                else "Build substance profiles from the therapeutic-priority queue and local evidence.",
             ],
         },
         {
@@ -179,6 +186,9 @@ def roadmap_status_report(
             "evidence": [
                 "JOSS draft exists." if has_joss_draft else "JOSS draft is missing.",
                 "Local tests and generated reports demonstrate software artifact growth.",
+                "Substance profile generator gives users a reproducible overview of measured and blocked substances."
+                if has_substance_profiles
+                else "Substance profile generator is missing.",
             ],
             "remaining": [
                 "Commit and push accumulated changes.",

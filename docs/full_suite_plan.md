@@ -79,6 +79,8 @@ The FAIR Chemistry model guardrail report is generated at `outputs/fairchem_mode
 
 The uncertainty proxy v0 report is generated at `outputs/crystalprobe_uncertainty_proxy_v0.json` and `outputs/crystalprobe_uncertainty_proxy_v0.md`. It aggregates AMPETP sensitivity disagreement and CPOSS high-priority disagreement evidence into target-level inspection decisions. It is an uncalibrated backend-behavior proxy, not a thermodynamic uncertainty estimate.
 
+The substance-profile report is generated at `outputs/crystalprobe_substance_profiles.json` and `outputs/crystalprobe_substance_profiles.md`. It creates a bounded profile for each current medication-priority target, merging the therapeutic queue, local CCDC source records, lisdexamfetamine proof layers, evidence tiers, CPOSS backend disagreement, and next actions. This is now the preferred overview for deciding which substance to measure or curate next.
+
 The local report rebuild order is documented in `docs/report_workflows.md` and mirrored by `data/curation/report_workflows_v0.1.json`. This covers AMPETP, CPOSS, therapeutic contrast, writing/status artifacts, and local verification commands so the generated evidence can be rebuilt before paper or release decisions.
 
 A conservative release-boundary report is generated at `outputs/crystalprobe_release_boundary.json` and `outputs/crystalprobe_release_boundary.md`. It separates candidate public repository artifacts from CCDC-derived artifacts that need human license review and local-only coordinate-bearing CIF files.

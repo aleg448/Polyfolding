@@ -136,6 +136,21 @@ Primary outputs:
 
 OMAT24 and OMol25 access are accepted locally, but these models remain validation-blocked for CrystalProbe scientific claims until task-specific calculation paths and reference policies are implemented.
 
+## Substance research profiles
+
+Use this report to consolidate the medication-priority queue, local measurements, evidence tiers, CPOSS disagreement, and claim boundaries into one substance-by-substance view.
+
+```powershell
+python scripts\build_substance_profiles.py
+```
+
+Primary outputs:
+
+- `outputs/crystalprobe_substance_profiles.json`
+- `outputs/crystalprobe_substance_profiles.md`
+
+The profiles are research-catalog records, not medical advice. They currently cover ADHD-priority substances, everyday foundation medicines, ibuprofen, carbamazepine, lisdexamfetamine dimesylate, and the measured AMPETP proxy target.
+
 ## AGI-assisted evidence-tier policy
 
 Use this report when lisdexamfetamine coordinates or human validation are unavailable. It keeps AGI-assisted evidence usable while preventing automatic promotion into benchmark claims.
@@ -160,6 +175,7 @@ python scripts\build_project_status_dashboard.py --test-summary "CURRENT_TEST_SU
 python scripts\build_roadmap_status_report.py
 python scripts\build_release_boundary_report.py
 python scripts\build_evidence_tier_report.py
+python scripts\build_substance_profiles.py
 python scripts\build_model_guardrails_report.py
 python scripts\build_uncertainty_proxy_report.py
 ```
@@ -174,6 +190,7 @@ Primary outputs:
 - `outputs/crystalprobe_roadmap_status.md`
 - `outputs/crystalprobe_release_boundary.md`
 - `outputs/crystalprobe_evidence_tiers.md`
+- `outputs/crystalprobe_substance_profiles.md`
 - `outputs/fairchem_model_guardrails.md`
 - `outputs/crystalprobe_uncertainty_proxy_v0.md`
 

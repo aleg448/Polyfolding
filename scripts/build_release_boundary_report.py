@@ -22,6 +22,7 @@ DEFAULT_REPO_PATHS = [
     "scripts/build_cposs_candidate_cards.py",
     "scripts/build_evidence_tier_report.py",
     "scripts/build_model_guardrails_report.py",
+    "scripts/build_substance_profiles.py",
     "scripts/build_uncertainty_proxy_report.py",
     "papers/ampetp_case_study.md",
     "papers/joss_paper.md",
@@ -32,6 +33,7 @@ DEFAULT_REPO_PATHS = [
     "src/crystalprobe/insight/evidence_tiers.py",
     "src/crystalprobe/insight/model_guardrails.py",
     "src/crystalprobe/insight/release.py",
+    "src/crystalprobe/insight/substance_profiles.py",
     "src/crystalprobe/uncertainty/proxy.py",
     "tests/test_backend_disagreement.py",
     "tests/test_claims.py",
@@ -41,6 +43,7 @@ DEFAULT_REPO_PATHS = [
     "tests/test_evidence_tiers.py",
     "tests/test_model_guardrails.py",
     "tests/test_release.py",
+    "tests/test_substance_profiles.py",
     "tests/test_uncertainty_proxy.py",
 ]
 

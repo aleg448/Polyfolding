@@ -68,6 +68,16 @@
       ]
     },
     {
+      "id": "substance_profiles",
+      "label": "Substance research profiles",
+      "scripts": [
+        "scripts/build_substance_profiles.py"
+      ],
+      "primary_outputs": [
+        "outputs/crystalprobe_substance_profiles.md"
+      ]
+    },
+    {
       "id": "model_guardrails",
       "label": "Model validation guardrails",
       "scripts": [
@@ -97,6 +107,7 @@
         "scripts/build_roadmap_status_report.py",
         "scripts/build_release_boundary_report.py",
         "scripts/build_evidence_tier_report.py",
+        "scripts/build_substance_profiles.py",
         "scripts/build_model_guardrails_report.py",
         "scripts/build_uncertainty_proxy_report.py"
       ],
@@ -107,6 +118,7 @@
         "outputs/crystalprobe_roadmap_status.md",
         "outputs/crystalprobe_release_boundary.md",
         "outputs/crystalprobe_evidence_tiers.md",
+        "outputs/crystalprobe_substance_profiles.md",
         "outputs/fairchem_model_guardrails.md",
         "outputs/crystalprobe_uncertainty_proxy_v0.md"
       ]
