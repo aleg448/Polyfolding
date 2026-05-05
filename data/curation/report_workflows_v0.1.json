@@ -68,6 +68,16 @@
       ]
     },
     {
+      "id": "measurement_queue",
+      "label": "Measurement and curation queue",
+      "scripts": [
+        "scripts/build_measurement_queue.py"
+      ],
+      "primary_outputs": [
+        "outputs/crystalprobe_measurement_queue.md"
+      ]
+    },
+    {
       "id": "substance_profiles",
       "label": "Substance research profiles",
       "scripts": [
@@ -108,6 +118,7 @@
         "scripts/build_release_boundary_report.py",
         "scripts/build_evidence_tier_report.py",
         "scripts/build_substance_profiles.py",
+        "scripts/build_measurement_queue.py",
         "scripts/build_model_guardrails_report.py",
         "scripts/build_uncertainty_proxy_report.py"
       ],
@@ -119,6 +130,7 @@
         "outputs/crystalprobe_release_boundary.md",
         "outputs/crystalprobe_evidence_tiers.md",
         "outputs/crystalprobe_substance_profiles.md",
+        "outputs/crystalprobe_measurement_queue.md",
         "outputs/fairchem_model_guardrails.md",
         "outputs/crystalprobe_uncertainty_proxy_v0.md"
       ]

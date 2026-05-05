@@ -27,6 +27,7 @@ def main() -> int:
     parser.add_argument("--model-guardrails", type=Path, default=Path("outputs/fairchem_model_guardrails.json"))
     parser.add_argument("--uncertainty-proxy", type=Path, default=Path("outputs/crystalprobe_uncertainty_proxy_v0.json"))
     parser.add_argument("--substance-profiles", type=Path, default=Path("outputs/crystalprobe_substance_profiles.json"))
+    parser.add_argument("--measurement-queue", type=Path, default=Path("outputs/crystalprobe_measurement_queue.json"))
     parser.add_argument("--json-out", type=Path, default=Path("outputs/crystalprobe_roadmap_status.json"))
     parser.add_argument("--md-out", type=Path, default=Path("outputs/crystalprobe_roadmap_status.md"))
     args = parser.parse_args()
@@ -48,6 +49,7 @@ def main() -> int:
         has_model_guardrails=args.model_guardrails.exists(),
         has_uncertainty_proxy=args.uncertainty_proxy.exists(),
         has_substance_profiles=args.substance_profiles.exists(),
+        has_measurement_queue=args.measurement_queue.exists(),
     )
     args.json_out.parent.mkdir(parents=True, exist_ok=True)
     args.json_out.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8", newline="\n")

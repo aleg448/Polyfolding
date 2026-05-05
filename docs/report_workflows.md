@@ -151,6 +151,21 @@ Primary outputs:
 
 The profiles are research-catalog records, not medical advice. They currently cover ADHD-priority substances, everyday foundation medicines, ibuprofen, carbamazepine, lisdexamfetamine dimesylate, and the measured AMPETP proxy target.
 
+## Measurement and curation queue
+
+Use this report after rebuilding substance profiles. It ranks the next measurement, source-discovery, and backend-inspection tasks by project utility.
+
+```powershell
+python scripts\build_measurement_queue.py
+```
+
+Primary outputs:
+
+- `outputs/crystalprobe_measurement_queue.json`
+- `outputs/crystalprobe_measurement_queue.md`
+
+The queue priority is not a clinical or medical priority ranking. It is a CrystalProbe roadmap utility ranking.
+
 ## AGI-assisted evidence-tier policy
 
 Use this report when lisdexamfetamine coordinates or human validation are unavailable. It keeps AGI-assisted evidence usable while preventing automatic promotion into benchmark claims.
@@ -176,6 +191,7 @@ python scripts\build_roadmap_status_report.py
 python scripts\build_release_boundary_report.py
 python scripts\build_evidence_tier_report.py
 python scripts\build_substance_profiles.py
+python scripts\build_measurement_queue.py
 python scripts\build_model_guardrails_report.py
 python scripts\build_uncertainty_proxy_report.py
 ```
@@ -191,6 +207,7 @@ Primary outputs:
 - `outputs/crystalprobe_release_boundary.md`
 - `outputs/crystalprobe_evidence_tiers.md`
 - `outputs/crystalprobe_substance_profiles.md`
+- `outputs/crystalprobe_measurement_queue.md`
 - `outputs/fairchem_model_guardrails.md`
 - `outputs/crystalprobe_uncertainty_proxy_v0.md`
 

@@ -23,6 +23,7 @@ def roadmap_status_report(
     has_model_guardrails: bool = False,
     has_uncertainty_proxy: bool = False,
     has_substance_profiles: bool = False,
+    has_measurement_queue: bool = False,
 ) -> dict[str, Any]:
     """Map current local artifacts to the four CrystalProbe roadmap deliverables."""
 
@@ -60,6 +61,9 @@ def roadmap_status_report(
                 "Substance profiles consolidate medication-priority source, measurement, and claim-boundary status."
                 if has_substance_profiles
                 else "Substance profiles are missing.",
+                "Measurement queue ranks the next source, inspection, and measurement actions."
+                if has_measurement_queue
+                else "Measurement queue is missing.",
             ],
             "remaining": [
                 "Promote pair candidates into curated records after experimental stability evidence is attached."
@@ -87,6 +91,9 @@ def roadmap_status_report(
                 "Use substance profiles to choose the next source-discovery or measurement target."
                 if has_substance_profiles
                 else "Build substance profiles from the therapeutic-priority queue and local evidence.",
+                "Execute the top measurement-queue actions while keeping blocked coordinate targets in curation status."
+                if has_measurement_queue
+                else "Generate the measurement queue from substance profiles.",
             ],
         },
         {
@@ -189,6 +196,9 @@ def roadmap_status_report(
                 "Substance profile generator gives users a reproducible overview of measured and blocked substances."
                 if has_substance_profiles
                 else "Substance profile generator is missing.",
+                "Measurement queue generator turns profiles into reproducible next-action priorities."
+                if has_measurement_queue
+                else "Measurement queue generator is missing.",
             ],
             "remaining": [
                 "Commit and push accumulated changes.",
