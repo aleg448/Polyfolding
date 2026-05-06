@@ -8,6 +8,7 @@ from collections.abc import Iterable, Iterator
 from pathlib import Path
 
 from crystalprobe.benchmark.schema import CurationStatus, PolymorphPair
+from crystalprobe.core.io import atomic_write_text
 
 
 class BenchmarkDataset:
@@ -105,10 +106,8 @@ def load_manifest(path: str | Path) -> BenchmarkDataset:
 def write_manifest(dataset: BenchmarkDataset, path: str | Path) -> None:
     """Write a dataset as JSON Lines with stable key ordering."""
 
-    manifest_path = Path(path)
-    with manifest_path.open("w", encoding="utf-8", newline="\n") as handle:
-        for pair in dataset:
-            data = pair.model_dump(mode="json")
-            handle.write(json.dumps(data, sort_keys=True, separators=(",", ":")))
-            handle.write("\n")
-
+    rows = [
+        json.dumps(pair.model_dump(mode="json"), sort_keys=True, separators=(",", ":"))
+        for pair in dataset
+    ]
+    atomic_write_text(path, "\n".join(rows) + ("\n" if rows else ""))

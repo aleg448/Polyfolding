@@ -13,6 +13,7 @@ def substance_profile_report(
     evidence_tiers: dict[str, Any] | None = None,
     cposs_disagreement: dict[str, Any] | None = None,
     source_discovery: dict[str, Any] | None = None,
+    source_acquisition: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Merge local curation and measurement artifacts into substance profiles."""
 
@@ -27,6 +28,7 @@ def substance_profile_report(
     _merge_evidence_tiers(profiles, evidence_tiers or {})
     _merge_cposs_disagreement(profiles, cposs_disagreement or {})
     _merge_source_discovery(profiles, source_discovery or {})
+    _merge_source_acquisition(profiles, source_acquisition or {})
 
     for profile in profiles.values():
         profile["readiness"] = _readiness(profile)
@@ -103,6 +105,12 @@ def substance_profile_markdown(report: dict[str, Any]) -> str:
                 "- Source discovery: "
                 f"`{profile['source_discovery_actionability']}` with coordinate access "
                 f"`{profile.get('coordinate_access_summary', 'not_recorded')}`."
+            )
+        if profile.get("source_acquisition_status"):
+            lines.append(
+                "- Source acquisition: "
+                f"`{profile['source_acquisition_status']}` with "
+                f"`{profile.get('local_coordinate_source_count', 0)}` local coordinate source(s)."
             )
         if profile.get("blocked_claims"):
             lines.append("- Blocked claims:")
@@ -250,10 +258,39 @@ def _merge_source_discovery(profiles: dict[str, dict[str, Any]], source_discover
             _append_unique(profile["next_actions"], action)
 
 
+def _merge_source_acquisition(profiles: dict[str, dict[str, Any]], source_acquisition: dict[str, Any]) -> None:
+    for target in source_acquisition.get("targets", []):
+        profile = profiles.get(_key(str(target.get("name", ""))))
+        if not profile:
+            continue
+        local_sources = list(target.get("local_coordinate_sources", []))
+        profile["source_acquisition_status"] = target.get("status")
+        profile["local_coordinate_source_count"] = len(local_sources)
+        for source in local_sources:
+            path = source.get("path")
+            status = source.get("status", "status_not_recorded")
+            if path:
+                _append_unique(profile["local_sources"], f"{path} ({status})")
+        for output in target.get("measurement_outputs", []):
+            _append_unique(profile["measurement_outputs"], output)
+        if local_sources:
+            _append_unique(
+                profile["next_actions"],
+                "Run local-only single-structure measurements and keep redistribution blocked until license review.",
+            )
+
+
 def _readiness(profile: dict[str, Any]) -> str:
     tier = profile.get("evidence_tier")
     if tier == "blocked_no_coordinates":
         return "blocked_no_crystal_coordinates"
+    acquisition_status = profile.get("source_acquisition_status")
+    if acquisition_status == "measured_local_only":
+        return "measured_needs_claim_guardrails"
+    if acquisition_status == "coordinates_available_locally" and profile.get("measurement_outputs"):
+        return "measured_needs_claim_guardrails"
+    if acquisition_status == "coordinates_available_locally":
+        return "coordinates_available_locally"
     if profile.get("source_discovery_actionability") == "download_candidate":
         return "source_download_candidate"
     if profile.get("source_discovery_actionability") == "validate_coordinate_access":
@@ -304,6 +341,8 @@ def _backend_signal(profile: dict[str, Any]) -> str:
         return f"{backend['decision']} ({backend['family']})"
     if profile.get("measurement_outputs"):
         return "measured"
+    if profile.get("source_acquisition_status") == "coordinates_available_locally":
+        return "coordinates local"
     return "not measured"
 
 

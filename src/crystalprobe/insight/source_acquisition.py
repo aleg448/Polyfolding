@@ -31,7 +31,7 @@ def source_acquisition_markdown(report: dict[str, Any]) -> str:
         "",
         f"- Status: `{report['status']}`",
         f"- Targets: `{report['target_count']}`",
-        f"- Targets requiring user input: `{report['targets_requiring_user_input']}`",
+        f"- Targets requiring review input: `{report['targets_requiring_user_input']}`",
         "",
         "## Status Counts",
         "",
@@ -42,15 +42,16 @@ def source_acquisition_markdown(report: dict[str, Any]) -> str:
             "",
             "## Targets",
             "",
-            "| Target | Task | Status | Download attempts | User input | Claim boundary |",
-            "|---|---|---|---:|---|---|",
+            "| Target | Task | Status | Local coordinate sources | Download attempts | Review input | Claim boundary |",
+            "|---|---|---|---:|---:|---|---|",
         ]
     )
     for target in report["targets"]:
         user_input = "required" if target["requires_user_input"] else "not required"
         lines.append(
             f"| {target['name']} | `{target['task']}` | `{target['status']}` | "
-            f"{target['download_attempt_count']} | {user_input} | `{target['claim_boundary']}` |"
+            f"{target['local_coordinate_source_count']} | {target['download_attempt_count']} | {user_input} | "
+            f"`{target['claim_boundary']}` |"
         )
     for target in report["targets"]:
         lines.extend(["", f"## {target['name']}", ""])
@@ -69,6 +70,12 @@ def source_acquisition_markdown(report: dict[str, Any]) -> str:
                 f"  - `{attempt['result']}` via `{attempt['method']}` for {attempt['url']}"
                 for attempt in target["download_attempts"]
             )
+        if target["local_coordinate_sources"]:
+            lines.append("- Local coordinate sources:")
+            lines.extend(
+                f"  - `{source['path']}` ({source.get('status', 'status_not_recorded')})"
+                for source in target["local_coordinate_sources"]
+            )
         if target["required_user_input"]:
             lines.append("- Required user input:")
             lines.extend(f"  - {item}" for item in target["required_user_input"])
@@ -80,17 +87,21 @@ def source_acquisition_markdown(report: dict[str, Any]) -> str:
 def _target_record(target: dict[str, Any]) -> dict[str, Any]:
     required_user_input = list(target.get("required_user_input", []))
     download_attempts = list(target.get("download_attempts", []))
+    local_coordinate_sources = list(target.get("local_coordinate_sources", []))
     return {
         "name": target.get("name"),
         "task": target.get("task"),
         "status": target.get("status"),
         "source_evidence": list(target.get("source_evidence", [])),
         "download_attempts": download_attempts,
+        "local_coordinate_sources": local_coordinate_sources,
+        "local_coordinate_source_count": len(local_coordinate_sources),
         "download_attempt_count": len(download_attempts),
         "failed_download_attempt_count": sum(
             1 for attempt in download_attempts if str(attempt.get("result")) == "failed"
         ),
         "candidate_files": list(target.get("candidate_files", [])),
+        "measurement_outputs": list(target.get("measurement_outputs", [])),
         "required_user_input": required_user_input,
         "requires_user_input": bool(required_user_input),
         "claim_boundary": target.get("claim_boundary"),

@@ -2,10 +2,16 @@
 
 from __future__ import annotations
 
+try:
+    from scripts import _path_bootstrap  # noqa: F401
+except ImportError:
+    import _path_bootstrap  # noqa: F401
+
 import argparse
 import json
 from pathlib import Path
 
+from crystalprobe.core.io import atomic_write_json, atomic_write_text
 from crystalprobe.insight.roadmap import roadmap_status_markdown, roadmap_status_report
 
 
@@ -30,14 +36,31 @@ def main() -> int:
     parser.add_argument("--uncertainty-proxy", type=Path, default=Path("outputs/crystalprobe_uncertainty_proxy_v0.json"))
     parser.add_argument("--substance-profiles", type=Path, default=Path("outputs/crystalprobe_substance_profiles.json"))
     parser.add_argument("--measurement-queue", type=Path, default=Path("outputs/crystalprobe_measurement_queue.json"))
+    parser.add_argument("--medication-cif-ingestion", type=Path, default=Path("outputs/medication_cif_ingestion.json"))
+    parser.add_argument("--medication-measurements", type=Path, default=Path("outputs/medication_measurement_summary.json"))
+    parser.add_argument("--cposs-promotion-gate", type=Path, default=Path("outputs/cposs_promotion_gate.json"))
+    parser.add_argument("--fingerprint-artifact-plan", type=Path, default=Path("outputs/crystalprobe_fingerprint_artifact_plan.json"))
+    parser.add_argument("--environment-blockers", type=Path, default=Path("outputs/crystalprobe_environment_blockers.json"))
     parser.add_argument("--json-out", type=Path, default=Path("outputs/crystalprobe_roadmap_status.json"))
     parser.add_argument("--md-out", type=Path, default=Path("outputs/crystalprobe_roadmap_status.md"))
     args = parser.parse_args()
+    cposs_promotion_gate = (
+        json.loads(args.cposs_promotion_gate.read_text(encoding="utf-8")) if args.cposs_promotion_gate.exists() else None
+    )
+    fingerprint_artifact_plan = (
+        json.loads(args.fingerprint_artifact_plan.read_text(encoding="utf-8")) if args.fingerprint_artifact_plan.exists() else None
+    )
+    environment_blockers = (
+        json.loads(args.environment_blockers.read_text(encoding="utf-8")) if args.environment_blockers.exists() else None
+    )
 
     report = roadmap_status_report(
         project_status=json.loads(args.project_status.read_text(encoding="utf-8")),
         readiness=json.loads(args.readiness.read_text(encoding="utf-8")),
         cposs_bridge=json.loads(args.cposs.read_text(encoding="utf-8")),
+        cposs_promotion_gate=cposs_promotion_gate,
+        fingerprint_artifact_plan=fingerprint_artifact_plan,
+        environment_blockers=environment_blockers,
         has_preprint_draft=args.preprint.exists(),
         has_joss_draft=args.joss.exists(),
         has_fastcsp_plan=args.fastcsp_plan.exists(),
@@ -54,11 +77,14 @@ def main() -> int:
         has_uncertainty_proxy=args.uncertainty_proxy.exists(),
         has_substance_profiles=args.substance_profiles.exists(),
         has_measurement_queue=args.measurement_queue.exists(),
+        has_medication_cif_ingestion=args.medication_cif_ingestion.exists(),
+        has_medication_measurements=args.medication_measurements.exists(),
+        has_cposs_promotion_gate=args.cposs_promotion_gate.exists(),
+        has_fingerprint_artifact_plan=args.fingerprint_artifact_plan.exists(),
+        has_environment_blockers=args.environment_blockers.exists(),
     )
-    args.json_out.parent.mkdir(parents=True, exist_ok=True)
-    args.json_out.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8", newline="\n")
-    args.md_out.parent.mkdir(parents=True, exist_ok=True)
-    args.md_out.write_text(roadmap_status_markdown(report), encoding="utf-8", newline="\n")
+    atomic_write_json(args.json_out, report)
+    atomic_write_text(args.md_out, roadmap_status_markdown(report))
     print(json.dumps({"json": str(args.json_out), "markdown": str(args.md_out)}, indent=2, sort_keys=True))
     return 0
 

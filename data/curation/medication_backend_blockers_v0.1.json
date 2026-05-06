@@ -1,0 +1,41 @@
+{
+  "schema_version": "0.1.0",
+  "status": "medication_backend_blockers_cleared",
+  "blockers": [],
+  "resolved": [
+    {
+      "structure_id": "atomoxetine_hcl_1519130",
+      "backend": "aimnet2",
+      "status": "measured_local_only",
+      "output": "outputs/medication_measurements/atomoxetine_hcl_1519130_aimnet2.json"
+    },
+    {
+      "structure_id": "methylphenidate_hcl_1453371",
+      "backend": "aimnet2",
+      "status": "measured_local_only",
+      "output": "outputs/medication_measurements/methylphenidate_hcl_1453371_aimnet2.json"
+    },
+    {
+      "structure_id": "modafinil_s_plus_241713",
+      "backend": "uma",
+      "status": "measured_local_only",
+      "output": "outputs/medication_measurements/modafinil_s_plus_241713_uma.json"
+    },
+    {
+      "structure_id": "atomoxetine_hcl_1519130",
+      "backend": "uma",
+      "status": "measured_local_only",
+      "output": "outputs/medication_measurements/atomoxetine_hcl_1519130_uma.json"
+    },
+    {
+      "structure_id": "methylphenidate_hcl_1453371",
+      "backend": "uma",
+      "status": "measured_local_only",
+      "output": "outputs/medication_measurements/methylphenidate_hcl_1453371_uma.json"
+    }
+  ],
+  "policy": [
+    "Resolved medication measurements remain local-only until source redistribution terms are reviewed.",
+    "Single-structure medication measurements are backend-behaviour evidence, not polymorph stability claims."
+  ]
+}

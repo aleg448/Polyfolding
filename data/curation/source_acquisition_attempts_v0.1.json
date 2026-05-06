@@ -6,7 +6,7 @@
     {
       "name": "modafinil",
       "task": "download_public_cif_candidate",
-      "status": "download_not_completed_manual_access_required",
+      "status": "measured_local_only",
       "source_evidence": [
         {
           "label": "ACS supporting information for 10.1021/cg030069t",
@@ -34,21 +34,33 @@
           "artifact_present": false
         }
       ],
+      "local_coordinate_sources": [
+        {
+          "path": "data/sources/modafinil/1415719-969516.cif",
+          "status": "available_local_only",
+          "selected_manifest": "data/curation/medication_cif_selection_v0.1.json",
+          "notes": "Contains parent modafinil blocks plus hydrate, co-crystal, solvate, and related blocks that must remain role-labeled."
+        }
+      ],
       "candidate_files": [
         "cg030069t1.cif",
         "cg030069t2.cif",
         "cg030069t3.cif"
       ],
-      "required_user_input": [
-        "Open CCDC Access Structures or the ACS supporting-information page in a browser, search for DOI 10.1021/cg030069t or CCDC 229171, accept the terms if appropriate, and save the CIF files under data/sources/modafinil/.",
-        "Confirm whether the downloaded CIFs may be used only locally or may also be referenced in a public evidence bundle."
+      "measurement_outputs": [
+        "outputs/medication_measurements/modafinil_s_plus_241713_mace.json",
+        "outputs/medication_measurements/modafinil_s_plus_241713_aimnet2.json",
+        "outputs/medication_measurements/modafinil_s_plus_241713_uma.json"
       ],
-      "claim_boundary": "source_acquisition_only_no_local_coordinates_downloaded"
+      "required_user_input": [
+        "Confirm whether the downloaded modafinil CIF bundle may be used only locally or may also be referenced in a public evidence bundle."
+      ],
+      "claim_boundary": "coordinates_available_local_only_measurement_allowed_no_redistribution"
     },
     {
       "name": "atomoxetine hydrochloride",
       "task": "validate_coordinate_access",
-      "status": "coordinate_route_identified_manual_validation_required",
+      "status": "measured_local_only",
       "source_evidence": [
         {
           "label": "Powder Diffraction article",
@@ -67,16 +79,28 @@
         }
       ],
       "download_attempts": [],
-      "required_user_input": [
-        "Search CCDC Access Structures for CSD 1519130 and DOI 10.1017/S0885715614000517, then record whether a CIF download is available.",
-        "If available and terms are acceptable, save the CIF under data/sources/atomoxetine_hcl/ and keep redistribution status local-only until reviewed."
+      "local_coordinate_sources": [
+        {
+          "path": "data/sources/ccdc/1302784-1519130.cif",
+          "status": "available_local_only",
+          "selected_manifest": "data/curation/medication_cif_selection_v0.1.json",
+          "notes": "Contains CCDC 1519130 and related atomoxetine hydrochloride records."
+        }
       ],
-      "claim_boundary": "source_route_identified_coordinates_not_obtained"
+      "measurement_outputs": [
+        "outputs/medication_measurements/atomoxetine_hcl_1519130_mace.json",
+        "outputs/medication_measurements/atomoxetine_hcl_1519130_aimnet2.json",
+        "outputs/medication_measurements/atomoxetine_hcl_1519130_uma.json"
+      ],
+      "required_user_input": [
+        "Confirm whether the atomoxetine hydrochloride CIF bundle may be used only locally or may also be referenced in a public evidence bundle."
+      ],
+      "claim_boundary": "coordinates_available_local_only_measurement_allowed_no_redistribution"
     },
     {
       "name": "methylphenidate hydrochloride",
       "task": "deeper_source_search",
-      "status": "literature_route_identified_coordinates_not_obtained",
+      "status": "measured_local_only",
       "source_evidence": [
         {
           "label": "threo-methylphenidate hydrochloride crystal-data clue",
@@ -95,11 +119,24 @@
         }
       ],
       "download_attempts": [],
+      "local_coordinate_sources": [
+        {
+          "path": "data/sources/ccdc/121320-2256172.cif",
+          "status": "available_local_only",
+          "selected_manifest": "data/curation/medication_cif_selection_v0.1.json",
+          "notes": "Contains one parent methylphenidate hydrochloride candidate plus related N-methyl/dimethyl analogues."
+        }
+      ],
+      "measurement_outputs": [
+        "outputs/medication_measurements/methylphenidate_hcl_1453371_mace.json",
+        "outputs/medication_measurements/methylphenidate_hcl_1453371_aimnet2.json",
+        "outputs/medication_measurements/methylphenidate_hcl_1453371_uma.json"
+      ],
       "required_user_input": [
-        "Search CCDC Access Structures by DOI 10.1023/A:1016262815984, compound name, and Pharm. Res. 1995 12 1430-1434 to determine whether the parent salt coordinates can be downloaded.",
+        "Confirm whether the parent methylphenidate hydrochloride CIF block may be used only locally or may also be referenced in a public evidence bundle.",
         "Do not substitute methylphenidate analogues for methylphenidate hydrochloride in benchmark claims; keep analogues as source-search clues only."
       ],
-      "claim_boundary": "candidate_literature_route_no_license_clean_parent_cif"
+      "claim_boundary": "coordinates_available_local_only_measurement_allowed_no_redistribution"
     }
   ],
   "policy": [

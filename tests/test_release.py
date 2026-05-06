@@ -1,4 +1,5 @@
 from crystalprobe.insight.release import release_boundary_markdown, release_boundary_report
+from scripts.build_release_boundary_report import DEFAULT_REPO_PATHS
 
 
 def test_release_boundary_report_classifies_coordinate_files_local_only():
@@ -64,3 +65,69 @@ def test_release_boundary_classifies_evidence_tier_outputs_public():
         ]
     )
     assert {record["category"] for record in report["records"]} == {"candidate_public"}
+
+
+def test_release_boundary_classifies_environment_blocker_outputs_public():
+    report = release_boundary_report(
+        artifact_paths=[
+            "outputs/crystalprobe_environment_blockers.json",
+            "outputs/crystalprobe_environment_blockers.md",
+            "outputs/crystalprobe_execution_unblock_report.json",
+            "outputs/crystalprobe_execution_unblock_report.md",
+            "outputs/crystalprobe_handoff_summary.json",
+            "outputs/crystalprobe_handoff_summary.md",
+            "outputs/crystalprobe_publication_readiness.json",
+            "outputs/crystalprobe_publication_readiness.md",
+        ]
+    )
+    assert {record["category"] for record in report["records"]} == {"candidate_public"}
+
+
+def test_release_boundary_classifies_medication_bundle_license_review():
+    report = release_boundary_report(
+        artifact_paths=[
+            "outputs/medication_research_bundle_manifest.md",
+            "outputs/figures/medication_case_study_coverage.svg",
+        ]
+    )
+
+    assert {record["category"] for record in report["records"]} == {"license_review_required"}
+    assert all("Medication" in record["reason"] for record in report["records"])
+
+
+def test_release_boundary_default_paths_include_script_bootstrap():
+    assert "scripts/_path_bootstrap.py" in DEFAULT_REPO_PATHS
+    report = release_boundary_report(artifact_paths=DEFAULT_REPO_PATHS)
+    by_path = {record["path"]: record for record in report["records"]}
+    assert by_path["scripts/_path_bootstrap.py"]["category"] == "candidate_public"
+
+
+def test_release_boundary_default_paths_include_status_and_roadmap_surface():
+    expected_paths = {
+        "scripts/build_project_status_dashboard.py",
+        "scripts/build_roadmap_status_report.py",
+        "scripts/build_environment_blockers_report.py",
+        "scripts/build_execution_unblock_report.py",
+        "scripts/build_handoff_report.py",
+        "scripts/build_publication_readiness_report.py",
+        "src/crystalprobe/core/io.py",
+        "src/crystalprobe/insight/environment.py",
+        "src/crystalprobe/insight/handoff.py",
+        "src/crystalprobe/insight/publication.py",
+        "src/crystalprobe/insight/roadmap.py",
+        "src/crystalprobe/insight/status.py",
+        "src/crystalprobe/insight/unblock.py",
+        "tests/test_environment.py",
+        "tests/test_handoff.py",
+        "tests/test_publication.py",
+        "tests/test_unblock.py",
+        "tests/test_io.py",
+        "tests/test_report_workflows.py",
+        "tests/test_roadmap.py",
+        "tests/test_status.py",
+    }
+
+    assert expected_paths.issubset(set(DEFAULT_REPO_PATHS))
+    report = release_boundary_report(artifact_paths=DEFAULT_REPO_PATHS)
+    by_path = {record["path"]: record for record in report["records"]}
+    assert {by_path[path]["category"] for path in expected_paths} == {"candidate_public"}

@@ -2,10 +2,16 @@
 
 from __future__ import annotations
 
+try:
+    from scripts import _path_bootstrap  # noqa: F401
+except ImportError:
+    import _path_bootstrap  # noqa: F401
+
 import argparse
 import json
 from pathlib import Path
 
+from crystalprobe.core.io import atomic_write_json
 from crystalprobe.datahub.cod import lisdexamfetamine_cod_queries, query_cod
 
 
@@ -44,8 +50,7 @@ def main() -> int:
             },
         },
     }
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8", newline="\n")
+    atomic_write_json(args.output, report)
     print(json.dumps({"output": str(args.output), "cod_queries": len(query_results)}, indent=2, sort_keys=True))
     return 0
 

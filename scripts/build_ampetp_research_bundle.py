@@ -2,6 +2,11 @@
 
 from __future__ import annotations
 
+try:
+    from scripts import _path_bootstrap  # noqa: F401
+except ImportError:
+    import _path_bootstrap  # noqa: F401
+
 import argparse
 import json
 from pathlib import Path
@@ -12,6 +17,7 @@ from crystalprobe.core.artifacts import (
     build_artifact_manifest,
     write_artifact_manifest,
 )
+from crystalprobe.core.io import atomic_write_text
 
 
 ARTIFACTS = [
@@ -73,7 +79,7 @@ def main() -> int:
         ],
     )
     write_artifact_manifest(args.output_json, manifest)
-    args.output_md.write_text(artifact_manifest_markdown(manifest), encoding="utf-8", newline="\n")
+    atomic_write_text(args.output_md, artifact_manifest_markdown(manifest))
     print(json.dumps({"json": str(args.output_json), "markdown": str(args.output_md)}, indent=2, sort_keys=True))
     return 0
 

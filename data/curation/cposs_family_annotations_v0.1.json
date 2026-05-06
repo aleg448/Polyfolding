@@ -1,0 +1,44 @@
+{
+  "schema_version": "0.1.0",
+  "status": "cposs_family_annotations_seeded",
+  "families": {
+    "CBZ": {
+      "common_name": "carbamazepine",
+      "smiles": "NC(=O)N1C2=CC=CC=C2C=CC2=CC=CC=C21",
+      "flexibility_class": "semi_rigid",
+      "h_bond_motifs": [
+        "amide"
+      ],
+      "functional_groups": [
+        "amide",
+        "dibenzazepine"
+      ],
+      "has_halogen": false,
+      "has_charge": false,
+      "is_chiral": false,
+      "chemistry_tags": [
+        "amide",
+        "neurology_foundation_medicine"
+      ]
+    },
+    "IBP": {
+      "common_name": "ibuprofen",
+      "smiles": "CC(C)CC1=CC=C(C=C1)C(C)C(=O)O",
+      "flexibility_class": "semi_rigid",
+      "h_bond_motifs": [
+        "carboxylic_acid"
+      ],
+      "functional_groups": [
+        "carboxylic_acid",
+        "aryl"
+      ],
+      "has_halogen": false,
+      "has_charge": false,
+      "is_chiral": true,
+      "chemistry_tags": [
+        "carboxylic_acid",
+        "everyday_foundation_medicine"
+      ]
+    }
+  }
+}

@@ -4,16 +4,14 @@ This guide records the local rebuild order for the current CrystalProbe research
 
 The companion manifest is `data/curation/report_workflows_v0.1.json`; tests check that the scripts named there still exist.
 
-From an uninstalled source checkout, set the local package path before running report generators:
-
-```powershell
-$env:PYTHONPATH='src'
-```
+Report scripts bootstrap the repo-local `src/` package path, so the documented `python scripts\...` commands work from an uninstalled source checkout without setting `PYTHONPATH`.
 
 ## Guardrails
 
 - Keep raw CCDC exports in `data/sources/` or another ignored local directory.
 - Treat `outputs/` as reproducible generated evidence; hash or bundle outputs before using them in a paper draft.
+- Report generators write JSON and Markdown outputs through same-directory atomic replacement where practical, so downstream rebuilds should not observe empty or partially written report files.
+- Record active Python dependency visibility separately from dependencies installed in `.venv`, Docker, or isolated backend environments.
 - Do not interpret perturbation sensitivity results as polymorph stability rankings.
 - Record exact backend names, checkpoints, input hashes, and blockers before promoting any claim beyond a pilot result.
 - When human database validation is unavailable, rebuild the evidence-tier report and keep the target below benchmark-grade claims.
@@ -101,6 +99,9 @@ Use this report for medication-priority targets that need coordinates before mea
 ```powershell
 python scripts\build_source_discovery_report.py
 python scripts\build_source_acquisition_report.py
+python scripts\build_medication_cif_ingestion_report.py --extract
+python scripts\build_medication_figures.py
+python scripts\build_medication_research_bundle.py
 ```
 
 Primary outputs:
@@ -109,8 +110,35 @@ Primary outputs:
 - `outputs/crystalprobe_source_discovery.md`
 - `outputs/crystalprobe_source_acquisition.json`
 - `outputs/crystalprobe_source_acquisition.md`
+- `outputs/medication_cif_ingestion.json`
+- `outputs/medication_cif_ingestion.md`
+- `outputs/medication_measurement_summary.json`
+- `outputs/medication_measurement_summary.md`
+- `outputs/figures/medication_case_study_coverage.svg`
+- `outputs/medication_research_bundle_manifest.json`
+- `outputs/medication_research_bundle_manifest.md`
 
-The current reports classify atomoxetine hydrochloride as coordinate-access validation, methylphenidate hydrochloride as a literature route that still needs coordinate validation, and modafinil as a public supporting-information CIF candidate whose direct ACS shell download did not complete. Manual CCDC/ACS browser input is still required before any of those targets can become measured crystal cases.
+The current reports classify modafinil, atomoxetine hydrochloride, and methylphenidate hydrochloride as measured local-only targets after the user-provided CIF downloads. These sources remain local-only until redistribution terms are reviewed.
+
+Medication single-structure measurements use selected block IDs from `data/curation/medication_cif_selection_v0.1.json`. Run MACE first, then AIMNet2 and UMA only for selected blocks that parse cleanly.
+
+Medication backend runs are tracked in `data/curation/medication_backend_blockers_v0.1.json` and rendered into `outputs/medication_measurement_summary.md`. The current blocker file is cleared: the selected modafinil, atomoxetine hydrochloride, and methylphenidate hydrochloride proof blocks each have MACE, AIMNet2, and UMA measurements. Do not reintroduce a blocker unless the corresponding backend output is missing or fails validation.
+
+## CPOSS benchmark promotion
+
+Use this gate to keep CPOSS candidates below benchmark status until stability evidence is attached.
+
+```powershell
+python scripts\build_cposs_promoted_pairs.py
+```
+
+Primary outputs:
+
+- `outputs/cposs_promotion_gate.json`
+- `outputs/cposs_promotion_gate.md`
+- `outputs/cposs_promoted_pairs.jsonl`
+
+The promotion gate only emits canonical `PolymorphPair` records for candidates with experimental stability ordering, citation, license decisions, disorder annotations, curator, reviewer, and a promote decision.
 
 ## Therapeutic sensitivity contrast
 
@@ -159,6 +187,60 @@ Primary outputs:
 
 OMAT24 and OMol25 access are accepted locally, but these models remain validation-blocked for CrystalProbe scientific claims until task-specific calculation paths and reference policies are implemented.
 
+## Active Python dependency blockers
+
+Use this report before interpreting a failed local command as a missing project capability. It records which optional scientific dependencies are visible to the active `python` executable and which configured project runners can satisfy backend-specific dependency groups.
+
+```powershell
+python scripts\build_environment_blockers_report.py
+```
+
+Primary outputs:
+
+- `outputs/crystalprobe_environment_blockers.json`
+- `outputs/crystalprobe_environment_blockers.md`
+
+## Execution unblock checklist
+
+Use this report to bring active Python dependency blockers, medication backend blockers, and queue-level runner blockers into one approval-ready checklist.
+
+```powershell
+python scripts\build_execution_unblock_report.py
+```
+
+Primary outputs:
+
+- `outputs/crystalprobe_execution_unblock_report.json`
+- `outputs/crystalprobe_execution_unblock_report.md`
+
+The current execution-unblock state is clear when the configured `.venv` and `.venv-fairchem` runners are present. Remaining blockers are publication and curation gates, not local execution blockers.
+
+## Handoff summary
+
+Use this report as the first artifact to open after a long unattended run. It distills project status, roadmap status, measurement queue, and the execution unblock checklist into one compact local handoff.
+
+```powershell
+python scripts\build_handoff_report.py
+```
+
+Primary outputs:
+
+- `outputs/crystalprobe_handoff_summary.json`
+- `outputs/crystalprobe_handoff_summary.md`
+
+## Publication readiness
+
+Use this report as a conservative release gate before treating local artifacts as paper- or public-release-ready. It combines CPOSS promotion status, fingerprint figure readiness, release-boundary categories, execution blockers, and remaining human-input items.
+
+```powershell
+python scripts\build_publication_readiness_report.py
+```
+
+Primary outputs:
+
+- `outputs/crystalprobe_publication_readiness.json`
+- `outputs/crystalprobe_publication_readiness.md`
+
 ## Substance research profiles
 
 Use this report to consolidate the medication-priority queue, local measurements, evidence tiers, CPOSS disagreement, and claim boundaries into one substance-by-substance view.
@@ -189,6 +271,8 @@ Primary outputs:
 
 The queue priority is not a clinical or medical priority ranking. It is a CrystalProbe roadmap utility ranking.
 
+The queue also records active-runner blockers from `outputs/crystalprobe_environment_blockers.json`, so a dependency-heavy action can be scientifically ready while still requiring `.venv`, Docker, or another Python environment to execute.
+
 ## AGI-assisted evidence-tier policy
 
 Use this report when lisdexamfetamine coordinates or human validation are unavailable. It keeps AGI-assisted evidence usable while preventing automatic promotion into benchmark claims.
@@ -214,14 +298,21 @@ python scripts\build_roadmap_status_report.py
 python scripts\build_release_boundary_report.py
 python scripts\build_source_discovery_report.py
 python scripts\build_source_acquisition_report.py
+python scripts\build_medication_cif_ingestion_report.py
+python scripts\build_cposs_promoted_pairs.py
+python scripts\build_fingerprint_artifact_plan.py
 python scripts\build_evidence_tier_report.py
 python scripts\build_substance_profiles.py
 python scripts\build_measurement_queue.py
 python scripts\build_model_guardrails_report.py
+python scripts\build_environment_blockers_report.py
+python scripts\build_execution_unblock_report.py
+python scripts\build_handoff_report.py
+python scripts\build_publication_readiness_report.py
 python scripts\build_uncertainty_proxy_report.py
 ```
 
-Replace `CURRENT_TEST_SUMMARY` with the latest local pytest result, for example `54 passed, 3 skipped`.
+Replace `CURRENT_TEST_SUMMARY` with the latest local pytest result, for example `151 passed, 3 skipped`.
 
 Primary outputs:
 
@@ -232,10 +323,18 @@ Primary outputs:
 - `outputs/crystalprobe_release_boundary.md`
 - `outputs/crystalprobe_source_discovery.md`
 - `outputs/crystalprobe_source_acquisition.md`
+- `outputs/medication_cif_ingestion.md`
+- `outputs/medication_measurement_summary.md`
+- `outputs/cposs_promotion_gate.md`
+- `outputs/crystalprobe_fingerprint_artifact_plan.md`
 - `outputs/crystalprobe_evidence_tiers.md`
 - `outputs/crystalprobe_substance_profiles.md`
 - `outputs/crystalprobe_measurement_queue.md`
 - `outputs/fairchem_model_guardrails.md`
+- `outputs/crystalprobe_environment_blockers.md`
+- `outputs/crystalprobe_execution_unblock_report.md`
+- `outputs/crystalprobe_handoff_summary.md`
+- `outputs/crystalprobe_publication_readiness.md`
 - `outputs/crystalprobe_uncertainty_proxy_v0.md`
 
 ## Verification

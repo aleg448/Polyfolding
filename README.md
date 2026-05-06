@@ -2,7 +2,7 @@
 
 CrystalProbe is an interpretability-first research suite for trustworthy polymorph prediction.
 
-The near-term goal is to make polymorph-pair evaluation reproducible before building larger CSP automation on top of it. This repository currently contains the Week 1 foundation:
+The near-term goal is to make polymorph-pair evaluation reproducible before building larger CSP automation on top of it. This repository currently contains the source-controlled research suite for:
 
 - A Pydantic schema for polymorph-pair benchmark records.
 - Dataset loading, validation, slicing, and summary utilities.
@@ -10,9 +10,19 @@ The near-term goal is to make polymorph-pair evaluation reproducible before buil
 - A dependency-light uncertainty wrapper interface for MLIP adapters.
 - Quick benchmark reporting with provenance ledger output.
 - Optional backend discovery for CIF parsing, MLIPs, and FastCSP.
-- Draft benchmark curation records and paper outlines.
+- Draft benchmark curation records, guarded promotion gates, and paper outlines.
+- Local-only medication CIF ingestion, measurement summaries, and case-study figures.
+- CPOSS candidate triage, evidence workpacks, and publication-readiness gates.
 
 The repository is intentionally structured so benchmark curation, model inference, uncertainty calibration, and paper generation can progress independently while sharing one tested contract.
+
+## Current Research State
+
+- AMPETP is the first paper-ready single-structure pilot, with MACE, AIMNet2, UMA, sensitivity, figures, and research-bundle reports generated locally.
+- Modafinil, atomoxetine hydrochloride, and methylphenidate hydrochloride have local-only CCDC/CSD-derived CIF proof blocks selected and measured with MACE, AIMNet2, and UMA.
+- The local execution queue is clear when the configured `.venv` and `.venv-fairchem` runners are available: dependency visibility, medication backend blockers, and queue runner blockers report no active execution blockers.
+- CPOSS records remain candidate-only. Verified benchmark and fingerprint-paper claims are blocked until experimental stability evidence, license decisions, disorder annotations, and promotion review produce at least 20 verified pairs.
+- Raw CCDC/CSD-derived CIFs and extracted coordinate-bearing blocks are not release artifacts unless license review explicitly permits redistribution.
 
 ## Quick Start
 

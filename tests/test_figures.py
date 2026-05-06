@@ -3,6 +3,7 @@ import pytest
 from crystalprobe.insight.figures import (
     backend_measurement_svg,
     guardrail_svg,
+    medication_case_study_svg,
     provenance_flow_svg,
     sensitivity_delta_svg,
     structure_projection_svg,
@@ -30,6 +31,30 @@ def test_backend_measurement_svg_renders_backend_names():
     )
     assert "mace" in svg
     assert "aimnet2" in svg
+
+
+def test_medication_case_study_svg_renders_targets_and_pending_runs():
+    svg = medication_case_study_svg(
+        {
+            "targets": [
+                {
+                    "name": "modafinil",
+                    "blocks": [
+                        {
+                            "measured_backend_count": 1,
+                            "backend_measurements": [
+                                {"backend": "mace", "status": "measured"},
+                                {"backend": "uma", "status": "pending_due_limit"},
+                            ],
+                        }
+                    ],
+                }
+            ]
+        }
+    )
+
+    assert "modafinil" in svg
+    assert "Pending backend runs" in svg
 
 
 def test_sensitivity_delta_svg_skips_reference():

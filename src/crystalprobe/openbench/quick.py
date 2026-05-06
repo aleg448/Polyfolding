@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
-import json
 from dataclasses import dataclass
 from pathlib import Path
 
 from crystalprobe.benchmark.dataset import load_manifest
 from crystalprobe.benchmark.predictions import load_pair_energy_prediction_records, load_pair_energy_predictions
+from crystalprobe.core.io import atomic_write_json, atomic_write_text
 from crystalprobe.core.ledger import LedgerEntry, file_sha256, record_ledger_entry
 from crystalprobe.insight.calibration import build_calibration_report
 from crystalprobe.insight.fingerprint import build_fingerprint_report
@@ -49,13 +49,9 @@ def run_quick_benchmark(
     report_json = output_path / "fingerprint_report.json"
     report_markdown = output_path / "fingerprint_report.md"
     calibration_json = output_path / "calibration_report.json"
-    with report_json.open("w", encoding="utf-8", newline="\n") as handle:
-        json.dump(report.as_dict(), handle, indent=2, sort_keys=True)
-        handle.write("\n")
-    report_markdown.write_text(fingerprint_markdown(report), encoding="utf-8", newline="\n")
-    with calibration_json.open("w", encoding="utf-8", newline="\n") as handle:
-        json.dump(calibration.as_dict(), handle, indent=2, sort_keys=True)
-        handle.write("\n")
+    atomic_write_json(report_json, report.as_dict())
+    atomic_write_text(report_markdown, fingerprint_markdown(report))
+    atomic_write_json(calibration_json, calibration.as_dict())
 
     ledger_path = Path(ledger) if ledger else None
     if ledger_path:

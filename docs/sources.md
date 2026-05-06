@@ -71,17 +71,19 @@ Medication-priority source discovery is split into two layers:
 
 Current acquisition status:
 
-- Modafinil: ACS lists CIF supporting-information files for DOI `10.1021/cg030069t`, and the article cites CCDC `229171`; direct local shell download did not produce a usable CIF, so manual ACS or CCDC Access Structures download is still required.
-- Atomoxetine hydrochloride: the Powder Diffraction article DOI `10.1017/S0885715614000517` and secondary CSD `1519130` clue identify a coordinate route, but a CIF has not been validated locally.
-- Methylphenidate hydrochloride: deeper search found a Pharm. Res. 1995 parent-salt crystal-data route, DOI `10.1023/A:1016262815984`, plus analogue crystal papers; parent-salt coordinates are still not obtained.
+- Modafinil: a local CCDC/CSD-derived CIF bundle is available at `data/sources/modafinil/1415719-969516.cif`; selected parent blocks are recorded in `data/curation/medication_cif_selection_v0.1.json`.
+- Atomoxetine hydrochloride: a local CCDC/CSD-derived bundle is available at `data/sources/ccdc/1302784-1519130.cif`; CCDC `1519130` is the primary selected block.
+- Methylphenidate hydrochloride: a local CCDC/CSD-derived bundle is available at `data/sources/ccdc/121320-2256172.cif`; CCDC `1453371` is the parent-salt priority block and analogue blocks remain role-labeled.
 
 Use:
 
 ```powershell
 python scripts\build_source_acquisition_report.py
+python scripts\build_medication_cif_ingestion_report.py --extract
+python scripts\build_medication_research_bundle.py
 ```
 
-Do not use medication analogue CIFs as parent-medication benchmark proof.
+The current selected medication proof blocks have local MACE, AIMNet2, and UMA measurements. Do not use medication analogue CIFs as parent-medication benchmark proof, and do not redistribute CCDC/CSD-derived coordinates without an explicit license decision.
 
 ## MACE-OFF
 

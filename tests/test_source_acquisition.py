@@ -10,6 +10,7 @@ def test_source_acquisition_report_counts_user_input_and_failures():
                     "task": "download_public_cif_candidate",
                     "status": "download_not_completed_manual_access_required",
                     "download_attempts": [{"result": "failed", "method": "curl"}],
+                    "local_coordinate_sources": [{"path": "data/sources/modafinil/file.cif"}],
                     "required_user_input": ["Download in browser."],
                 },
                 {
@@ -25,6 +26,7 @@ def test_source_acquisition_report_counts_user_input_and_failures():
     by_name = {target["name"]: target for target in report["targets"]}
     assert report["targets_requiring_user_input"] == 1
     assert by_name["modafinil"]["failed_download_attempt_count"] == 1
+    assert by_name["modafinil"]["local_coordinate_source_count"] == 1
     assert by_name["carbamazepine"]["requires_user_input"] is False
 
 

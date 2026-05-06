@@ -2,10 +2,16 @@
 
 from __future__ import annotations
 
+try:
+    from scripts import _path_bootstrap  # noqa: F401
+except ImportError:
+    import _path_bootstrap  # noqa: F401
+
 import argparse
 import json
 from pathlib import Path
 
+from crystalprobe.core.io import atomic_write_json, atomic_write_text
 from crystalprobe.insight.case_study import build_single_structure_case_study, case_study_markdown, load_prediction
 
 
@@ -36,10 +42,8 @@ def main() -> int:
         source_record=source_record,
     )
 
-    args.output_json.parent.mkdir(parents=True, exist_ok=True)
-    args.output_json.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8", newline="\n")
-    args.output_md.parent.mkdir(parents=True, exist_ok=True)
-    args.output_md.write_text(case_study_markdown(report), encoding="utf-8", newline="\n")
+    atomic_write_json(args.output_json, report)
+    atomic_write_text(args.output_md, case_study_markdown(report))
     print(json.dumps({"json": str(args.output_json), "markdown": str(args.output_md)}, indent=2))
     return 0
 

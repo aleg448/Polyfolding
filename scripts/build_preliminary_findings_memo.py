@@ -2,10 +2,16 @@
 
 from __future__ import annotations
 
+try:
+    from scripts import _path_bootstrap  # noqa: F401
+except ImportError:
+    import _path_bootstrap  # noqa: F401
+
 import argparse
 import json
 from pathlib import Path
 
+from crystalprobe.core.io import atomic_write_text
 from crystalprobe.insight.memo import preliminary_findings_memo
 
 
@@ -26,8 +32,7 @@ def main() -> int:
         bundle_manifest=json.loads(args.bundle.read_text(encoding="utf-8")),
         therapeutic_contrast=json.loads(args.contrast.read_text(encoding="utf-8")) if args.contrast.exists() else None,
     )
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(memo, encoding="utf-8", newline="\n")
+    atomic_write_text(args.output, memo)
     print(json.dumps({"memo": str(args.output)}, indent=2, sort_keys=True))
     return 0
 

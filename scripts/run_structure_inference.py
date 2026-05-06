@@ -2,6 +2,11 @@
 
 from __future__ import annotations
 
+try:
+    from scripts import _path_bootstrap  # noqa: F401
+except ImportError:
+    import _path_bootstrap  # noqa: F401
+
 import argparse
 import json
 from pathlib import Path
@@ -9,6 +14,7 @@ from typing import Any
 
 from ase.io import read
 
+from crystalprobe.core.io import atomic_write_json
 from crystalprobe.datahub.ccdc import write_ccdc_block
 from crystalprobe.foundry.optional_adapters import AIMNet2Adapter, MACEOffAdapter, UMAAdapter
 from crystalprobe.insight.local_geometry import analyze_local_geometry
@@ -86,8 +92,7 @@ def main() -> int:
     if not args.no_local_geometry:
         row["local_geometry"] = analyze_local_geometry(atoms, forces=prediction.forces)
 
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(row, indent=2, sort_keys=True), encoding="utf-8", newline="\n")
+    atomic_write_json(args.output, row)
     print(json.dumps({"output": str(args.output), "structure_id": args.structure_id, "backend": args.backend}, indent=2))
     return 0
 

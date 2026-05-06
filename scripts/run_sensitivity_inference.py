@@ -2,6 +2,11 @@
 
 from __future__ import annotations
 
+try:
+    from scripts import _path_bootstrap  # noqa: F401
+except ImportError:
+    import _path_bootstrap  # noqa: F401
+
 import argparse
 import json
 import math
@@ -10,6 +15,7 @@ from typing import Any
 
 from ase.io import read
 
+from crystalprobe.core.io import atomic_write_text
 from crystalprobe.core.paths import portable_path
 from crystalprobe.foundry.optional_adapters import AIMNet2Adapter, MACEOffAdapter, UMAAdapter
 from crystalprobe.insight.local_geometry import analyze_local_geometry
@@ -64,42 +70,42 @@ def main() -> int:
 
     completed = 0
     errors = 0
-    with args.output.open("w", encoding="utf-8", newline="\n") as handle:
-        for variant in manifest["variants"]:
-            try:
-                variant_path = portable_path(variant["path"])
-                atoms = read(str(variant_path))
-                prediction = model.predict(atoms)
-                row = {
-                    "backend": args.backend,
-                    "manifest": str(args.manifest),
-                    "variant": variant["name"],
-                    "variant_path": str(variant_path),
-                    "formula": atoms.get_chemical_formula(),
-                    "natoms": len(atoms),
-                    "pbc": [bool(value) for value in atoms.pbc],
-                    "energy_ev": prediction.energy,
-                    "force_summary": _force_summary(prediction.forces),
-                    "model_metadata": prediction.metadata,
-                    "perturbation": variant,
-                }
-                if not args.no_local_geometry:
-                    row["local_geometry"] = analyze_local_geometry(atoms, forces=prediction.forces)
-            except Exception as exc:
-                if not args.continue_on_error:
-                    raise
-                row = {
-                    "backend": args.backend,
-                    "manifest": str(args.manifest),
-                    "variant": variant["name"],
-                    "variant_path": variant.get("path"),
-                    "error": f"{type(exc).__name__}: {exc}",
-                }
-                errors += 1
-            else:
-                completed += 1
-            handle.write(json.dumps(row, sort_keys=True, separators=(",", ":")))
-            handle.write("\n")
+    rows = []
+    for variant in manifest["variants"]:
+        try:
+            variant_path = portable_path(variant["path"])
+            atoms = read(str(variant_path))
+            prediction = model.predict(atoms)
+            row = {
+                "backend": args.backend,
+                "manifest": str(args.manifest),
+                "variant": variant["name"],
+                "variant_path": str(variant_path),
+                "formula": atoms.get_chemical_formula(),
+                "natoms": len(atoms),
+                "pbc": [bool(value) for value in atoms.pbc],
+                "energy_ev": prediction.energy,
+                "force_summary": _force_summary(prediction.forces),
+                "model_metadata": prediction.metadata,
+                "perturbation": variant,
+            }
+            if not args.no_local_geometry:
+                row["local_geometry"] = analyze_local_geometry(atoms, forces=prediction.forces)
+        except Exception as exc:
+            if not args.continue_on_error:
+                raise
+            row = {
+                "backend": args.backend,
+                "manifest": str(args.manifest),
+                "variant": variant["name"],
+                "variant_path": variant.get("path"),
+                "error": f"{type(exc).__name__}: {exc}",
+            }
+            errors += 1
+        else:
+            completed += 1
+        rows.append(json.dumps(row, sort_keys=True, separators=(",", ":")))
+    atomic_write_text(args.output, "\n".join(rows) + ("\n" if rows else ""))
 
     print(
         json.dumps(

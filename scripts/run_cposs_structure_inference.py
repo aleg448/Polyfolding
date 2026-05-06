@@ -2,12 +2,18 @@
 
 from __future__ import annotations
 
+try:
+    from scripts import _path_bootstrap  # noqa: F401
+except ImportError:
+    import _path_bootstrap  # noqa: F401
+
 import argparse
 import json
 import math
 from pathlib import Path
 from typing import Any
 
+from crystalprobe.core.io import atomic_write_text
 from crystalprobe.datahub.cposs209 import CpossStructureRecord, index_cposs_cif
 from crystalprobe.foundry.optional_adapters import AIMNet2Adapter, MACEOffAdapter, UMAAdapter
 from crystalprobe.insight.local_geometry import analyze_local_geometry
@@ -101,30 +107,30 @@ def main() -> int:
 
     completed = 0
     errors = 0
-    with args.output.open("w", encoding="utf-8", newline="\n") as handle:
-        for record in records:
-            try:
-                row = _prediction_row(
-                    record,
-                    source_path=source_path,
-                    adapter=model,
-                    include_local_geometry=not args.no_local_geometry,
-                )
-            except Exception as exc:
-                if not args.continue_on_error:
-                    raise
-                row = {
-                    "block_id": record.block_id,
-                    "family_code": record.family_code,
-                    "source_file": record.source_file,
-                    "source_index": record.source_index,
-                    "error": f"{type(exc).__name__}: {exc}",
-                }
-                errors += 1
-            else:
-                completed += 1
-            handle.write(json.dumps(row, sort_keys=True, separators=(",", ":")))
-            handle.write("\n")
+    rows = []
+    for record in records:
+        try:
+            row = _prediction_row(
+                record,
+                source_path=source_path,
+                adapter=model,
+                include_local_geometry=not args.no_local_geometry,
+            )
+        except Exception as exc:
+            if not args.continue_on_error:
+                raise
+            row = {
+                "block_id": record.block_id,
+                "family_code": record.family_code,
+                "source_file": record.source_file,
+                "source_index": record.source_index,
+                "error": f"{type(exc).__name__}: {exc}",
+            }
+            errors += 1
+        else:
+            completed += 1
+        rows.append(json.dumps(row, sort_keys=True, separators=(",", ":")))
+    atomic_write_text(args.output, "\n".join(rows) + ("\n" if rows else ""))
 
     print(
         json.dumps(

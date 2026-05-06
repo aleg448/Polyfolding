@@ -5,11 +5,58 @@ from __future__ import annotations
 from typing import Any
 
 
+def _promotion_gate_summary(cposs_promotion_gate: dict[str, Any]) -> str:
+    promoted_count = cposs_promotion_gate.get("promoted_count", 0)
+    milestones = cposs_promotion_gate.get("milestones", [])
+    if not milestones:
+        return f"CPOSS promotion gate records {promoted_count} promoted benchmark pairs."
+    milestone_text = ", ".join(
+        f"{milestone.get('pair_count')} pairs: {milestone.get('status')} ({milestone.get('remaining')} remaining)"
+        for milestone in milestones
+    )
+    return f"CPOSS promotion gate records {promoted_count} promoted benchmark pairs; milestones: {milestone_text}."
+
+
+def _first_pending_milestone(cposs_promotion_gate: dict[str, Any]) -> dict[str, Any] | None:
+    for milestone in cposs_promotion_gate.get("milestones", []):
+        if milestone.get("status") != "met":
+            return milestone
+    return None
+
+
+def _fingerprint_candidate_slice_summary(fingerprint_artifact_plan: dict[str, Any]) -> str:
+    family_rows = fingerprint_artifact_plan.get("candidate_family_summary", [])
+    if not family_rows:
+        return "Fingerprint artifact plan gates chemistry-slice figures on verified pair counts."
+    family_text = ", ".join(
+        f"{row.get('family')}={row.get('candidate_count')} candidates/{row.get('promoted_count')} promoted"
+        for row in family_rows
+    )
+    return f"Fingerprint artifact plan gates chemistry-slice figures and tracks pre-benchmark candidate slices: {family_text}."
+
+
+def _environment_summary(environment_blockers: dict[str, Any]) -> str:
+    missing = [
+        row.get("module")
+        for row in environment_blockers.get("dependencies", [])
+        if row.get("status") != "available"
+    ]
+    if not missing:
+        return "Active Python environment report records all tracked optional scientific dependencies as visible."
+    return (
+        "Active Python environment report records missing optional dependencies in this runner: "
+        f"{', '.join(str(module) for module in missing)}."
+    )
+
+
 def roadmap_status_report(
     *,
     project_status: dict[str, Any],
     readiness: dict[str, Any],
     cposs_bridge: dict[str, Any],
+    cposs_promotion_gate: dict[str, Any] | None = None,
+    fingerprint_artifact_plan: dict[str, Any] | None = None,
+    environment_blockers: dict[str, Any] | None = None,
     has_preprint_draft: bool,
     has_joss_draft: bool,
     has_fastcsp_plan: bool,
@@ -26,6 +73,11 @@ def roadmap_status_report(
     has_uncertainty_proxy: bool = False,
     has_substance_profiles: bool = False,
     has_measurement_queue: bool = False,
+    has_medication_cif_ingestion: bool = False,
+    has_medication_measurements: bool = False,
+    has_cposs_promotion_gate: bool = False,
+    has_fingerprint_artifact_plan: bool = False,
+    has_environment_blockers: bool = False,
 ) -> dict[str, Any]:
     """Map current local artifacts to the four CrystalProbe roadmap deliverables."""
 
@@ -35,6 +87,10 @@ def roadmap_status_report(
     uma_ampetp_sensitivity_verified = "uma_ampetp_sensitivity" in docker_status
     uma_therapeutic_contrast_verified = "uma_therapeutic_contrast" in docker_status
     aimnet2_therapeutic_contrast_verified = "aimnet2_therapeutic_contrast" in docker_status
+    promotion_gate = cposs_promotion_gate or {}
+    pending_promotion_milestone = _first_pending_milestone(promotion_gate)
+    artifact_plan = fingerprint_artifact_plan or {}
+    environment_report = environment_blockers or {}
     deliverables = [
         {
             "deliverable": "Polymorph-pair benchmark",
@@ -72,6 +128,12 @@ def roadmap_status_report(
                 "Source-discovery report differentiates modafinil download, atomoxetine validation, and methylphenidate deeper search."
                 if has_source_discovery
                 else "Medication source-discovery report is missing.",
+                "Medication CIF ingestion records local selected blocks for modafinil, atomoxetine hydrochloride, and methylphenidate hydrochloride."
+                if has_medication_cif_ingestion
+                else "Medication CIF ingestion report is missing.",
+                _promotion_gate_summary(promotion_gate)
+                if has_cposs_promotion_gate
+                else "CPOSS benchmark promotion gate is missing.",
             ],
             "remaining": [
                 "Promote pair candidates into curated records after experimental stability evidence is attached."
@@ -105,9 +167,24 @@ def roadmap_status_report(
                 "Execute the top measurement-queue actions while keeping blocked coordinate targets in curation status."
                 if has_measurement_queue
                 else "Generate the measurement queue from substance profiles.",
-                "Download and inspect modafinil SI CIFs after license review; validate atomoxetine coordinate access; continue methylphenidate deeper search."
-                if has_source_discovery
-                else "Create source-discovery records for the next medication targets.",
+                "Run local MACE/AIMNet2/UMA measurements for selected medication CIF blocks."
+                if has_medication_cif_ingestion and not has_medication_measurements
+                else "Summarize medication measurements and keep release boundaries local-only."
+                if has_medication_measurements
+                else (
+                    "Download and inspect modafinil SI CIFs after license review; validate atomoxetine coordinate access; continue methylphenidate deeper search."
+                    if has_source_discovery
+                    else "Create source-discovery records for the next medication targets."
+                ),
+                (
+                    "Use the CPOSS promotion gate to fill "
+                    f"{pending_promotion_milestone.get('remaining')} more verified pairs for the "
+                    f"{pending_promotion_milestone.get('pair_count')}-pair milestone, then continue to 50 and 100+."
+                )
+                if pending_promotion_milestone
+                else "Use the CPOSS promotion gate to keep verified pair records release-ready as the benchmark grows."
+                if has_cposs_promotion_gate
+                else "Add a promotion gate from evidence workpacks to canonical benchmark pair records.",
             ],
         },
         {
@@ -129,6 +206,9 @@ def roadmap_status_report(
                 "High-priority CPOSS backend-disagreement metrics are available."
                 if has_cposs_backend_disagreement
                 else "High-priority CPOSS backend-disagreement metrics are missing.",
+                _fingerprint_candidate_slice_summary(artifact_plan)
+                if has_fingerprint_artifact_plan
+                else "Fingerprint artifact plan is missing.",
                 "AMPETP has Docker/fairchem UMA reference and sensitivity measurements."
                 if uma_ampetp_sensitivity_verified
                 else (
@@ -155,6 +235,9 @@ def roadmap_status_report(
                     )
                 ),
                 "Scale from pilot/bridge results to curated pairwise benchmark slices.",
+                "Generate real chemistry-slice figures after the 20 verified-pair milestone is reached."
+                if has_fingerprint_artifact_plan
+                else "Add figure-readiness gates for benchmark composition, ranking accuracy, calibration, and diagnostic failure modes.",
                 "Extend backend-disagreement metrics from AMPETP sensitivity to CPOSS candidate pairs."
                 if has_backend_disagreement and not has_cposs_backend_disagreement
                 else "Use the CPOSS disagreement report to choose bounded case-study examples."
@@ -192,6 +275,9 @@ def roadmap_status_report(
                 "OMAT24/OMol25 model guardrails are documented before scientific use."
                 if has_model_guardrails
                 else "OMAT24/OMol25 model guardrail report is missing.",
+                _environment_summary(environment_report)
+                if has_environment_blockers
+                else "Active Python dependency blocker report is missing.",
             ],
             "remaining": [
                 "Wire CrystalProbe uncertainty/reporting outputs into a fairchem/UMA-compatible workflow.",
@@ -199,6 +285,11 @@ def roadmap_status_report(
                 "Run a FastCSP-specific integration smoke test."
                 if docker_verified
                 else "Wire CrystalProbe uncertainty/reporting outputs into a FastCSP-compatible workflow.",
+                "Run dependency-heavy commands through `.venv`, Docker, or a Python where ASE/MACE/AIMNet2/fairchem are visible."
+                if has_environment_blockers and environment_report.get("missing_count", 0)
+                else "Keep active Python dependency visibility report current before debugging backend failures."
+                if has_environment_blockers
+                else "Generate the active Python dependency blocker report.",
             ],
         },
         {
@@ -213,6 +304,9 @@ def roadmap_status_report(
                 "Measurement queue generator turns profiles into reproducible next-action priorities."
                 if has_measurement_queue
                 else "Measurement queue generator is missing.",
+                "Active-environment blocker report records optional dependency visibility for reproducible troubleshooting."
+                if has_environment_blockers
+                else "Active-environment blocker report is missing.",
             ],
             "remaining": [
                 "Commit and push accumulated changes.",

@@ -2,10 +2,16 @@
 
 from __future__ import annotations
 
+try:
+    from scripts import _path_bootstrap  # noqa: F401
+except ImportError:
+    import _path_bootstrap  # noqa: F401
+
 import argparse
 import json
 from pathlib import Path
 
+from crystalprobe.core.io import atomic_write_json, atomic_write_text
 from crystalprobe.insight.readiness import ampetp_readiness_report, readiness_markdown
 
 
@@ -27,10 +33,8 @@ def main() -> int:
         evidence_tiers=json.loads(args.evidence_tiers.read_text(encoding="utf-8")) if args.evidence_tiers.exists() else None,
         manuscript_text=args.preprint.read_text(encoding="utf-8") if args.preprint.exists() else None,
     )
-    args.json_out.parent.mkdir(parents=True, exist_ok=True)
-    args.json_out.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8", newline="\n")
-    args.md_out.parent.mkdir(parents=True, exist_ok=True)
-    args.md_out.write_text(readiness_markdown(report), encoding="utf-8", newline="\n")
+    atomic_write_json(args.json_out, report)
+    atomic_write_text(args.md_out, readiness_markdown(report))
     print(json.dumps({"json": str(args.json_out), "markdown": str(args.md_out), "status": report["status"]}, indent=2, sort_keys=True))
     return 0 if report["failed"] == 0 else 2
 

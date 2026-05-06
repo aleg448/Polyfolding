@@ -2,10 +2,16 @@
 
 from __future__ import annotations
 
+try:
+    from scripts import _path_bootstrap  # noqa: F401
+except ImportError:
+    import _path_bootstrap  # noqa: F401
+
 import argparse
 import json
 from pathlib import Path
 
+from crystalprobe.core.io import atomic_write_json
 from crystalprobe.insight.structure_predictions import (
     load_structure_prediction_rows,
     summarize_relative_structure_energies,
@@ -21,8 +27,7 @@ def main() -> int:
     rows = load_structure_prediction_rows(args.predictions)
     summary = summarize_relative_structure_energies(rows)
     if args.json_out:
-        args.json_out.parent.mkdir(parents=True, exist_ok=True)
-        args.json_out.write_text(json.dumps(summary, indent=2, sort_keys=True), encoding="utf-8", newline="\n")
+        atomic_write_json(args.json_out, summary)
     print(json.dumps(summary, indent=2, sort_keys=True))
     return 0
 

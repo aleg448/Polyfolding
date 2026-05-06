@@ -2,10 +2,16 @@
 
 from __future__ import annotations
 
+try:
+    from scripts import _path_bootstrap  # noqa: F401
+except ImportError:
+    import _path_bootstrap  # noqa: F401
+
 import argparse
 import json
 from pathlib import Path
 
+from crystalprobe.core.io import atomic_write_json, atomic_write_text
 from crystalprobe.insight.substance_profiles import substance_profile_markdown, substance_profile_report
 
 
@@ -21,6 +27,7 @@ def main() -> int:
     parser.add_argument("--evidence-tiers", type=Path, default=Path("outputs/crystalprobe_evidence_tiers.json"))
     parser.add_argument("--cposs-disagreement", type=Path, default=Path("outputs/cposs_high_priority_backend_disagreement.json"))
     parser.add_argument("--source-discovery", type=Path, default=Path("outputs/crystalprobe_source_discovery.json"))
+    parser.add_argument("--source-acquisition", type=Path, default=Path("outputs/crystalprobe_source_acquisition.json"))
     parser.add_argument("--json-out", type=Path, default=Path("outputs/crystalprobe_substance_profiles.json"))
     parser.add_argument("--md-out", type=Path, default=Path("outputs/crystalprobe_substance_profiles.md"))
     args = parser.parse_args()
@@ -32,11 +39,10 @@ def main() -> int:
         evidence_tiers=_load_optional(args.evidence_tiers),
         cposs_disagreement=_load_optional(args.cposs_disagreement),
         source_discovery=_load_optional(args.source_discovery),
+        source_acquisition=_load_optional(args.source_acquisition),
     )
-    args.json_out.parent.mkdir(parents=True, exist_ok=True)
-    args.json_out.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8", newline="\n")
-    args.md_out.parent.mkdir(parents=True, exist_ok=True)
-    args.md_out.write_text(substance_profile_markdown(report), encoding="utf-8", newline="\n")
+    atomic_write_json(args.json_out, report)
+    atomic_write_text(args.md_out, substance_profile_markdown(report))
     print(json.dumps({"json": str(args.json_out), "markdown": str(args.md_out)}, indent=2, sort_keys=True))
     return 0
 

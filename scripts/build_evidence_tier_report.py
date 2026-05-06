@@ -2,10 +2,16 @@
 
 from __future__ import annotations
 
+try:
+    from scripts import _path_bootstrap  # noqa: F401
+except ImportError:
+    import _path_bootstrap  # noqa: F401
+
 import argparse
 import json
 from pathlib import Path
 
+from crystalprobe.core.io import atomic_write_json, atomic_write_text
 from crystalprobe.insight.evidence_tiers import evidence_tier_markdown, evidence_tier_report
 
 
@@ -66,9 +72,8 @@ def main() -> int:
 
     records = DEFAULT_RECORDS if args.records is None else json.loads(args.records.read_text(encoding="utf-8"))
     report = evidence_tier_report(records)
-    args.json_out.parent.mkdir(parents=True, exist_ok=True)
-    args.json_out.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8", newline="\n")
-    args.md_out.write_text(evidence_tier_markdown(report), encoding="utf-8", newline="\n")
+    atomic_write_json(args.json_out, report)
+    atomic_write_text(args.md_out, evidence_tier_markdown(report))
     print(json.dumps({"json": str(args.json_out), "markdown": str(args.md_out)}, indent=2, sort_keys=True))
     return 0
 

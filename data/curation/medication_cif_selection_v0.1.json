@@ -1,0 +1,115 @@
+{
+  "schema_version": "0.1.0",
+  "status": "medication_cif_selection_recorded",
+  "license_policy": "All CCDC/CSD-derived CIF files listed here are local-only unless redistribution is explicitly reviewed and cleared.",
+  "targets": [
+    {
+      "name": "modafinil",
+      "source_path": "data/sources/modafinil/1415719-969516.cif",
+      "selected_blocks": [
+        {
+          "block_id": "(S)-(+)modafinil",
+          "structure_id": "modafinil_s_plus_241713",
+          "target_role": "parent_medication_priority",
+          "expected_formula": "C15 H15 N O2 S",
+          "ccdc_deposition": "CCDC 241713",
+          "promote_to_profile": true
+        },
+        {
+          "block_id": "(R)-(-)modafinil",
+          "structure_id": "modafinil_r_minus_241714",
+          "target_role": "parent_medication_priority",
+          "expected_formula": "C15 H15 N O2 S",
+          "ccdc_deposition": "CCDC 241714",
+          "promote_to_profile": true
+        },
+        {
+          "block_id": "I",
+          "structure_id": "modafinil_form_i_1456987",
+          "target_role": "parent_medication_candidate",
+          "expected_formula": "C15 H15 N O2 S",
+          "ccdc_deposition": "CCDC 1456987",
+          "promote_to_profile": true
+        },
+        {
+          "block_id": "modamida",
+          "structure_id": "modafinil_modamida_229171",
+          "target_role": "ccdc_229171_candidate_parse_check",
+          "expected_formula": "unknown",
+          "ccdc_deposition": "CCDC 229171",
+          "promote_to_profile": false
+        }
+      ],
+      "excluded_roles": [
+        "hydrate",
+        "co_crystal",
+        "solvate",
+        "synthetic_intermediate_or_related_derivative"
+      ]
+    },
+    {
+      "name": "atomoxetine hydrochloride",
+      "source_path": "data/sources/ccdc/1302784-1519130.cif",
+      "selected_blocks": [
+        {
+          "block_id": "ATOMOXETINE_publ",
+          "structure_id": "atomoxetine_hcl_1519130",
+          "target_role": "parent_salt_priority",
+          "expected_formula": "C17 H22 Cl N O",
+          "ccdc_deposition": "CCDC 1519130",
+          "promote_to_profile": true
+        },
+        {
+          "block_id": "YIGNEI",
+          "structure_id": "atomoxetine_hcl_yignei_1302784",
+          "target_role": "related_parent_salt_record",
+          "expected_formula": "C17 H22 N1 O1 1+,Cl1 1-",
+          "ccdc_deposition": "CCDC 1302784",
+          "promote_to_profile": true
+        },
+        {
+          "block_id": "YIGNEI01",
+          "structure_id": "atomoxetine_hcl_yignei01_1302785",
+          "target_role": "related_parent_salt_record",
+          "expected_formula": "C17 H22 N1 O1 1+,Cl1 1-",
+          "ccdc_deposition": "CCDC 1302785",
+          "promote_to_profile": true
+        }
+      ],
+      "excluded_roles": []
+    },
+    {
+      "name": "methylphenidate hydrochloride",
+      "source_path": "data/sources/ccdc/121320-2256172.cif",
+      "selected_blocks": [
+        {
+          "block_id": "498",
+          "structure_id": "methylphenidate_hcl_1453371",
+          "target_role": "parent_salt_priority",
+          "expected_formula": "C14 H20 Cl N O2",
+          "ccdc_deposition": "CCDC 1453371",
+          "promote_to_profile": true
+        },
+        {
+          "block_id": "glas01",
+          "structure_id": "methylphenidate_related_glas01_121320",
+          "target_role": "related_dimethyl_analogue_not_parent_proof",
+          "expected_formula": "C16 H24 Cl N O2",
+          "ccdc_deposition": "CCDC 121320",
+          "promote_to_profile": false
+        },
+        {
+          "block_id": "mark07",
+          "structure_id": "methylphenidate_related_mark07_121321",
+          "target_role": "related_n_methyl_analogue_not_parent_proof",
+          "expected_formula": "C15 H22 Cl N O2",
+          "ccdc_deposition": "CCDC 121321",
+          "promote_to_profile": false
+        }
+      ],
+      "excluded_roles": [
+        "analogue_only_not_parent_coordinates"
+      ]
+    }
+  ]
+}

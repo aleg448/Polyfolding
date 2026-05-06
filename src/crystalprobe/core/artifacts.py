@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-import json
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
+from crystalprobe.core.io import atomic_write_json
 from crystalprobe.core.ledger import file_sha256, object_sha256
 
 
@@ -56,11 +56,9 @@ def build_artifact_manifest(
 
 
 def write_artifact_manifest(path: str | Path, manifest: dict[str, Any]) -> None:
-    """Write a manifest as sorted, indented JSON."""
+    """Write a manifest as sorted, indented JSON using atomic replacement."""
 
-    output = Path(path)
-    output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(manifest, indent=2, sort_keys=True), encoding="utf-8", newline="\n")
+    atomic_write_json(path, manifest)
 
 
 def artifact_manifest_markdown(manifest: dict[str, Any]) -> str:

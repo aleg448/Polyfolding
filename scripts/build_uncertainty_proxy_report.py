@@ -2,10 +2,16 @@
 
 from __future__ import annotations
 
+try:
+    from scripts import _path_bootstrap  # noqa: F401
+except ImportError:
+    import _path_bootstrap  # noqa: F401
+
 import argparse
 import json
 from pathlib import Path
 
+from crystalprobe.core.io import atomic_write_json, atomic_write_text
 from crystalprobe.uncertainty.proxy import disagreement_uncertainty_proxy, uncertainty_proxy_markdown
 
 
@@ -25,10 +31,8 @@ def main() -> int:
     paths = args.report or DEFAULT_REPORTS
     reports = [json.loads(path.read_text(encoding="utf-8")) for path in paths if path.exists()]
     proxy = disagreement_uncertainty_proxy(reports)
-    args.json_out.parent.mkdir(parents=True, exist_ok=True)
-    args.json_out.write_text(json.dumps(proxy, indent=2, sort_keys=True), encoding="utf-8", newline="\n")
-    args.md_out.parent.mkdir(parents=True, exist_ok=True)
-    args.md_out.write_text(uncertainty_proxy_markdown(proxy), encoding="utf-8", newline="\n")
+    atomic_write_json(args.json_out, proxy)
+    atomic_write_text(args.md_out, uncertainty_proxy_markdown(proxy))
     print(json.dumps({"json": str(args.json_out), "markdown": str(args.md_out)}, indent=2, sort_keys=True))
     return 0
 

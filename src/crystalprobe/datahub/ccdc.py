@@ -7,6 +7,8 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
+from crystalprobe.core.io import atomic_write_text
+
 
 DATA_RE = re.compile(r"^data_(?P<block_id>\S+)")
 TAG_RE = re.compile(r"^(?P<tag>_[A-Za-z0-9_.-]+)\s+(?P<value>.+?)\s*$")
@@ -128,9 +130,7 @@ def write_ccdc_block(
     blocks = split_ccdc_cif(source)
     block = find_ccdc_block(blocks, block_id=block_id, index=index)
     text = sanitize_cif_text(block.text) if sanitize else block.text
-    output_path = Path(output)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(text, encoding="utf-8", newline="\n")
+    atomic_write_text(output, text)
     return block
 
 

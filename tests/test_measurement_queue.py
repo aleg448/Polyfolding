@@ -88,3 +88,47 @@ def test_measurement_queue_markdown_renders_policy():
 
     assert markdown.startswith("# CrystalProbe measurement and curation queue")
     assert "not medical importance" in markdown
+
+
+def test_measurement_queue_marks_active_runner_blockers():
+    report = measurement_queue_report(
+        {
+            "profiles": [
+                {
+                    "name": "modafinil",
+                    "readiness": "coordinates_available_locally",
+                },
+                {
+                    "name": "lisdexamfetamine dimesylate",
+                    "readiness": "blocked_no_crystal_coordinates",
+                    "evidence_tier": "blocked_no_coordinates",
+                },
+            ]
+        },
+        environment_blockers={
+            "dependencies": [
+                {"module": "ase", "status": "missing_from_active_python"},
+                {"module": "torch", "status": "available"},
+                {"module": "mace", "status": "missing_from_active_python"},
+            ]
+        },
+    )
+
+    by_substance = {item["substance"]: item for item in report["items"]}
+    assert report["active_runner_missing_modules"] == ["ase", "mace"]
+    assert report["active_runner_blocked_count"] == 1
+    assert by_substance["modafinil"]["active_runner_blocked"] is True
+    assert by_substance["modafinil"]["active_runner_missing_modules"] == ["ase", "mace"]
+    assert by_substance["lisdexamfetamine dimesylate"]["active_runner_blocked"] is False
+
+
+def test_measurement_queue_markdown_renders_active_runner_blockers():
+    report = measurement_queue_report(
+        {"profiles": [{"name": "carbamazepine", "readiness": "backend_disagreement_inspection"}]},
+        environment_blockers={"dependencies": [{"module": "fairchem", "status": "missing_from_active_python"}]},
+    )
+
+    markdown = measurement_queue_markdown(report)
+
+    assert "Active Runner Blockers" in markdown
+    assert "carbamazepine: missing `fairchem`" in markdown

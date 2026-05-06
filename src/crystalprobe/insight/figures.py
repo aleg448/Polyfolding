@@ -6,11 +6,11 @@ import html
 from pathlib import Path
 from typing import Any
 
+from crystalprobe.core.io import atomic_write_text
+
 
 def write_svg(path: str | Path, svg: str) -> None:
-    output = Path(path)
-    output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(svg, encoding="utf-8", newline="\n")
+    atomic_write_text(path, svg)
 
 
 def provenance_flow_svg(title: str, steps: list[str], *, width: int = 1100, height: int = 260) -> str:
@@ -47,6 +47,53 @@ def backend_measurement_svg(report: dict[str, Any], *, width: int = 900, height:
     pieces = [_svg_open(width, height), _title("AMPETP backend force diagnostics", width)]
     pieces.extend(_horizontal_bars(bars, x=220, y=100, width=560, row_height=54, value_suffix=" eV/Ang"))
     pieces.append(_text(42, height - 42, "Energy values are recorded in the report; force bars compare local diagnostic intensity.", size=16, fill="#475569"))
+    pieces.append("</svg>")
+    return "\n".join(pieces)
+
+
+def medication_case_study_svg(report: dict[str, Any], *, width: int = 1100, height: int = 520) -> str:
+    """Render medication measurement coverage for the fingerprint paper."""
+
+    rows = []
+    for target in report.get("targets", []):
+        measured = sum(1 for block in target.get("blocks", []) if block.get("measured_backend_count", 0) > 0)
+        pending = sum(
+            1
+            for block in target.get("blocks", [])
+            for backend in block.get("backend_measurements", [])
+            if str(backend.get("status", "")).startswith("pending_")
+        )
+        rows.append(
+            {
+                "label": str(target.get("name")),
+                "measured": measured,
+                "pending": pending,
+                "blocks": len(target.get("blocks", [])),
+            }
+        )
+    max_value = max((row["blocks"] for row in rows), default=1)
+    pieces = [_svg_open(width, height), _title("Medication local measurement case studies", width)]
+    pieces.append(_text(56, 88, "Local-only CCDC/CSD-derived CIFs; measurements are backend-behaviour evidence, not stability claims.", size=15, fill="#475569"))
+    chart_x = 360
+    chart_y = 132
+    chart_width = 560
+    row_height = 84
+    for index, row in enumerate(rows):
+        y = chart_y + index * row_height
+        measured_width = row["measured"] / max_value * chart_width
+        pending_width = row["pending"] / max_value * chart_width
+        pieces.append(_text(56, y + 24, row["label"], size=18, weight="700", fill="#111827"))
+        pieces.append(_text(56, y + 50, f"{row['measured']} measured blocks; {row['pending']} pending backend runs", size=14, fill="#475569"))
+        pieces.append(_rect(chart_x, y, chart_width, 26, fill="#e5e7eb", stroke="none", radius=3))
+        pieces.append(_rect(chart_x, y, measured_width, 26, fill="#2563eb", stroke="none", radius=3))
+        if pending_width:
+            pieces.append(_rect(chart_x, y + 34, pending_width, 18, fill="#f59e0b", stroke="none", radius=3))
+        pieces.append(_text(chart_x + chart_width + 18, y + 20, f"{row['blocks']} selected", size=14, fill="#111827"))
+    legend_y = height - 70
+    pieces.append(_rect(56, legend_y - 14, 22, 14, fill="#2563eb", stroke="none", radius=2))
+    pieces.append(_text(88, legend_y, "Measured selected blocks", size=14, fill="#111827"))
+    pieces.append(_rect(286, legend_y - 14, 22, 14, fill="#f59e0b", stroke="none", radius=2))
+    pieces.append(_text(318, legend_y, "Pending backend runs", size=14, fill="#111827"))
     pieces.append("</svg>")
     return "\n".join(pieces)
 

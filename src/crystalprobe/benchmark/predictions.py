@@ -8,6 +8,7 @@ from pathlib import Path
 from pydantic import BaseModel, ConfigDict, Field
 
 from crystalprobe.benchmark.metrics import PairEnergyPrediction
+from crystalprobe.core.io import atomic_write_text
 
 
 class PairEnergyPredictionRecord(BaseModel):
@@ -76,8 +77,8 @@ def load_pair_energy_prediction_records(path: str | Path) -> list[PairEnergyPred
 
 
 def write_pair_energy_predictions(records: list[PairEnergyPredictionRecord], path: str | Path) -> None:
-    prediction_path = Path(path)
-    with prediction_path.open("w", encoding="utf-8", newline="\n") as handle:
-        for record in records:
-            handle.write(json.dumps(record.model_dump(mode="json"), sort_keys=True, separators=(",", ":")))
-            handle.write("\n")
+    rows = [
+        json.dumps(record.model_dump(mode="json"), sort_keys=True, separators=(",", ":"))
+        for record in records
+    ]
+    atomic_write_text(path, "\n".join(rows) + ("\n" if rows else ""))

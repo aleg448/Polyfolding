@@ -2,10 +2,16 @@
 
 from __future__ import annotations
 
+try:
+    from scripts import _path_bootstrap  # noqa: F401
+except ImportError:
+    import _path_bootstrap  # noqa: F401
+
 import argparse
 import json
 from pathlib import Path
 
+from crystalprobe.core.io import atomic_write_json, atomic_write_text
 from crystalprobe.insight.cposs_disagreement import cposs_backend_disagreement_markdown, cposs_backend_disagreement_report
 from crystalprobe.insight.structure_predictions import load_structure_prediction_rows
 
@@ -26,10 +32,8 @@ def main() -> int:
         "uma": load_structure_prediction_rows(args.uma),
     }
     report = cposs_backend_disagreement_report(rows_by_backend, title=args.title)
-    args.json_out.parent.mkdir(parents=True, exist_ok=True)
-    args.json_out.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8", newline="\n")
-    args.md_out.parent.mkdir(parents=True, exist_ok=True)
-    args.md_out.write_text(cposs_backend_disagreement_markdown(report), encoding="utf-8", newline="\n")
+    atomic_write_json(args.json_out, report)
+    atomic_write_text(args.md_out, cposs_backend_disagreement_markdown(report))
     print(json.dumps({"json": str(args.json_out), "markdown": str(args.md_out)}, indent=2, sort_keys=True))
     return 0
 

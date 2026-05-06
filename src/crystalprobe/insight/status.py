@@ -14,6 +14,7 @@ def project_status_report(
     test_summary: str,
     therapeutic_contrast: dict[str, Any] | None = None,
     evidence_tiers: dict[str, Any] | None = None,
+    execution_unblock: dict[str, Any] | None = None,
     docker_status: str = "not_run",
     git_status: str = "not_recorded",
 ) -> dict[str, Any]:
@@ -29,6 +30,10 @@ def project_status_report(
         next_steps.append("Run AIMNet2 on the ibuprofen sensitivity grid in Linux/Docker.")
     if "uma_therapeutic_contrast" not in docker_status:
         next_steps.insert(0, "Extend UMA from AMPETP sensitivity into therapeutic contrast workflows.")
+    unblock_summary = _execution_unblock_status(execution_unblock)
+    for approval in unblock_summary["approval_batch"]:
+        if approval not in next_steps:
+            next_steps.append(approval)
     return {
         "schema_version": "0.1.0",
         "status": "active_research_pilot",
@@ -46,6 +51,7 @@ def project_status_report(
         },
         "therapeutic_contrast": _contrast_status(therapeutic_contrast),
         "evidence_tiers": _evidence_tier_status(evidence_tiers),
+        "execution_unblock": unblock_summary,
         "verification": {
             "latest_local_test_summary": test_summary,
             "docker_status": docker_status,
@@ -93,9 +99,26 @@ def project_status_markdown(report: dict[str, Any]) -> str:
         f"- Docker: `{report['verification']['docker_status']}`",
         f"- Git: `{report['verification']['git_status']}`",
         "",
+        "## Execution Unblock",
+        "",
+        f"- Status: `{report['execution_unblock']['status']}`",
+        f"- Blockers: `{report['execution_unblock']['blocker_count']}`",
+        f"- Active Python dependency blockers: `{report['execution_unblock']['counts'].get('active_python_dependency', 0)}`",
+        f"- Backend execution blockers: `{report['execution_unblock']['counts'].get('backend_execution', 0)}`",
+        f"- Queue runner blockers: `{report['execution_unblock']['counts'].get('queue_active_runner', 0)}`",
+        "- Approval batch:",
+    ]
+    if report["execution_unblock"]["approval_batch"]:
+        lines.extend(f"  - {item}" for item in report["execution_unblock"]["approval_batch"])
+    else:
+        lines.append("  - None currently recorded.")
+    lines.extend(
+        [
+        "",
         "## Remaining User Input",
         "",
-    ]
+        ]
+    )
     lines.extend(f"- {item}" for item in report["remaining_user_input"])
     if not report["remaining_user_input"]:
         lines.append("- None currently recorded.")
@@ -150,4 +173,20 @@ def _evidence_tier_status(report: dict[str, Any] | None) -> dict[str, Any]:
         "blocked_count": tiers.get("blocked_no_coordinates", 0),
         "verified_candidate_count": tiers.get("verified_benchmark_candidate", 0),
         "tiers": tiers,
+    }
+
+
+def _execution_unblock_status(report: dict[str, Any] | None) -> dict[str, Any]:
+    if not report:
+        return {
+            "status": "not_available",
+            "blocker_count": 0,
+            "counts": {},
+            "approval_batch": [],
+        }
+    return {
+        "status": report.get("status"),
+        "blocker_count": report.get("blocker_count", 0),
+        "counts": dict(report.get("counts", {})),
+        "approval_batch": list(report.get("approval_batch", [])),
     }

@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 import hashlib
-import json
 import random
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
+
+from crystalprobe.core.io import atomic_write_json
 
 
 @dataclass(frozen=True)
@@ -99,9 +100,7 @@ def sensitivity_manifest(
 
 
 def write_json(path: str | Path, data: dict[str, Any]) -> None:
-    output = Path(path)
-    output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(data, indent=2, sort_keys=True), encoding="utf-8", newline="\n")
+    atomic_write_json(path, data)
 
 
 def sha256_file(path: str | Path) -> str:

@@ -11,6 +11,7 @@ from crystalprobe.benchmark.dataset import load_manifest
 from crystalprobe.benchmark.metrics import ranking_accuracy
 from crystalprobe.benchmark.predictions import load_pair_energy_prediction_records, load_pair_energy_predictions
 from crystalprobe.config import load_config
+from crystalprobe.core.io import atomic_write_json, atomic_write_text
 from crystalprobe.datahub.cposs209 import (
     generate_cposs_pair_candidates,
     index_cposs_cif,
@@ -131,8 +132,7 @@ def main(argv: list[str] | None = None) -> int:
         predictions = load_pair_energy_predictions(args.predictions)
         report = build_fingerprint_report(list(dataset), predictions)
         if args.markdown:
-            args.markdown.parent.mkdir(parents=True, exist_ok=True)
-            args.markdown.write_text(fingerprint_markdown(report), encoding="utf-8", newline="\n")
+            atomic_write_text(args.markdown, fingerprint_markdown(report))
         print(json.dumps(report.as_dict(), indent=2, sort_keys=True))
         return 0
 
@@ -184,8 +184,7 @@ def main(argv: list[str] | None = None) -> int:
             "records": [record.as_dict() for record in records],
         }
         if args.json_out:
-            args.json_out.parent.mkdir(parents=True, exist_ok=True)
-            args.json_out.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8", newline="\n")
+            atomic_write_json(args.json_out, payload)
         print(json.dumps(payload["summary"], indent=2, sort_keys=True))
         return 0
 
@@ -197,8 +196,7 @@ def main(argv: list[str] | None = None) -> int:
             "pairs": [candidate.as_dict() for candidate in candidates],
         }
         if args.json_out:
-            args.json_out.parent.mkdir(parents=True, exist_ok=True)
-            args.json_out.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8", newline="\n")
+            atomic_write_json(args.json_out, payload)
         print(json.dumps(payload["summary"], indent=2, sort_keys=True))
         return 0
 

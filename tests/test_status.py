@@ -113,3 +113,31 @@ def test_project_status_summarizes_evidence_tiers():
     assert report["evidence_tiers"]["guardrailed_pilot_count"] == 1
     assert report["evidence_tiers"]["blocked_count"] == 1
     assert "## Evidence Tiers" in markdown
+
+
+def test_project_status_summarizes_execution_unblock_report():
+    report = project_status_report(
+        readiness={"status": "paper_pilot_ready", "passed": 8, "failed": 0},
+        bundle={"artifacts": [{}, {}], "manifest_sha256": "a" * 64},
+        cposs_bridge={"family_count": 2, "structure_count": 16, "families": {"IBP": {}, "CBZ": {}}},
+        therapeutic_contrast={"backend": "mace", "target_count": 2},
+        execution_unblock={
+            "status": "execution_unblock_queue_recorded",
+            "blocker_count": 15,
+            "counts": {
+                "active_python_dependency": 4,
+                "backend_execution": 5,
+                "queue_active_runner": 6,
+            },
+            "approval_batch": ["Select or repair the CrystalProbe Python runner."],
+        },
+        blockers_text="## Remaining User Input\n\n## Other\n",
+        test_summary="1 passed",
+    )
+    markdown = project_status_markdown(report)
+
+    assert report["execution_unblock"]["blocker_count"] == 15
+    assert "Select or repair the CrystalProbe Python runner." in report["next_recommended_steps"]
+    assert "## Execution Unblock" in markdown
+    assert "Active Python dependency blockers: `4`" in markdown
+    assert "Select or repair the CrystalProbe Python runner." in markdown

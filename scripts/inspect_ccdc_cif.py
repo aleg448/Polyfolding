@@ -2,10 +2,16 @@
 
 from __future__ import annotations
 
+try:
+    from scripts import _path_bootstrap  # noqa: F401
+except ImportError:
+    import _path_bootstrap  # noqa: F401
+
 import argparse
 import json
 from pathlib import Path
 
+from crystalprobe.core.io import atomic_write_json
 from crystalprobe.datahub.ccdc import split_ccdc_cif, summarize_ccdc_blocks, write_ccdc_block
 
 
@@ -25,8 +31,7 @@ def main() -> int:
         "blocks": [block.as_dict() for block in blocks],
     }
     if args.json_out:
-        args.json_out.parent.mkdir(parents=True, exist_ok=True)
-        args.json_out.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8", newline="\n")
+        atomic_write_json(args.json_out, report)
     if args.extract_out:
         selected = write_ccdc_block(
             args.cif,

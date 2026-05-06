@@ -8,22 +8,27 @@ from typing import Any
 def measurement_queue_report(
     substance_profiles: dict[str, Any],
     *,
+    environment_blockers: dict[str, Any] | None = None,
     title: str = "CrystalProbe measurement and curation queue",
 ) -> dict[str, Any]:
     """Convert substance profiles into next actions ranked by suite impact."""
 
-    items = [_queue_item(profile) for profile in substance_profiles.get("profiles", [])]
+    active_missing = _active_missing_modules(environment_blockers or {})
+    items = [_queue_item(profile, active_missing=active_missing) for profile in substance_profiles.get("profiles", [])]
     ordered = sorted(items, key=lambda item: (-int(item["priority_score"]), item["substance"].casefold()))
     return {
         "schema_version": "0.1.0",
         "title": title,
         "status": "measurement_queue_recorded",
         "item_count": len(ordered),
+        "active_runner_missing_modules": sorted(active_missing),
+        "active_runner_blocked_count": sum(1 for item in ordered if item["active_runner_blocked"]),
         "items": ordered,
         "next_batch": ordered[:5],
         "policy": [
             "Queue priority estimates project utility, not medical importance or clinical value.",
             "Actions that require new gated coordinates stay in curation/source-acquisition status until access is resolved.",
+            "Active-runner blockers mean the current Python cannot run the dependency-heavy step; use `.venv`, Docker, or a Python with the listed modules visible.",
             "Backend-disagreement actions are inspection tasks and do not create experimental stability labels.",
             "Only license-clean coordinates with stability evidence can promote a target toward benchmark use.",
         ],
@@ -38,40 +43,51 @@ def measurement_queue_markdown(report: dict[str, Any]) -> str:
         "",
         f"- Status: `{report['status']}`",
         f"- Items: `{report['item_count']}`",
+        f"- Active-runner blocked items: `{report.get('active_runner_blocked_count', 0)}`",
         "",
         "## Next Batch",
         "",
-        "| Rank | Substance | Action | Priority | Why | First Step |",
-        "|---:|---|---|---:|---|---|",
+        "| Rank | Substance | Action | Priority | Runner Blocked | Why | First Step |",
+        "|---:|---|---|---:|---|---|---|",
     ]
     for rank, item in enumerate(report["next_batch"], start=1):
         lines.append(
             f"| {rank} | {item['substance']} | `{item['action_type']}` | "
-            f"{item['priority_score']} | {item['rationale']} | {item['first_step']} |"
+            f"{item['priority_score']} | `{item['active_runner_blocked']}` | "
+            f"{item['rationale']} | {item['first_step']} |"
         )
     lines.extend(
         [
             "",
             "## Full Queue",
             "",
-            "| Substance | Readiness | Evidence Tier | Action | Priority | Blocked |",
-            "|---|---|---|---|---:|---|",
+            "| Substance | Readiness | Evidence Tier | Action | Priority | Blocked | Runner Blocked |",
+            "|---|---|---|---|---:|---|---|",
         ]
     )
     for item in report["items"]:
         lines.append(
             f"| {item['substance']} | `{item['readiness']}` | `{item['evidence_tier']}` | "
-            f"`{item['action_type']}` | {item['priority_score']} | `{item['blocked']}` |"
+            f"`{item['action_type']}` | {item['priority_score']} | `{item['blocked']}` | "
+            f"`{item['active_runner_blocked']}` |"
+        )
+    blocked = [item for item in report["items"] if item["active_runner_blocked"]]
+    if blocked:
+        lines.extend(["", "## Active Runner Blockers", ""])
+        lines.extend(
+            f"- {item['substance']}: missing `{', '.join(item['active_runner_missing_modules'])}` for `{item['action_type']}`."
+            for item in blocked
         )
     lines.extend(["", "## Policy", ""])
     lines.extend(f"- {line}" for line in report["policy"])
     return "\n".join(lines).rstrip() + "\n"
 
 
-def _queue_item(profile: dict[str, Any]) -> dict[str, Any]:
+def _queue_item(profile: dict[str, Any], *, active_missing: set[str]) -> dict[str, Any]:
     readiness = str(profile.get("readiness") or "unknown")
     evidence_tier = str(profile.get("evidence_tier") or "not_assigned")
     action_type, priority, blocked, rationale = _classify(profile, readiness, evidence_tier)
+    runner_missing = sorted(_runner_required_modules(action_type).intersection(active_missing))
     return {
         "substance": profile.get("name"),
         "role": profile.get("role"),
@@ -82,11 +98,42 @@ def _queue_item(profile: dict[str, Any]) -> dict[str, Any]:
         "priority_score": priority,
         "blocked": blocked,
         "rationale": rationale,
-        "first_step": _first_step(profile, action_type),
+        "first_step": _runner_aware_first_step(_first_step(profile, action_type), runner_missing),
+        "active_runner_blocked": bool(runner_missing),
+        "active_runner_missing_modules": runner_missing,
         "next_actions": list(profile.get("next_actions", [])),
         "blocked_claims": list(profile.get("blocked_claims", [])),
         "measurement_outputs": list(profile.get("measurement_outputs", [])),
     }
+
+
+def _active_missing_modules(environment_blockers: dict[str, Any]) -> set[str]:
+    return {
+        str(row.get("module"))
+        for row in environment_blockers.get("dependencies", [])
+        if row.get("module") and row.get("status") != "available"
+    }
+
+
+def _runner_required_modules(action_type: str) -> set[str]:
+    if action_type in {
+        "run_local_measurements",
+        "inspect_backend_disagreement",
+        "download_public_cif_candidate",
+    }:
+        return {"ase", "mace", "aimnet", "fairchem"}
+    if action_type in {"curate_claim_boundary", "maintain_guardrailed_pilot"}:
+        return {"ase", "aimnet", "fairchem"}
+    return set()
+
+
+def _runner_aware_first_step(first_step: str, runner_missing: list[str]) -> str:
+    if not runner_missing:
+        return first_step
+    return (
+        f"{first_step} Active runner is missing {', '.join(runner_missing)}; "
+        "use `.venv`, Docker, or a Python with those modules visible for dependency-heavy steps."
+    )
 
 
 def _classify(profile: dict[str, Any], readiness: str, evidence_tier: str) -> tuple[str, int, bool, str]:
@@ -102,6 +149,20 @@ def _classify(profile: dict[str, Any], readiness: str, evidence_tier: str) -> tu
             95 if "lisdexamfetamine" in name else 82,
             True,
             "high-value target is blocked by missing license-compatible crystal coordinates",
+        )
+    if readiness == "coordinates_available_locally":
+        return (
+            "run_local_measurements",
+            92,
+            False,
+            "license-controlled local coordinates are available and should be measured before claim curation",
+        )
+    if readiness == "measured_needs_claim_guardrails":
+        return (
+            "curate_claim_boundary",
+            89 if priority_group == "adhd_core" else 60,
+            False,
+            "local measurements exist and now need claim-boundary, backend-completion, and evidence-tier curation",
         )
     if actionability == "download_candidate" or readiness == "source_download_candidate":
         return (
@@ -177,6 +238,10 @@ def _first_step(profile: dict[str, Any], action_type: str) -> str:
         return "Download the public supporting-information CIFs into ignored local sources after license review, then inspect the CIF blocks."
     if action_type == "coordinate_acquisition":
         return "Search for license-compatible CIF or atom-coordinate evidence; do not run crystal MLIP without coordinates."
+    if action_type == "run_local_measurements":
+        return "Run MACE first, then AIMNet2 and UMA where the selected CIF block parses cleanly."
+    if action_type == "curate_claim_boundary":
+        return "Record which backends are complete, keep coordinates local-only, and block stability claims until experimental evidence exists."
     if action_type == "validate_coordinate_access":
         return "Validate the cited CSD/CCDC or publication coordinate route and record license constraints before measurement."
     if action_type == "deeper_source_search":
