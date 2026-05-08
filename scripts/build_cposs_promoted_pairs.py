@@ -19,6 +19,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--workpack", type=Path, default=Path("outputs/cposs_evidence_workpack.json"))
     parser.add_argument("--family-annotations", type=Path, default=Path("data/curation/cposs_family_annotations_v0.1.json"))
+    parser.add_argument("--block-mapping", type=Path, default=Path("outputs/cposs_block_form_mapping.json"))
     parser.add_argument("--json-out", type=Path, default=Path("outputs/cposs_promotion_gate.json"))
     parser.add_argument("--md-out", type=Path, default=Path("outputs/cposs_promotion_gate.md"))
     parser.add_argument("--records-out", type=Path, default=Path("outputs/cposs_promoted_pairs.jsonl"))
@@ -28,6 +29,7 @@ def main() -> int:
     report = cposs_promotion_report(
         json.loads(args.workpack.read_text(encoding="utf-8")),
         family_annotations=annotations.get("families", annotations),
+        block_mapping_report=json.loads(args.block_mapping.read_text(encoding="utf-8")) if args.block_mapping.exists() else None,
     )
     atomic_write_json(args.json_out, report)
     atomic_write_text(args.md_out, cposs_promotion_markdown(report))

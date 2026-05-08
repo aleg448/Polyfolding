@@ -2,6 +2,23 @@
   "schema_version": "0.1.0",
   "status": "cposs_family_annotations_seeded",
   "families": {
+    "ACR": {
+      "common_name": "acridine",
+      "smiles": "C1=CC=C2C(=C1)C=CC3=CC=CC=N23",
+      "flexibility_class": "rigid",
+      "h_bond_motifs": [],
+      "functional_groups": [
+        "aza_arene",
+        "polycyclic_aromatic"
+      ],
+      "has_halogen": false,
+      "has_charge": false,
+      "is_chiral": false,
+      "chemistry_tags": [
+        "rigid_aromatic",
+        "heteroaromatic"
+      ]
+    },
     "CBZ": {
       "common_name": "carbamazepine",
       "smiles": "NC(=O)N1C2=CC=CC=C2C=CC2=CC=CC=C21",
@@ -19,6 +36,27 @@
       "chemistry_tags": [
         "amide",
         "neurology_foundation_medicine"
+      ]
+    },
+    "FLU": {
+      "common_name": "5-fluorouracil",
+      "smiles": "O=C1NC=C(F)C(=O)N1",
+      "flexibility_class": "rigid",
+      "h_bond_motifs": [
+        "amide",
+        "imide"
+      ],
+      "functional_groups": [
+        "fluorinated_pyrimidinedione",
+        "amide"
+      ],
+      "has_halogen": true,
+      "has_charge": false,
+      "is_chiral": false,
+      "chemistry_tags": [
+        "halogenated",
+        "hydrogen_bonding",
+        "oncology_foundation_medicine"
       ]
     },
     "IBP": {

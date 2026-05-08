@@ -89,6 +89,40 @@ def test_cposs_evidence_workpack_contains_curator_fields():
     assert workpack["work_items"][0]["structure_b"]["block_id"] == "IBP02"
 
 
+def test_cposs_evidence_workpack_applies_curation_overrides():
+    triage = cposs_pair_triage_report(cposs_pair_candidate_report(_bridge()))
+    workpack = cposs_evidence_workpack(
+        triage,
+        max_candidates=1,
+        evidence_overrides={
+            "family_defaults": {
+                "IBP": {
+                    "evidence_form": {
+                        "citation_url": "https://example.test/family",
+                    },
+                    "review_notes": ["Family note."],
+                }
+            },
+            "candidate_overrides": {
+                "ibp_ibp01_vs_ibp02": {
+                    "evidence_form": {
+                        "experimental_stability_ordering": "ambiguous",
+                        "citation_doi": "10.0000/example",
+                        "promotion_decision": "do_not_promote",
+                    },
+                    "review_notes": ["Fixture review note."],
+                }
+            }
+        },
+    )
+
+    item = workpack["work_items"][0]
+    assert item["evidence_form"]["citation_doi"] == "10.0000/example"
+    assert item["evidence_form"]["citation_url"] == "https://example.test/family"
+    assert item["evidence_form"]["promotion_decision"] == "do_not_promote"
+    assert item["review_notes"] == ["Family note.", "Fixture review note."]
+
+
 def test_cposs_evidence_workpack_fallback_preserves_second_structure_id():
     workpack = cposs_evidence_workpack(
         {
@@ -111,10 +145,23 @@ def test_cposs_evidence_workpack_fallback_preserves_second_structure_id():
 
 def test_cposs_evidence_workpack_markdown_renders_form():
     triage = cposs_pair_triage_report(cposs_pair_candidate_report(_bridge()))
-    markdown = cposs_evidence_workpack_markdown(cposs_evidence_workpack(triage, max_candidates=1))
+    markdown = cposs_evidence_workpack_markdown(
+        cposs_evidence_workpack(
+            triage,
+            max_candidates=1,
+            evidence_overrides={
+                "candidate_overrides": {
+                    "ibp_ibp01_vs_ibp02": {
+                        "review_notes": ["Reviewed but not promoted."],
+                    }
+                }
+            },
+        )
+    )
     assert markdown.startswith("# CPOSS pair evidence workpack")
     assert "experimental_stability_ordering" in markdown
     assert "No pair with unresolved ambiguity" in markdown
+    assert "Reviewed but not promoted." in markdown
 
 
 def test_cposs_candidate_cards_keep_claim_safe_tier():

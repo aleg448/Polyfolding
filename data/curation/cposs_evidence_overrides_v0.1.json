@@ -1,0 +1,155 @@
+{
+  "schema_version": "0.1.0",
+  "status": "agi_literature_review_overlay",
+  "created_utc": "2026-05-06",
+  "scope": "Applies literature-review fields to the currently generated CPOSS CBZ/IBP evidence workpack without promoting any candidate into the benchmark.",
+  "global_review_notes": [
+    "The current local CPOSS workpack has been expanded beyond the first 20-entry milestone by adding ACR and FLU MACE family measurements to the CBZ/IBP bridge.",
+    "The overlay fills citation, license, disorder, curator, reviewer, and promotion-decision fields where a family-level literature source exists.",
+    "No entry is promoted because the current workpack still lacks a locked mapping from every CPOSS block ID to an experimentally verified form label and stability condition."
+  ],
+  "family_defaults": {
+    "ACR": {
+      "evidence_form": {
+        "experimental_stability_ordering": "ambiguous",
+        "temperature_K": "298",
+        "relative_humidity": "",
+        "free_energy_diff_kJ_per_mol": "",
+        "citation_doi": "10.1021/acs.cgd.9b00557",
+        "citation_url": "https://doi.org/10.1021/acs.cgd.9b00557",
+        "source_license_a": "CC-BY-NC-4.0 source archive; CCDC-derived coordinate redistribution requires review",
+        "source_license_b": "CC-BY-NC-4.0 source archive; CCDC-derived coordinate redistribution requires review",
+        "has_disorder_a": "unknown",
+        "has_disorder_b": "unknown",
+        "disorder_notes": "Acridine has extensive polymorphism literature, but CPOSS block-level form and disorder mapping is not yet locked for promotion.",
+        "curator": "codex_agi_literature_pass_2026-05-06",
+        "reviewer": "codex_self_review_no_human_validation_2026-05-06",
+        "promotion_decision": "do_not_promote",
+        "notes": "Acridine family literature supports polymorph context; this expanded workpack keeps candidate-specific ordering ambiguous until CPOSS block IDs are mapped to experimental form labels."
+      },
+      "review_notes": [
+        "Primary family polymorph landscape source found for acridine; candidate-specific promotion is withheld pending block-to-form mapping.",
+        "Use ACR entries to expand curation coverage, not as verified benchmark pairs."
+      ],
+      "source_review": {
+        "primary_family_source": "The (Current) Acridine Solid Form Landscape: Eight Polymorphs and a Hydrate",
+        "primary_family_doi": "10.1021/acs.cgd.9b00557",
+        "cposs_dataset_doi": "10.1021/acs.cgd.5c00255"
+      }
+    },
+    "CBZ": {
+      "evidence_form": {
+        "experimental_stability_ordering": "ambiguous",
+        "temperature_K": "298",
+        "relative_humidity": "",
+        "free_energy_diff_kJ_per_mol": "",
+        "citation_doi": "10.1016/0378-5173(89)90357-8",
+        "citation_url": "https://doi.org/10.1016/0378-5173(89)90357-8",
+        "source_license_a": "CC-BY-NC-4.0 source archive; CCDC-derived coordinate redistribution requires review",
+        "source_license_b": "CC-BY-NC-4.0 source archive; CCDC-derived coordinate redistribution requires review",
+        "has_disorder_a": "unknown",
+        "has_disorder_b": "unknown",
+        "disorder_notes": "Family-level literature supports carbamazepine polymorph stability context, but CPOSS block-level form/disorder mapping is not yet locked for promotion.",
+        "curator": "codex_agi_literature_pass_2026-05-06",
+        "reviewer": "codex_self_review_no_human_validation_2026-05-06",
+        "promotion_decision": "do_not_promote",
+        "notes": "Carbamazepine Form III is reported stable at room temperature in the cited literature; this workpack keeps candidate-specific ordering ambiguous until CPOSS block IDs are mapped to experimental form labels."
+      },
+      "review_notes": [
+        "Primary family stability source found for carbamazepine; candidate-specific promotion is withheld pending block-to-form mapping.",
+        "Do not use local MACE/AIMNet2/UMA ordering as experimental stability evidence."
+      ],
+      "source_review": {
+        "primary_family_source": "Effect of type and extent of crystalline order on chemical and physical stability of carbamazepine",
+        "primary_family_doi": "10.1016/0378-5173(89)90357-8",
+        "cposs_dataset_doi": "10.1021/acs.cgd.5c00255"
+      }
+    },
+    "FLU": {
+      "evidence_form": {
+        "experimental_stability_ordering": "ambiguous",
+        "temperature_K": "298",
+        "relative_humidity": "",
+        "free_energy_diff_kJ_per_mol": "",
+        "citation_doi": "10.1021/ja044336a",
+        "citation_url": "https://doi.org/10.1021/ja044336a",
+        "source_license_a": "CC-BY-NC-4.0 source archive; CCDC-derived coordinate redistribution requires review",
+        "source_license_b": "CC-BY-NC-4.0 source archive; CCDC-derived coordinate redistribution requires review",
+        "has_disorder_a": "unknown",
+        "has_disorder_b": "unknown",
+        "disorder_notes": "5-fluorouracil has Form I/Form II polymorph literature, but CPOSS block-level form and disorder mapping is not yet locked for promotion.",
+        "curator": "codex_agi_literature_pass_2026-05-06",
+        "reviewer": "codex_self_review_no_human_validation_2026-05-06",
+        "promotion_decision": "do_not_promote",
+        "notes": "5-fluorouracil literature reports a new Form II found after CSP; thermal-analysis discussion does not by itself promote CPOSS block pairs without block-to-form mapping."
+      },
+      "review_notes": [
+        "Primary family polymorph source found for 5-fluorouracil; candidate-specific promotion is withheld pending block-to-form mapping.",
+        "FLU entries expand the workpack to the requested 20+ scale while preserving the no-promotion gate."
+      ],
+      "source_review": {
+        "primary_family_source": "A New Polymorph of 5-Fluorouracil Found Following Computational Crystal Structure Predictions",
+        "primary_family_doi": "10.1021/ja044336a",
+        "cposs_dataset_doi": "10.1021/acs.cgd.5c00255"
+      }
+    },
+    "IBP": {
+      "evidence_form": {
+        "experimental_stability_ordering": "ambiguous",
+        "temperature_K": "298",
+        "relative_humidity": "",
+        "free_energy_diff_kJ_per_mol": "",
+        "citation_doi": "10.1021/cg300599q",
+        "citation_url": "https://doi.org/10.1021/cg300599q",
+        "source_license_a": "CC-BY-NC-4.0 source archive; CCDC-derived coordinate redistribution requires review",
+        "source_license_b": "CC-BY-NC-4.0 source archive; CCDC-derived coordinate redistribution requires review",
+        "has_disorder_a": "unknown",
+        "has_disorder_b": "unknown",
+        "disorder_notes": "Family-level literature reports racemic ibuprofen polymorph context, but CPOSS block-level form/disorder mapping is not yet locked for promotion.",
+        "curator": "codex_agi_literature_pass_2026-05-06",
+        "reviewer": "codex_self_review_no_human_validation_2026-05-06",
+        "promotion_decision": "do_not_promote",
+        "notes": "Ibuprofen Form I/Form II literature exists, but CPOSS IBP block IDs include structures that may not all be the same experimentally verified racemic polymorph pair."
+      },
+      "review_notes": [
+        "Primary family stability source found for racemic ibuprofen; candidate-specific promotion is withheld pending block-to-form mapping.",
+        "IBP entries must be checked for racemic versus enantiopure or related-structure status before benchmark use."
+      ],
+      "source_review": {
+        "primary_family_source": "New Insights into the Preparation of the Low-Melting Polymorph of Racemic Ibuprofen",
+        "primary_family_doi": "10.1021/cg300599q",
+        "cposs_dataset_doi": "10.1021/acs.cgd.5c00255"
+      }
+    }
+  },
+  "candidate_overrides": {
+    "cbz_cbz01_psicrys_vs_cbz03_psicrys": {
+      "review_notes": [
+        "Likely high-value CBZ pair for manual review because CBZ03 has P21/c metrics consistent with the commonly stable room-temperature form, but this must be verified against CPOSS source labels before promotion."
+      ]
+    },
+    "cbz_cbz03_psicrys_vs_cbz02_psicrys": {
+      "evidence_form": {
+        "has_disorder_b": "true",
+        "disorder_notes": "CBZ02-like trigonal/channel carbamazepine structures have reported solvate/disorder ambiguity in the CPOSS paper discussion; keep blocked."
+      },
+      "review_notes": [
+        "Do not promote while the CBZ02/channel-solvate ambiguity remains unresolved."
+      ]
+    },
+    "cbz_cbz02_psicrys_vs_cbz04_psicrys": {
+      "evidence_form": {
+        "has_disorder_a": "true",
+        "disorder_notes": "CBZ02-like trigonal/channel carbamazepine structures have reported solvate/disorder ambiguity in the CPOSS paper discussion; keep blocked."
+      },
+      "review_notes": [
+        "Do not promote while the CBZ02/channel-solvate ambiguity remains unresolved."
+      ]
+    },
+    "ibp_ibp01_psicrys_vs_ibp06_psicrys": {
+      "review_notes": [
+        "IBP01/IBP06 is useful for backend-disagreement inspection, but candidate-specific promotion is blocked until IBP06 is confirmed as the intended experimental racemic polymorph rather than an enantiopure or related packing."
+      ]
+    }
+  }
+}

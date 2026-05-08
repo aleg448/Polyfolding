@@ -145,13 +145,19 @@ def cposs_pair_triage_markdown(report: dict[str, Any]) -> str:
     return "\n".join(lines).rstrip() + "\n"
 
 
-def cposs_evidence_workpack(triage_report: dict[str, Any], *, max_candidates: int | None = None) -> dict[str, Any]:
+def cposs_evidence_workpack(
+    triage_report: dict[str, Any],
+    *,
+    max_candidates: int | None = None,
+    evidence_overrides: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     """Create curator-fillable evidence forms from the CPOSS triage queue."""
 
     candidates = triage_report.get("top_candidates", [])
     if max_candidates is not None:
         candidates = candidates[:max_candidates]
-    work_items = [_evidence_form(candidate) for candidate in candidates]
+    overrides = evidence_overrides or {}
+    work_items = [_apply_evidence_override(_evidence_form(candidate), overrides) for candidate in candidates]
     return {
         "schema_version": "0.1.0",
         "title": "CPOSS pair evidence workpack",
@@ -166,6 +172,34 @@ def cposs_evidence_workpack(triage_report: dict[str, Any], *, max_candidates: in
             "No pair with unresolved ambiguity is used for headline ranking or calibration metrics.",
         ],
     }
+
+
+def _apply_evidence_override(item: dict[str, Any], overrides: dict[str, Any]) -> dict[str, Any]:
+    family_defaults = overrides.get("family_defaults", {})
+    by_candidate = overrides.get("candidate_overrides", {})
+    family_override = family_defaults.get(item["family"], {})
+    candidate_override = by_candidate.get(item["candidate_id"], {})
+    override = _merge_evidence_override(family_override, candidate_override)
+    if not override:
+        return item
+    updated = dict(item)
+    updated["evidence_form"] = {**item["evidence_form"], **override.get("evidence_form", {})}
+    if override.get("review_notes"):
+        updated["review_notes"] = list(override["review_notes"])
+    if override.get("source_review"):
+        updated["source_review"] = dict(override["source_review"])
+    return updated
+
+
+def _merge_evidence_override(base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any]:
+    merged = dict(base)
+    if base.get("evidence_form") or override.get("evidence_form"):
+        merged["evidence_form"] = {**base.get("evidence_form", {}), **override.get("evidence_form", {})}
+    if base.get("review_notes") or override.get("review_notes"):
+        merged["review_notes"] = [*base.get("review_notes", []), *override.get("review_notes", [])]
+    if base.get("source_review") or override.get("source_review"):
+        merged["source_review"] = {**base.get("source_review", {}), **override.get("source_review", {})}
+    return merged
 
 
 def cposs_evidence_workpack_markdown(workpack: dict[str, Any]) -> str:
@@ -206,6 +240,9 @@ def cposs_evidence_workpack_markdown(workpack: dict[str, Any]) -> str:
         )
         for field, value in item["evidence_form"].items():
             lines.append(f"| {field} | {value or ''} |")
+        if item.get("review_notes"):
+            lines.extend(["", "### Review Notes", ""])
+            lines.extend(f"- {note}" for note in item["review_notes"])
     return "\n".join(lines).rstrip() + "\n"
 
 

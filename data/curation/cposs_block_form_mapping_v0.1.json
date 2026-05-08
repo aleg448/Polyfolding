@@ -1,0 +1,577 @@
+{
+  "allowed_mapping_statuses": [
+    "unmapped",
+    "proposed",
+    "ambiguous",
+    "block_form_mapping_locked",
+    "rejected"
+  ],
+  "families": {
+    "ACR": {
+      "blocks": {
+        "ACR01_PsiCrys": {
+          "citation_doi": "",
+          "citation_url": "",
+          "curator": "",
+          "disorder_annotation": "unknown",
+          "experimental_form_label": "",
+          "license_decision": "",
+          "mapping_confidence": "unknown",
+          "mapping_notes": "",
+          "mapping_status": "unmapped",
+          "matching_evidence": {
+            "cell_match": null,
+            "formula_match": null,
+            "source_label_match": null,
+            "space_group_match": null
+          },
+          "reviewer": ""
+        },
+        "ACR02_PsiCrys": {
+          "citation_doi": "",
+          "citation_url": "",
+          "curator": "",
+          "disorder_annotation": "unknown",
+          "experimental_form_label": "",
+          "license_decision": "",
+          "mapping_confidence": "unknown",
+          "mapping_notes": "",
+          "mapping_status": "unmapped",
+          "matching_evidence": {
+            "cell_match": null,
+            "formula_match": null,
+            "source_label_match": null,
+            "space_group_match": null
+          },
+          "reviewer": ""
+        },
+        "ACR03_PsiCrys": {
+          "citation_doi": "",
+          "citation_url": "",
+          "curator": "",
+          "disorder_annotation": "unknown",
+          "experimental_form_label": "",
+          "license_decision": "",
+          "mapping_confidence": "unknown",
+          "mapping_notes": "",
+          "mapping_status": "unmapped",
+          "matching_evidence": {
+            "cell_match": null,
+            "formula_match": null,
+            "source_label_match": null,
+            "space_group_match": null
+          },
+          "reviewer": ""
+        },
+        "ACR04_PsiCrys": {
+          "citation_doi": "",
+          "citation_url": "",
+          "curator": "",
+          "disorder_annotation": "unknown",
+          "experimental_form_label": "",
+          "license_decision": "",
+          "mapping_confidence": "unknown",
+          "mapping_notes": "",
+          "mapping_status": "unmapped",
+          "matching_evidence": {
+            "cell_match": null,
+            "formula_match": null,
+            "source_label_match": null,
+            "space_group_match": null
+          },
+          "reviewer": ""
+        },
+        "ACR05_PsiCrys": {
+          "citation_doi": "",
+          "citation_url": "",
+          "curator": "",
+          "disorder_annotation": "unknown",
+          "experimental_form_label": "",
+          "license_decision": "",
+          "mapping_confidence": "unknown",
+          "mapping_notes": "",
+          "mapping_status": "unmapped",
+          "matching_evidence": {
+            "cell_match": null,
+            "formula_match": null,
+            "source_label_match": null,
+            "space_group_match": null
+          },
+          "reviewer": ""
+        },
+        "ACR06_PsiCrys": {
+          "citation_doi": "",
+          "citation_url": "",
+          "curator": "",
+          "disorder_annotation": "unknown",
+          "experimental_form_label": "",
+          "license_decision": "",
+          "mapping_confidence": "unknown",
+          "mapping_notes": "",
+          "mapping_status": "unmapped",
+          "matching_evidence": {
+            "cell_match": null,
+            "formula_match": null,
+            "source_label_match": null,
+            "space_group_match": null
+          },
+          "reviewer": ""
+        },
+        "ACR07_PsiCrys": {
+          "citation_doi": "",
+          "citation_url": "",
+          "curator": "",
+          "disorder_annotation": "unknown",
+          "experimental_form_label": "",
+          "license_decision": "",
+          "mapping_confidence": "unknown",
+          "mapping_notes": "",
+          "mapping_status": "unmapped",
+          "matching_evidence": {
+            "cell_match": null,
+            "formula_match": null,
+            "source_label_match": null,
+            "space_group_match": null
+          },
+          "reviewer": ""
+        }
+      },
+      "family_source_doi": "10.1021/acs.cgd.9b00557",
+      "family_source_url": "https://doi.org/10.1021/acs.cgd.9b00557"
+    },
+    "CBZ": {
+      "blocks": {
+        "CBZ01_PsiCrys": {
+          "citation_doi": "",
+          "citation_url": "",
+          "curator": "",
+          "disorder_annotation": "unknown",
+          "experimental_form_label": "",
+          "license_decision": "",
+          "mapping_confidence": "unknown",
+          "mapping_notes": "",
+          "mapping_status": "unmapped",
+          "matching_evidence": {
+            "cell_match": null,
+            "formula_match": null,
+            "source_label_match": null,
+            "space_group_match": null
+          },
+          "reviewer": ""
+        },
+        "CBZ02_PsiCrys": {
+          "citation_doi": "",
+          "citation_url": "",
+          "curator": "",
+          "disorder_annotation": "unknown",
+          "experimental_form_label": "",
+          "license_decision": "",
+          "mapping_confidence": "unknown",
+          "mapping_notes": "",
+          "mapping_status": "unmapped",
+          "matching_evidence": {
+            "cell_match": null,
+            "formula_match": null,
+            "source_label_match": null,
+            "space_group_match": null
+          },
+          "reviewer": ""
+        },
+        "CBZ03_PsiCrys": {
+          "citation_doi": "",
+          "citation_url": "",
+          "curator": "",
+          "disorder_annotation": "unknown",
+          "experimental_form_label": "",
+          "license_decision": "",
+          "mapping_confidence": "unknown",
+          "mapping_notes": "",
+          "mapping_status": "unmapped",
+          "matching_evidence": {
+            "cell_match": null,
+            "formula_match": null,
+            "source_label_match": null,
+            "space_group_match": null
+          },
+          "reviewer": ""
+        },
+        "CBZ04_PsiCrys": {
+          "citation_doi": "",
+          "citation_url": "",
+          "curator": "",
+          "disorder_annotation": "unknown",
+          "experimental_form_label": "",
+          "license_decision": "",
+          "mapping_confidence": "unknown",
+          "mapping_notes": "",
+          "mapping_status": "unmapped",
+          "matching_evidence": {
+            "cell_match": null,
+            "formula_match": null,
+            "source_label_match": null,
+            "space_group_match": null
+          },
+          "reviewer": ""
+        },
+        "CBZ05_PsiCrys": {
+          "citation_doi": "",
+          "citation_url": "",
+          "curator": "",
+          "disorder_annotation": "unknown",
+          "experimental_form_label": "",
+          "license_decision": "",
+          "mapping_confidence": "unknown",
+          "mapping_notes": "",
+          "mapping_status": "unmapped",
+          "matching_evidence": {
+            "cell_match": null,
+            "formula_match": null,
+            "source_label_match": null,
+            "space_group_match": null
+          },
+          "reviewer": ""
+        },
+        "CBZ06_PsiCrys": {
+          "citation_doi": "",
+          "citation_url": "",
+          "curator": "",
+          "disorder_annotation": "unknown",
+          "experimental_form_label": "",
+          "license_decision": "",
+          "mapping_confidence": "unknown",
+          "mapping_notes": "",
+          "mapping_status": "unmapped",
+          "matching_evidence": {
+            "cell_match": null,
+            "formula_match": null,
+            "source_label_match": null,
+            "space_group_match": null
+          },
+          "reviewer": ""
+        },
+        "CBZ07_PsiCrys": {
+          "citation_doi": "",
+          "citation_url": "",
+          "curator": "",
+          "disorder_annotation": "unknown",
+          "experimental_form_label": "",
+          "license_decision": "",
+          "mapping_confidence": "unknown",
+          "mapping_notes": "",
+          "mapping_status": "unmapped",
+          "matching_evidence": {
+            "cell_match": null,
+            "formula_match": null,
+            "source_label_match": null,
+            "space_group_match": null
+          },
+          "reviewer": ""
+        },
+        "CBZ08_PsiCrys": {
+          "citation_doi": "",
+          "citation_url": "",
+          "curator": "",
+          "disorder_annotation": "unknown",
+          "experimental_form_label": "",
+          "license_decision": "",
+          "mapping_confidence": "unknown",
+          "mapping_notes": "",
+          "mapping_status": "unmapped",
+          "matching_evidence": {
+            "cell_match": null,
+            "formula_match": null,
+            "source_label_match": null,
+            "space_group_match": null
+          },
+          "reviewer": ""
+        },
+        "CBZ09_PsiCrys": {
+          "citation_doi": "",
+          "citation_url": "",
+          "curator": "",
+          "disorder_annotation": "unknown",
+          "experimental_form_label": "",
+          "license_decision": "",
+          "mapping_confidence": "unknown",
+          "mapping_notes": "",
+          "mapping_status": "unmapped",
+          "matching_evidence": {
+            "cell_match": null,
+            "formula_match": null,
+            "source_label_match": null,
+            "space_group_match": null
+          },
+          "reviewer": ""
+        }
+      },
+      "family_source_doi": "10.1016/0378-5173(89)90357-8",
+      "family_source_url": "https://doi.org/10.1016/0378-5173(89)90357-8"
+    },
+    "FLU": {
+      "blocks": {
+        "FLU01_PsiCrys": {
+          "citation_doi": "",
+          "citation_url": "",
+          "curator": "",
+          "disorder_annotation": "unknown",
+          "experimental_form_label": "",
+          "license_decision": "",
+          "mapping_confidence": "unknown",
+          "mapping_notes": "",
+          "mapping_status": "unmapped",
+          "matching_evidence": {
+            "cell_match": null,
+            "formula_match": null,
+            "source_label_match": null,
+            "space_group_match": null
+          },
+          "reviewer": ""
+        },
+        "FLU02_PsiCrys": {
+          "citation_doi": "",
+          "citation_url": "",
+          "curator": "",
+          "disorder_annotation": "unknown",
+          "experimental_form_label": "",
+          "license_decision": "",
+          "mapping_confidence": "unknown",
+          "mapping_notes": "",
+          "mapping_status": "unmapped",
+          "matching_evidence": {
+            "cell_match": null,
+            "formula_match": null,
+            "source_label_match": null,
+            "space_group_match": null
+          },
+          "reviewer": ""
+        },
+        "FLU03_PsiCrys": {
+          "citation_doi": "",
+          "citation_url": "",
+          "curator": "",
+          "disorder_annotation": "unknown",
+          "experimental_form_label": "",
+          "license_decision": "",
+          "mapping_confidence": "unknown",
+          "mapping_notes": "",
+          "mapping_status": "unmapped",
+          "matching_evidence": {
+            "cell_match": null,
+            "formula_match": null,
+            "source_label_match": null,
+            "space_group_match": null
+          },
+          "reviewer": ""
+        },
+        "FLU04_PsiCrys": {
+          "citation_doi": "",
+          "citation_url": "",
+          "curator": "",
+          "disorder_annotation": "unknown",
+          "experimental_form_label": "",
+          "license_decision": "",
+          "mapping_confidence": "unknown",
+          "mapping_notes": "",
+          "mapping_status": "unmapped",
+          "matching_evidence": {
+            "cell_match": null,
+            "formula_match": null,
+            "source_label_match": null,
+            "space_group_match": null
+          },
+          "reviewer": ""
+        },
+        "FLU05_PsiCrys": {
+          "citation_doi": "",
+          "citation_url": "",
+          "curator": "",
+          "disorder_annotation": "unknown",
+          "experimental_form_label": "",
+          "license_decision": "",
+          "mapping_confidence": "unknown",
+          "mapping_notes": "",
+          "mapping_status": "unmapped",
+          "matching_evidence": {
+            "cell_match": null,
+            "formula_match": null,
+            "source_label_match": null,
+            "space_group_match": null
+          },
+          "reviewer": ""
+        },
+        "FLU06_PsiCrys": {
+          "citation_doi": "",
+          "citation_url": "",
+          "curator": "",
+          "disorder_annotation": "unknown",
+          "experimental_form_label": "",
+          "license_decision": "",
+          "mapping_confidence": "unknown",
+          "mapping_notes": "",
+          "mapping_status": "unmapped",
+          "matching_evidence": {
+            "cell_match": null,
+            "formula_match": null,
+            "source_label_match": null,
+            "space_group_match": null
+          },
+          "reviewer": ""
+        }
+      },
+      "family_source_doi": "10.1021/ja044336a",
+      "family_source_url": "https://doi.org/10.1021/ja044336a"
+    },
+    "IBP": {
+      "blocks": {
+        "IBP01_PsiCrys": {
+          "citation_doi": "",
+          "citation_url": "",
+          "curator": "",
+          "disorder_annotation": "unknown",
+          "experimental_form_label": "",
+          "license_decision": "",
+          "mapping_confidence": "unknown",
+          "mapping_notes": "",
+          "mapping_status": "unmapped",
+          "matching_evidence": {
+            "cell_match": null,
+            "formula_match": null,
+            "source_label_match": null,
+            "space_group_match": null
+          },
+          "reviewer": ""
+        },
+        "IBP02_PsiCrys": {
+          "citation_doi": "",
+          "citation_url": "",
+          "curator": "",
+          "disorder_annotation": "unknown",
+          "experimental_form_label": "",
+          "license_decision": "",
+          "mapping_confidence": "unknown",
+          "mapping_notes": "",
+          "mapping_status": "unmapped",
+          "matching_evidence": {
+            "cell_match": null,
+            "formula_match": null,
+            "source_label_match": null,
+            "space_group_match": null
+          },
+          "reviewer": ""
+        },
+        "IBP03_PsiCrys": {
+          "citation_doi": "",
+          "citation_url": "",
+          "curator": "",
+          "disorder_annotation": "unknown",
+          "experimental_form_label": "",
+          "license_decision": "",
+          "mapping_confidence": "unknown",
+          "mapping_notes": "",
+          "mapping_status": "unmapped",
+          "matching_evidence": {
+            "cell_match": null,
+            "formula_match": null,
+            "source_label_match": null,
+            "space_group_match": null
+          },
+          "reviewer": ""
+        },
+        "IBP04_PsiCrys": {
+          "citation_doi": "",
+          "citation_url": "",
+          "curator": "",
+          "disorder_annotation": "unknown",
+          "experimental_form_label": "",
+          "license_decision": "",
+          "mapping_confidence": "unknown",
+          "mapping_notes": "",
+          "mapping_status": "unmapped",
+          "matching_evidence": {
+            "cell_match": null,
+            "formula_match": null,
+            "source_label_match": null,
+            "space_group_match": null
+          },
+          "reviewer": ""
+        },
+        "IBP05_PsiCrys": {
+          "citation_doi": "",
+          "citation_url": "",
+          "curator": "",
+          "disorder_annotation": "unknown",
+          "experimental_form_label": "",
+          "license_decision": "",
+          "mapping_confidence": "unknown",
+          "mapping_notes": "",
+          "mapping_status": "unmapped",
+          "matching_evidence": {
+            "cell_match": null,
+            "formula_match": null,
+            "source_label_match": null,
+            "space_group_match": null
+          },
+          "reviewer": ""
+        },
+        "IBP06_PsiCrys": {
+          "citation_doi": "",
+          "citation_url": "",
+          "curator": "",
+          "disorder_annotation": "unknown",
+          "experimental_form_label": "",
+          "license_decision": "",
+          "mapping_confidence": "unknown",
+          "mapping_notes": "",
+          "mapping_status": "unmapped",
+          "matching_evidence": {
+            "cell_match": null,
+            "formula_match": null,
+            "source_label_match": null,
+            "space_group_match": null
+          },
+          "reviewer": ""
+        },
+        "IBP07_PsiCrys": {
+          "citation_doi": "",
+          "citation_url": "",
+          "curator": "",
+          "disorder_annotation": "unknown",
+          "experimental_form_label": "",
+          "license_decision": "",
+          "mapping_confidence": "unknown",
+          "mapping_notes": "",
+          "mapping_status": "unmapped",
+          "matching_evidence": {
+            "cell_match": null,
+            "formula_match": null,
+            "source_label_match": null,
+            "space_group_match": null
+          },
+          "reviewer": ""
+        }
+      },
+      "family_literature_context": "Web review 2026-05-08: CPOSS209 describes racemic ibuprofen Form I as the marketed and most stable racemic form at low temperature, and Form II as a second less-stable/highly metastable racemic form containing two conformations. The 2012 ibuprofen Form II paper shows Form II preparation from the supercooled liquid as high as 273 K. This supports IBP family curation but does not by itself map IBP06_PsiCrys to a specific experimental form.",
+      "family_source_doi": "10.1021/cg300599q",
+      "family_source_url": "https://doi.org/10.1021/cg300599q"
+    }
+  },
+  "promotion_rule": "A CPOSS candidate can only advance from literature_mapped_candidate to verified_benchmark_pair after both block mappings are block_form_mapping_locked with high confidence and resolved license/disorder fields.",
+  "required_block_fields": [
+    "mapping_status",
+    "experimental_form_label",
+    "mapping_confidence",
+    "citation_doi or citation_url",
+    "matching_evidence.cell_match",
+    "matching_evidence.space_group_match",
+    "matching_evidence.formula_match",
+    "matching_evidence.source_label_match",
+    "license_decision",
+    "disorder_annotation",
+    "curator",
+    "reviewer"
+  ],
+  "schema_version": "0.1.0",
+  "scope": "Local CPOSS block-to-experimental-form mapping manifest. This file records metadata needed for promotion and does not contain coordinate-bearing CIF content.",
+  "status": "block_form_mapping_scaffold",
+  "total_block_count": 29
+}

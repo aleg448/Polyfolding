@@ -18,7 +18,7 @@ This repository implements the CrystalProbe vertical slice as a dependency-light
 - CPOSS AGI-assisted candidate cards with claim boundaries and follow-up backend commands.
 - Medication CIF selection, ingestion, source-acquisition, local measurement, and backend-blocker reporting.
 - Environment, execution-unblock, handoff, and publication-readiness reports for unattended or long-running work sessions.
-- CPOSS promotion gate from evidence workpack entries to canonical benchmark records, with field-completion, curation-queue, and chemistry-family summaries.
+- CPOSS promotion gate from evidence workpack entries to canonical benchmark records, with field-completion, curation-queue, block-to-form mapping, and chemistry-family summaries.
 - Fingerprint artifact readiness gating, including pre-benchmark CBZ/IBP candidate-slice tracking and a generated medication case-study coverage figure.
 - Paper outlines for the fingerprint, data descriptor, and JOSS outputs.
 
@@ -57,6 +57,8 @@ A CPOSS candidate triage report is generated at `outputs/cposs_pair_triage_repor
 
 A curator-fillable CPOSS evidence workpack is generated at `outputs/cposs_evidence_workpack.json` and `outputs/cposs_evidence_workpack.md`. It turns the triage queue into structured forms for stability citations, source-license decisions, disorder annotations, and promotion review.
 
+A CPOSS block-to-form mapping report is generated at `outputs/cposs_block_form_mapping.json` and `outputs/cposs_block_form_mapping.md`. It turns the current literature-mapped workpack into a per-block mapping queue, requiring locked experimental form labels, high-confidence cell/space-group/formula/source-label matching, license resolution, and disorder annotation before any pair can become promotion-ready.
+
 The current preliminary findings memo is generated at `outputs/crystalprobe_preliminary_findings_memo.md`. It summarizes AMPETP readiness, AMPETP sensitivity, the CPOSS bridge, and the remaining guardrails in a collaborator-facing format.
 
 A ChemRxiv-style preprint draft scaffold is generated at `outputs/crystalprobe_chemrxiv_preprint_draft.md`. It expands the preliminary memo into abstract, introduction, methods, results, discussion, limitations, and reproducibility sections.
@@ -91,9 +93,9 @@ The FAIR Chemistry model guardrail report is generated at `outputs/fairchem_mode
 
 The uncertainty proxy v0 report is generated at `outputs/crystalprobe_uncertainty_proxy_v0.json` and `outputs/crystalprobe_uncertainty_proxy_v0.md`. It aggregates AMPETP sensitivity disagreement and CPOSS high-priority disagreement evidence into target-level inspection decisions. It is an uncalibrated backend-behavior proxy, not a thermodynamic uncertainty estimate.
 
-The CPOSS promotion gate is generated at `outputs/cposs_promotion_gate.json` and `outputs/cposs_promotion_gate.md`, with promoted records written to `outputs/cposs_promoted_pairs.jsonl` only after stability evidence, license decisions, disorder annotations, curator/reviewer, and promotion decision are complete. Current CPOSS candidates remain blocked, so verified benchmark pair count is still zero. The gate now includes an evidence field-completion matrix, a priority-sorted curation queue, and a chemistry-family summary showing 8 CBZ and 6 IBP blocked candidates with one high-priority blocked candidate in each family.
+The CPOSS promotion gate is generated at `outputs/cposs_promotion_gate.json` and `outputs/cposs_promotion_gate.md`, with promoted records written to `outputs/cposs_promoted_pairs.jsonl` only after stability evidence, license decisions, disorder annotations, curator/reviewer, and promotion decision are complete. Evidence-populated but not block-verified candidates are classified as `literature_mapped_candidate`, not benchmark records. The gate now includes an evidence field-completion matrix, a priority-sorted curation queue, per-candidate upgrade requirements, and a chemistry-family summary covering ACR, CBZ, FLU, and IBP. The separate block-to-form report records the exact block-level mapping blockers preventing upgrade from literature-mapped candidates to verified benchmark records. The workpack is expanded beyond the first 20-entry curation milestone while remaining at 0 verified benchmark pairs.
 
-The fingerprint artifact plan is generated at `outputs/crystalprobe_fingerprint_artifact_plan.json` and `outputs/crystalprobe_fingerprint_artifact_plan.md`. It blocks ranking-accuracy and calibration figures until at least 20 verified benchmark pairs exist, while the medication case-study panel is now ready and generated at `outputs/figures/medication_case_study_coverage.svg`. The plan also surfaces the same CBZ/IBP candidate-family slices as pre-benchmark planning context without promoting them into paper-facing benchmark metrics.
+The fingerprint artifact plan is generated at `outputs/crystalprobe_fingerprint_artifact_plan.json` and `outputs/crystalprobe_fingerprint_artifact_plan.md`. It blocks ranking-accuracy and calibration figures until at least 20 verified benchmark pairs exist, while the medication case-study panel is now ready and generated at `outputs/figures/medication_case_study_coverage.svg`. The plan also surfaces the same ACR/CBZ/FLU/IBP candidate-family slices as pre-benchmark planning context without promoting them into paper-facing benchmark metrics.
 
 The substance-profile report is generated at `outputs/crystalprobe_substance_profiles.json` and `outputs/crystalprobe_substance_profiles.md`. It creates a bounded profile for each current medication-priority target, merging the therapeutic queue, local CCDC source records, lisdexamfetamine proof layers, evidence tiers, CPOSS backend disagreement, and next actions. This is now the preferred overview for deciding which substance to measure or curate next.
 

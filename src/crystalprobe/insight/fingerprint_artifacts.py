@@ -87,14 +87,15 @@ def fingerprint_artifact_plan_markdown(report: dict[str, Any]) -> str:
                 "",
                 "## Candidate Family Summary",
                 "",
-                "| Family | Candidates | Promoted | Blocked | High Priority Blocked |",
-                "|---|---:|---:|---:|---:|",
+                "| Family | Candidates | Promoted | Literature Mapped | Blocked | High Priority Not Promoted |",
+                "|---|---:|---:|---:|---:|---:|",
             ]
         )
         for row in report["candidate_family_summary"]:
             lines.append(
                 f"| `{row['family']}` | `{row['candidate_count']}` | `{row['promoted_count']}` | "
-                f"`{row['blocked_count']}` | `{row['high_priority_blocked_count']}` |"
+                f"`{row.get('literature_mapped_count', 0)}` | `{row['blocked_count']}` | "
+                f"`{row.get('high_priority_not_promoted_count', row.get('high_priority_blocked_count', 0))}` |"
             )
     lines.extend(
         [

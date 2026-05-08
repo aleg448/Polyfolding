@@ -97,9 +97,30 @@ def test_release_boundary_classifies_medication_bundle_license_review():
 
 def test_release_boundary_default_paths_include_script_bootstrap():
     assert "scripts/_path_bootstrap.py" in DEFAULT_REPO_PATHS
+    assert "data/curation/cposs_block_form_mapping_v0.1.json" in DEFAULT_REPO_PATHS
+    assert "data/curation/cposs_evidence_overrides_v0.1.json" in DEFAULT_REPO_PATHS
+    assert "docs/release_boundary_review_2026-05-06.md" in DEFAULT_REPO_PATHS
     report = release_boundary_report(artifact_paths=DEFAULT_REPO_PATHS)
     by_path = {record["path"]: record for record in report["records"]}
     assert by_path["scripts/_path_bootstrap.py"]["category"] == "candidate_public"
+    assert by_path["data/curation/cposs_block_form_mapping_v0.1.json"]["category"] == "candidate_public"
+    assert by_path["data/curation/cposs_evidence_overrides_v0.1.json"]["category"] == "candidate_public"
+    assert by_path["docs/release_boundary_review_2026-05-06.md"]["category"] == "candidate_public"
+
+
+def test_release_boundary_default_paths_include_cposs_block_mapping_surface():
+    expected_paths = {
+        "scripts/build_cposs_block_mapping_dossier.py",
+        "scripts/build_cposs_block_mapping_report.py",
+        "scripts/seed_cposs_block_form_mapping_manifest.py",
+        "src/crystalprobe/insight/cposs_block_mapping.py",
+        "tests/test_cposs_block_mapping.py",
+    }
+
+    assert expected_paths.issubset(set(DEFAULT_REPO_PATHS))
+    report = release_boundary_report(artifact_paths=DEFAULT_REPO_PATHS)
+    by_path = {record["path"]: record for record in report["records"]}
+    assert {by_path[path]["category"] for path in expected_paths} == {"candidate_public"}
 
 
 def test_release_boundary_default_paths_include_status_and_roadmap_surface():

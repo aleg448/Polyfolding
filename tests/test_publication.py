@@ -4,6 +4,7 @@ from crystalprobe.insight.publication import publication_readiness_markdown, pub
 def test_publication_readiness_blocks_unverified_and_restricted_artifacts():
     report = publication_readiness_report(
         cposs_promotion={"promoted_count": 0},
+        cposs_block_mapping={"candidate_count": 25, "candidate_mapping_ready_count": 0},
         fingerprint_plan={"figures": [{"figure_id": "calibration", "status": "blocked"}]},
         release_boundary={"counts": {"candidate_public": 3, "license_review_required": 2, "local_only": 1}},
         execution_unblock={"blocker_count": 1, "approval_batch": ["Run pending backend commands."]},
@@ -12,14 +13,16 @@ def test_publication_readiness_blocks_unverified_and_restricted_artifacts():
 
     assert report["status"] == "publication_blocked"
     assert report["ready"] is False
-    assert report["blocked_gate_count"] == 5
+    assert report["blocked_gate_count"] == 6
     assert "Run pending backend commands." in report["approval_batch"]
     assert any("Curate and promote 20 verified CPOSS pairs" in step for step in report["next_publication_steps"])
+    assert any("Lock block-to-experimental-form mappings for 25 CPOSS candidate pairs" in step for step in report["next_publication_steps"])
 
 
 def test_publication_readiness_can_pass_all_gates():
     report = publication_readiness_report(
         cposs_promotion={"promoted_count": 20},
+        cposs_block_mapping={"candidate_count": 20, "candidate_mapping_ready_count": 20},
         fingerprint_plan={"figures": [{"figure_id": "composition", "status": "ready"}]},
         release_boundary={"counts": {"candidate_public": 3, "license_review_required": 0, "local_only": 0}},
         execution_unblock={"blocker_count": 0, "approval_batch": []},

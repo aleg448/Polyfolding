@@ -29,8 +29,10 @@ def main() -> int:
     args = parser.parse_args()
 
     summaries = args.summary or [
+        Path("outputs/cposs_acr_mace_summary.json"),
         Path("outputs/cposs_ibp_mace_summary.json"),
         Path("outputs/cposs_cbz_mace_summary.json"),
+        Path("outputs/cposs_flu_mace_summary.json"),
     ]
     report = build_cposs_mini_benchmark_report(
         [load_summary(path) for path in summaries],

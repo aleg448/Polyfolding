@@ -196,6 +196,7 @@ def test_roadmap_status_uses_cposs_promotion_milestones():
         cposs_bridge={"family_count": 2, "structure_count": 16},
         cposs_promotion_gate={
             "promoted_count": 0,
+            "literature_mapped_count": 25,
             "milestones": [
                 {"pair_count": 20, "remaining": 20, "status": "pending"},
                 {"pair_count": 50, "remaining": 50, "status": "pending"},
@@ -226,13 +227,52 @@ def test_roadmap_status_uses_cposs_promotion_milestones():
 
     benchmark = report["deliverables"][0]
     assert (
-        "CPOSS promotion gate records 0 promoted benchmark pairs; milestones: "
+        "CPOSS promotion gate records 0 promoted benchmark pairs and "
+        "25 literature-mapped prebenchmark candidates; milestones: "
         "20 pairs: pending (20 remaining), 50 pairs: pending (50 remaining), "
         "100 pairs: pending (100 remaining)."
     ) in benchmark["evidence"]
     assert (
-        "Use the CPOSS promotion gate to fill 20 more verified pairs for the 20-pair milestone, "
+        "Use the CPOSS promotion gate to upgrade 20 literature-mapped candidates into verified pairs for the 20-pair milestone, "
         "then continue to 50 and 100+."
+    ) in benchmark["remaining"]
+
+
+def test_roadmap_status_uses_cposs_block_mapping_summary():
+    report = roadmap_status_report(
+        project_status={
+            "ampetp": {"readiness_status": "paper_pilot_ready"},
+            "verification": {"latest_local_test_summary": "1 passed", "docker_status": "verified"},
+        },
+        readiness={"status": "paper_pilot_ready"},
+        cposs_bridge={"family_count": 2, "structure_count": 16},
+        cposs_block_mapping={
+            "block_count": 29,
+            "locked_block_count": 0,
+            "candidate_mapping_ready_count": 0,
+            "block_curation_queue": [
+                {
+                    "family": "IBP",
+                    "block_id": "IBP06_PsiCrys",
+                    "top_candidate_id": "ibp_ibp01_psicrys_vs_ibp06_psicrys",
+                }
+            ],
+        },
+        has_preprint_draft=True,
+        has_joss_draft=True,
+        has_fastcsp_plan=True,
+        has_cposs_block_mapping=True,
+    )
+
+    benchmark = report["deliverables"][0]
+    assert (
+        "CPOSS block-to-form mapping report covers 29 unique candidate blocks; "
+        "0 are locked and 0 candidate pairs are mapping-ready. Top block target: "
+        "IBP IBP06_PsiCrys via ibp_ibp01_psicrys_vs_ibp06_psicrys."
+    ) in benchmark["evidence"]
+    assert (
+        "Lock CPOSS block-to-experimental-form mappings before promotion, starting with "
+        "IBP IBP06_PsiCrys for ibp_ibp01_psicrys_vs_ibp06_psicrys."
     ) in benchmark["remaining"]
 
 
@@ -246,8 +286,8 @@ def test_roadmap_status_uses_fingerprint_candidate_slices():
         cposs_bridge={"family_count": 2, "structure_count": 16},
         fingerprint_artifact_plan={
             "candidate_family_summary": [
-                {"family": "CBZ", "candidate_count": 8, "promoted_count": 0},
-                {"family": "IBP", "candidate_count": 6, "promoted_count": 0},
+                {"family": "CBZ", "candidate_count": 8, "literature_mapped_count": 8, "promoted_count": 0},
+                {"family": "IBP", "candidate_count": 6, "literature_mapped_count": 6, "promoted_count": 0},
             ]
         },
         has_preprint_draft=True,
@@ -272,7 +312,7 @@ def test_roadmap_status_uses_fingerprint_candidate_slices():
     paper = report["deliverables"][1]
     assert (
         "Fingerprint artifact plan gates chemistry-slice figures and tracks pre-benchmark candidate slices: "
-        "CBZ=8 candidates/0 promoted, IBP=6 candidates/0 promoted."
+        "CBZ=8 candidates/8 mapped/0 promoted, IBP=6 candidates/6 mapped/0 promoted."
     ) in paper["evidence"]
 
 

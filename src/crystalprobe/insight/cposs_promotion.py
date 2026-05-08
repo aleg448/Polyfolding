@@ -26,15 +26,24 @@ def cposs_promotion_report(
     evidence_workpack: dict[str, Any],
     *,
     family_annotations: dict[str, Any] | None = None,
+    block_mapping_report: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Validate completed CPOSS evidence forms before benchmark promotion."""
 
     annotations = family_annotations or {}
+    block_mapping_rows = _candidate_block_mapping_rows(block_mapping_report)
     rows = [
-        _promotion_row(item, annotations.get(str(item.get("family")), {}))
+        _promotion_row(
+            item,
+            annotations.get(str(item.get("family")), {}),
+            None if block_mapping_rows is None else block_mapping_rows.get(str(item.get("candidate_id"))),
+            enforce_block_mapping=block_mapping_rows is not None,
+        )
         for item in evidence_workpack.get("work_items", [])
     ]
     promoted = [row["record"] for row in rows if row["promotion_status"] == "promoted"]
+    literature_mapped = [row for row in rows if row["promotion_status"] == "literature_mapped_candidate"]
+    blocked = [row for row in rows if row["promotion_status"] == "blocked"]
     milestones = _milestones(len(promoted))
     field_completion = _field_completion(evidence_workpack.get("work_items", []))
     curation_queue = _curation_queue(rows)
@@ -44,15 +53,21 @@ def cposs_promotion_report(
         "status": "cposs_promotion_gate_recorded",
         "candidate_count": len(rows),
         "promoted_count": len(promoted),
-        "blocked_count": sum(1 for row in rows if row["promotion_status"] != "promoted"),
+        "literature_mapped_count": len(literature_mapped),
+        "blocked_count": len(blocked),
+        "not_promoted_count": len(rows) - len(promoted),
+        "block_mapping_enforced": block_mapping_rows is not None,
         "milestones": milestones,
         "family_summary": family_summary,
         "field_completion": field_completion,
         "curation_queue": curation_queue,
+        "upgrade_requirements": _upgrade_requirements(rows),
         "rows": rows,
         "promoted_records": promoted,
         "policy": [
             "No CPOSS candidate becomes a benchmark record without experimental stability evidence.",
+            "Literature-mapped candidates are evidence-populated prebenchmark records, not verified benchmark pairs.",
+            "When a block-to-form mapping report is supplied, promotion requires mapping-ready candidate pairs.",
             "Verified records require source license decisions and explicit disorder annotations.",
             "Ambiguous or incomplete records remain excluded from headline fingerprint and calibration metrics.",
         ],
@@ -68,7 +83,9 @@ def cposs_promotion_markdown(report: dict[str, Any]) -> str:
         f"- Status: `{report['status']}`",
         f"- Candidates: `{report['candidate_count']}`",
         f"- Promoted: `{report['promoted_count']}`",
+        f"- Literature mapped: `{report.get('literature_mapped_count', 0)}`",
         f"- Blocked: `{report['blocked_count']}`",
+        f"- Block mapping enforced: `{report.get('block_mapping_enforced', False)}`",
         "",
         "## Milestones",
         "",
@@ -82,14 +99,15 @@ def cposs_promotion_markdown(report: dict[str, Any]) -> str:
             "",
             "## Family Summary",
             "",
-            "| Family | Candidates | Promoted | Blocked | High Priority Blocked |",
-            "|---|---:|---:|---:|---:|",
+            "| Family | Candidates | Promoted | Literature Mapped | Blocked | High Priority Not Promoted |",
+            "|---|---:|---:|---:|---:|---:|",
         ]
     )
     for row in report.get("family_summary", []):
         lines.append(
             f"| `{row['family']}` | `{row['candidate_count']}` | `{row['promoted_count']}` | "
-            f"`{row['blocked_count']}` | `{row['high_priority_blocked_count']}` |"
+            f"`{row.get('literature_mapped_count', 0)}` | `{row['blocked_count']}` | "
+            f"`{row['high_priority_not_promoted_count']}` |"
         )
     lines.extend(
         [
@@ -128,17 +146,36 @@ def cposs_promotion_markdown(report: dict[str, Any]) -> str:
     for row in report["rows"]:
         reasons = row.get("blockers") or row.get("validation_errors") or []
         lines.append(f"| `{row['candidate_id']}` | `{row['promotion_status']}` | {'; '.join(reasons) or 'none'} |")
+    if report.get("upgrade_requirements"):
+        lines.extend(
+            [
+                "",
+                "## Upgrade Requirements",
+                "",
+                "| Candidate | Status | Requirements |",
+                "|---|---|---|",
+            ]
+        )
+        for row in report["upgrade_requirements"]:
+            lines.append(
+                f"| `{row['candidate_id']}` | `{row['promotion_status']}` | "
+                f"{'; '.join(row['requirements']) or 'none'} |"
+            )
     lines.extend(["", "## Policy", ""])
     lines.extend(f"- {item}" for item in report["policy"])
     return "\n".join(lines).rstrip() + "\n"
 
 
-def _promotion_row(item: dict[str, Any], annotation: dict[str, Any]) -> dict[str, Any]:
+def _promotion_row(
+    item: dict[str, Any],
+    annotation: dict[str, Any],
+    block_mapping_row: dict[str, Any] | None,
+    *,
+    enforce_block_mapping: bool,
+) -> dict[str, Any]:
     candidate_id = str(item.get("candidate_id"))
     form = dict(item.get("evidence_form", {}))
     blockers = _missing_fields(form)
-    if form.get("promotion_decision") != "promote":
-        blockers.append("promotion_decision must be promote")
     if not annotation:
         blockers.append("family chemistry annotation is missing")
     if blockers:
@@ -149,6 +186,30 @@ def _promotion_row(item: dict[str, Any], annotation: dict[str, Any]) -> dict[str
             "promotion_status": "blocked",
             "next_required_fields": _next_required_fields(form),
             "blockers": blockers,
+            "upgrade_requirements": _upgrade_requirements_for_form(form),
+        }
+    if form.get("promotion_decision") != "promote":
+        return {
+            "candidate_id": candidate_id,
+            "family": item.get("family"),
+            "priority": item.get("priority", "unspecified"),
+            "promotion_status": "literature_mapped_candidate",
+            "next_required_fields": [],
+            "upgrade_requirements": _upgrade_requirements_for_form(form),
+        }
+    mapping_blockers = _block_mapping_blockers(block_mapping_row, enforce_block_mapping)
+    if mapping_blockers:
+        return {
+            "candidate_id": candidate_id,
+            "family": item.get("family"),
+            "priority": item.get("priority", "unspecified"),
+            "promotion_status": "blocked",
+            "next_required_fields": [],
+            "blockers": mapping_blockers,
+            "upgrade_requirements": [
+                *_upgrade_requirements_for_form(form),
+                "Lock block-to-experimental-form mapping for both candidate structures.",
+            ],
         }
     record = _record(item, form, annotation)
     try:
@@ -161,6 +222,7 @@ def _promotion_row(item: dict[str, Any], annotation: dict[str, Any]) -> dict[str
             "promotion_status": "blocked",
             "next_required_fields": [],
             "validation_errors": [error["msg"] for error in exc.errors()],
+            "upgrade_requirements": ["Fix schema validation errors before promotion."],
         }
     return {
         "candidate_id": candidate_id,
@@ -168,6 +230,7 @@ def _promotion_row(item: dict[str, Any], annotation: dict[str, Any]) -> dict[str
         "priority": item.get("priority", "unspecified"),
         "promotion_status": "promoted",
         "next_required_fields": [],
+        "upgrade_requirements": [],
         "record": validated.model_dump(mode="json"),
     }
 
@@ -181,6 +244,27 @@ def _missing_fields(form: dict[str, Any]) -> list[str]:
     if not form.get("citation_doi") and not form.get("citation_url"):
         missing.append("citation_doi or citation_url is required")
     return missing
+
+
+def _candidate_block_mapping_rows(block_mapping_report: dict[str, Any] | None) -> dict[str, dict[str, Any]] | None:
+    if block_mapping_report is None:
+        return None
+    return {
+        str(row.get("candidate_id")): dict(row)
+        for row in block_mapping_report.get("candidate_rows", [])
+        if row.get("candidate_id")
+    }
+
+
+def _block_mapping_blockers(block_mapping_row: dict[str, Any] | None, enforce_block_mapping: bool) -> list[str]:
+    if not enforce_block_mapping:
+        return []
+    if block_mapping_row is None:
+        return ["block-to-form mapping row is missing"]
+    if block_mapping_row.get("mapping_ready") is True:
+        return []
+    blockers = list(block_mapping_row.get("blockers", []))
+    return blockers or ["block-to-form mapping is not locked for both structures"]
 
 
 def _field_completion(work_items: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -229,6 +313,8 @@ def _curation_queue(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
             "priority": row.get("priority", "unspecified"),
             "missing_count": len(row.get("next_required_fields", [])),
             "next_required_fields": row.get("next_required_fields", []),
+            "promotion_status": row.get("promotion_status"),
+            "upgrade_requirements": row.get("upgrade_requirements", []),
         }
         for row in rows
         if row.get("promotion_status") != "promoted"
@@ -249,17 +335,56 @@ def _family_summary(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     for family in families:
         family_rows = [row for row in rows if str(row.get("family")) == family]
         promoted_count = sum(1 for row in family_rows if row.get("promotion_status") == "promoted")
-        blocked_rows = [row for row in family_rows if row.get("promotion_status") != "promoted"]
+        literature_mapped_count = sum(1 for row in family_rows if row.get("promotion_status") == "literature_mapped_candidate")
+        blocked_rows = [row for row in family_rows if row.get("promotion_status") == "blocked"]
+        not_promoted_rows = [row for row in family_rows if row.get("promotion_status") != "promoted"]
         summary.append(
             {
                 "family": family,
                 "candidate_count": len(family_rows),
                 "promoted_count": promoted_count,
+                "literature_mapped_count": literature_mapped_count,
                 "blocked_count": len(blocked_rows),
                 "high_priority_blocked_count": sum(1 for row in blocked_rows if row.get("priority") == "high"),
+                "high_priority_not_promoted_count": sum(
+                    1 for row in not_promoted_rows if row.get("priority") == "high"
+                ),
             }
         )
     return summary
+
+
+def _upgrade_requirements(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return [
+        {
+            "candidate_id": row["candidate_id"],
+            "family": row.get("family"),
+            "priority": row.get("priority", "unspecified"),
+            "promotion_status": row.get("promotion_status"),
+            "requirements": row.get("upgrade_requirements", []),
+        }
+        for row in rows
+        if row.get("promotion_status") != "promoted"
+    ]
+
+
+def _upgrade_requirements_for_form(form: dict[str, Any]) -> list[str]:
+    requirements = []
+    if _next_required_fields(form):
+        requirements.append("Complete all required evidence fields.")
+    if form.get("experimental_stability_ordering") in {None, "", "ambiguous"}:
+        requirements.append("Map CPOSS block IDs to experimental form labels and assign a non-ambiguous stability ordering.")
+    if str(form.get("has_disorder_a", "")).strip().casefold() == "unknown" or str(
+        form.get("has_disorder_b", "")
+    ).strip().casefold() == "unknown":
+        requirements.append("Replace unknown disorder annotations with explicit true/false values and notes.")
+    if "requires review" in str(form.get("source_license_a", "")).casefold() or "requires review" in str(
+        form.get("source_license_b", "")
+    ).casefold():
+        requirements.append("Resolve source-license review into benchmark-schema license values.")
+    if form.get("promotion_decision") != "promote":
+        requirements.append("Set promotion_decision to promote only after independent review confirms the mapping.")
+    return requirements
 
 
 def _milestones(promoted_count: int) -> list[dict[str, Any]]:

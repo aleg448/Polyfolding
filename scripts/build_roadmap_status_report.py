@@ -28,6 +28,7 @@ def main() -> int:
     parser.add_argument("--cposs-pair-triage", type=Path, default=Path("outputs/cposs_pair_triage_report.json"))
     parser.add_argument("--cposs-candidate-cards", type=Path, default=Path("outputs/cposs_candidate_cards.json"))
     parser.add_argument("--cposs-evidence-workpack", type=Path, default=Path("outputs/cposs_evidence_workpack.json"))
+    parser.add_argument("--cposs-block-mapping", type=Path, default=Path("outputs/cposs_block_form_mapping.json"))
     parser.add_argument("--backend-disagreement", type=Path, default=Path("outputs/ampetp_backend_disagreement.json"))
     parser.add_argument("--cposs-backend-disagreement", type=Path, default=Path("outputs/cposs_high_priority_backend_disagreement.json"))
     parser.add_argument("--cposs-disagreement-inspection", type=Path, default=Path("outputs/cposs_cbz_disagreement_inspection.json"))
@@ -53,12 +54,16 @@ def main() -> int:
     environment_blockers = (
         json.loads(args.environment_blockers.read_text(encoding="utf-8")) if args.environment_blockers.exists() else None
     )
+    cposs_block_mapping = (
+        json.loads(args.cposs_block_mapping.read_text(encoding="utf-8")) if args.cposs_block_mapping.exists() else None
+    )
 
     report = roadmap_status_report(
         project_status=json.loads(args.project_status.read_text(encoding="utf-8")),
         readiness=json.loads(args.readiness.read_text(encoding="utf-8")),
         cposs_bridge=json.loads(args.cposs.read_text(encoding="utf-8")),
         cposs_promotion_gate=cposs_promotion_gate,
+        cposs_block_mapping=cposs_block_mapping,
         fingerprint_artifact_plan=fingerprint_artifact_plan,
         environment_blockers=environment_blockers,
         has_preprint_draft=args.preprint.exists(),
@@ -69,6 +74,7 @@ def main() -> int:
         has_cposs_pair_triage=args.cposs_pair_triage.exists(),
         has_cposs_candidate_cards=args.cposs_candidate_cards.exists(),
         has_cposs_evidence_workpack=args.cposs_evidence_workpack.exists(),
+        has_cposs_block_mapping=args.cposs_block_mapping.exists(),
         has_backend_disagreement=args.backend_disagreement.exists(),
         has_cposs_backend_disagreement=args.cposs_backend_disagreement.exists(),
         has_cposs_disagreement_inspection=args.cposs_disagreement_inspection.exists(),

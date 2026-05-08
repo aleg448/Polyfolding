@@ -51,6 +51,6 @@ def test_crystalprobe_scripts_bootstrap_repo_local_imports():
 def test_full_suite_plan_mentions_current_cposs_and_fingerprint_summaries():
     plan = FULL_SUITE_PLAN.read_text(encoding="utf-8")
     assert "atomic output replacement" in plan
-    assert "field-completion, curation-queue, and chemistry-family summaries" in plan
-    assert "8 CBZ and 6 IBP blocked candidates" in plan
-    assert "pre-benchmark CBZ/IBP candidate-slice tracking" in plan
+    assert "field-completion, curation-queue, block-to-form mapping, and chemistry-family summaries" in plan
+    assert "ACR, CBZ, FLU, and IBP" in plan
+    assert "pre-benchmark planning context" in plan

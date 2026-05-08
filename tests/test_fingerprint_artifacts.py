@@ -10,8 +10,9 @@ def test_fingerprint_artifact_plan_gates_pair_figures():
                     "family": "CBZ",
                     "candidate_count": 8,
                     "promoted_count": 0,
-                    "blocked_count": 8,
-                    "high_priority_blocked_count": 1,
+                    "literature_mapped_count": 8,
+                    "blocked_count": 0,
+                    "high_priority_not_promoted_count": 1,
                 }
             ],
         },
@@ -26,4 +27,4 @@ def test_fingerprint_artifact_plan_gates_pair_figures():
     markdown = fingerprint_artifact_plan_markdown(report)
     assert "Fingerprint Artifact Plan" in markdown
     assert "## Candidate Family Summary" in markdown
-    assert "| `CBZ` | `8` | `0` | `8` | `1` |" in markdown
+    assert "| `CBZ` | `8` | `0` | `8` | `0` | `1` |" in markdown

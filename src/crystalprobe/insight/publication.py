@@ -8,6 +8,7 @@ from typing import Any
 def publication_readiness_report(
     *,
     cposs_promotion: dict[str, Any],
+    cposs_block_mapping: dict[str, Any] | None = None,
     fingerprint_plan: dict[str, Any],
     release_boundary: dict[str, Any],
     execution_unblock: dict[str, Any],
@@ -21,6 +22,7 @@ def publication_readiness_report(
             cposs_promotion.get("promoted_count", 0) >= 20,
             f"{cposs_promotion.get('promoted_count', 0)} promoted pairs; 20 required for first benchmark-paper milestone.",
         ),
+        *_block_mapping_gates(cposs_block_mapping),
         _gate(
             "fingerprint_figures",
             all(row.get("status") == "ready" for row in fingerprint_plan.get("figures", [])),
@@ -51,7 +53,7 @@ def publication_readiness_report(
         "gates": gates,
         "blocked_gate_count": sum(1 for gate in gates if gate["status"] != "passed"),
         "approval_batch": list(execution_unblock.get("approval_batch", [])),
-        "next_publication_steps": _next_steps(gates, cposs_promotion, handoff),
+        "next_publication_steps": _next_steps(gates, cposs_promotion, cposs_block_mapping or {}, handoff),
         "policy": [
             "Publication readiness requires verified benchmark evidence, not just backend disagreement.",
             "CCDC/CSD-derived generated reports and figures require source-license review before public sharing.",
@@ -109,9 +111,27 @@ def _release_detail(release_boundary: dict[str, Any]) -> str:
     )
 
 
+def _block_mapping_gates(cposs_block_mapping: dict[str, Any] | None) -> list[dict[str, str]]:
+    if cposs_block_mapping is None:
+        return []
+    return [
+        _gate(
+            "block_form_mapping",
+            cposs_block_mapping.get("candidate_count", 0) > 0
+            and cposs_block_mapping.get("candidate_mapping_ready_count", 0)
+            == cposs_block_mapping.get("candidate_count", 0),
+            (
+                f"{cposs_block_mapping.get('candidate_mapping_ready_count', 0)} of "
+                f"{cposs_block_mapping.get('candidate_count', 0)} candidate pairs have locked block-to-form mappings."
+            ),
+        )
+    ]
+
+
 def _next_steps(
     gates: list[dict[str, str]],
     cposs_promotion: dict[str, Any],
+    cposs_block_mapping: dict[str, Any],
     handoff: dict[str, Any],
 ) -> list[str]:
     steps: list[str] = []
@@ -119,6 +139,11 @@ def _next_steps(
     if "verified_pair_milestone_20" in blocked:
         remaining = 20 - int(cposs_promotion.get("promoted_count", 0))
         steps.append(f"Curate and promote {remaining} verified CPOSS pairs for the first benchmark milestone.")
+    if "block_form_mapping" in blocked:
+        remaining = int(cposs_block_mapping.get("candidate_count", 0)) - int(
+            cposs_block_mapping.get("candidate_mapping_ready_count", 0)
+        )
+        steps.append(f"Lock block-to-experimental-form mappings for {remaining} CPOSS candidate pairs before promotion.")
     if "fingerprint_figures" in blocked:
         steps.append("Keep fingerprint figures blocked until verified-pair counts support ranking and calibration claims.")
     if "release_boundary" in blocked:

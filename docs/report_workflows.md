@@ -62,6 +62,9 @@ python scripts\build_cposs_pair_candidate_report.py
 python scripts\build_cposs_pair_triage_report.py
 python scripts\build_cposs_candidate_cards.py
 python scripts\build_cposs_evidence_workpack.py
+python scripts\seed_cposs_block_form_mapping_manifest.py
+python scripts\build_cposs_block_mapping_report.py
+python scripts\build_cposs_block_mapping_dossier.py
 docker compose run --rm crystalprobe-core python scripts/run_cposs_structure_inference.py --backend mace --block-id IBP01_PsiCrys --block-id IBP06_PsiCrys --block-id CBZ01_PsiCrys --block-id CBZ03_PsiCrys --output outputs/cposs_candidates_high_priority_mace.jsonl --continue-on-error
 docker compose run --rm crystalprobe-core python scripts/run_cposs_structure_inference.py --backend aimnet2 --block-id IBP01_PsiCrys --block-id IBP06_PsiCrys --block-id CBZ01_PsiCrys --block-id CBZ03_PsiCrys --output outputs/cposs_candidates_high_priority_aimnet2.jsonl --continue-on-error
 docker compose run --rm crystalprobe-fairchem python scripts/run_cposs_structure_inference.py --backend uma --block-id IBP01_PsiCrys --block-id IBP06_PsiCrys --block-id CBZ01_PsiCrys --block-id CBZ03_PsiCrys --output outputs/cposs_candidates_high_priority_uma.jsonl --continue-on-error
@@ -81,12 +84,20 @@ Primary outputs:
 - `outputs/cposs_candidate_cards.md`
 - `outputs/cposs_evidence_workpack.json`
 - `outputs/cposs_evidence_workpack.md`
+- `outputs/cposs_block_form_mapping.json`
+- `outputs/cposs_block_form_mapping.md`
+- `outputs/cposs_block_mapping_dossier.json`
+- `outputs/cposs_block_mapping_dossier.md`
 - `outputs/cposs_high_priority_backend_disagreement.json`
 - `outputs/cposs_high_priority_backend_disagreement.md`
 - `outputs/cposs_cbz_disagreement_inspection.json`
 - `outputs/cposs_cbz_disagreement_inspection.md`
 
 The candidate cards include exact MACE, AIMNet2, and UMA commands for follow-up measurements on each pair. They remain AGI-assisted planning artifacts, not benchmark records.
+
+`scripts\build_cposs_evidence_workpack.py` reads optional curation overlays from `data/curation/cposs_evidence_overrides_v0.1.json`. The current default CPOSS bridge uses ACR, CBZ, FLU, and IBP MACE summaries, expanding the workpack past the first 20-entry milestone while retaining family-level literature/source-review metadata and `do_not_promote` decisions. It does not create verified benchmark records.
+
+`scripts\seed_cposs_block_form_mapping_manifest.py` fills missing block rows in `data/curation/cposs_block_form_mapping_v0.1.json` from the current evidence workpack while preserving any existing curation. `scripts\build_cposs_block_mapping_report.py` reads that manifest and converts the workpack into a block-to-experimental-form mapping queue. `scripts\build_cposs_block_mapping_dossier.py` then creates a focused checklist for the top block target, or for a named `--block-id`. This is the next gate after family-level literature mapping: each CPOSS block needs a locked form label, high-confidence cell/space-group/formula/source-label checks, license resolution, and disorder annotation before a pair can be promoted.
 
 The high-priority disagreement report compares the current ibuprofen and carbamazepine CPOSS candidate pairs across MACE, AIMNet2, and UMA. It is a backend-behavior inspection report, not an experimental stability result.
 
@@ -129,16 +140,23 @@ Medication backend runs are tracked in `data/curation/medication_backend_blocker
 Use this gate to keep CPOSS candidates below benchmark status until stability evidence is attached.
 
 ```powershell
-python scripts\build_cposs_promoted_pairs.py
+python scripts\seed_cposs_block_form_mapping_manifest.py
+python scripts\build_cposs_block_mapping_report.py
+python scripts\build_cposs_block_mapping_dossier.py
+python scripts\build_cposs_promoted_pairs.py --block-mapping outputs\cposs_block_form_mapping.json
 ```
 
 Primary outputs:
 
 - `outputs/cposs_promotion_gate.json`
 - `outputs/cposs_promotion_gate.md`
+- `outputs/cposs_block_form_mapping.json`
+- `outputs/cposs_block_form_mapping.md`
+- `outputs/cposs_block_mapping_dossier.json`
+- `outputs/cposs_block_mapping_dossier.md`
 - `outputs/cposs_promoted_pairs.jsonl`
 
-The promotion gate only emits canonical `PolymorphPair` records for candidates with experimental stability ordering, citation, license decisions, disorder annotations, curator, reviewer, and a promote decision.
+The promotion gate only emits canonical `PolymorphPair` records for candidates with experimental stability ordering, citation, license decisions, disorder annotations, curator, reviewer, and a promote decision. When `outputs\cposs_block_form_mapping.json` exists, `scripts\build_cposs_promoted_pairs.py` enforces it as an additional hard gate, so a `promote` decision still remains blocked until both structures in the candidate pair are mapping-ready.
 
 ## Therapeutic sensitivity contrast
 
@@ -231,6 +249,7 @@ Primary outputs:
 ## Publication readiness
 
 Use this report as a conservative release gate before treating local artifacts as paper- or public-release-ready. It combines CPOSS promotion status, fingerprint figure readiness, release-boundary categories, execution blockers, and remaining human-input items.
+When `outputs/cposs_block_form_mapping.json` exists, publication readiness also blocks on locked block-to-experimental-form mappings for all CPOSS candidate pairs.
 
 ```powershell
 python scripts\build_publication_readiness_report.py
@@ -299,6 +318,9 @@ python scripts\build_release_boundary_report.py
 python scripts\build_source_discovery_report.py
 python scripts\build_source_acquisition_report.py
 python scripts\build_medication_cif_ingestion_report.py
+python scripts\seed_cposs_block_form_mapping_manifest.py
+python scripts\build_cposs_block_mapping_report.py
+python scripts\build_cposs_block_mapping_dossier.py
 python scripts\build_cposs_promoted_pairs.py
 python scripts\build_fingerprint_artifact_plan.py
 python scripts\build_evidence_tier_report.py
@@ -325,6 +347,8 @@ Primary outputs:
 - `outputs/crystalprobe_source_acquisition.md`
 - `outputs/medication_cif_ingestion.md`
 - `outputs/medication_measurement_summary.md`
+- `outputs/cposs_block_form_mapping.md`
+- `outputs/cposs_block_mapping_dossier.md`
 - `outputs/cposs_promotion_gate.md`
 - `outputs/crystalprobe_fingerprint_artifact_plan.md`
 - `outputs/crystalprobe_evidence_tiers.md`

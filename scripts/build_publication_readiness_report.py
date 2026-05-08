@@ -18,6 +18,7 @@ from crystalprobe.insight.publication import publication_readiness_markdown, pub
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--cposs-promotion", type=Path, default=Path("outputs/cposs_promotion_gate.json"))
+    parser.add_argument("--cposs-block-mapping", type=Path, default=Path("outputs/cposs_block_form_mapping.json"))
     parser.add_argument("--fingerprint-plan", type=Path, default=Path("outputs/crystalprobe_fingerprint_artifact_plan.json"))
     parser.add_argument("--release-boundary", type=Path, default=Path("outputs/crystalprobe_release_boundary.json"))
     parser.add_argument("--execution-unblock", type=Path, default=Path("outputs/crystalprobe_execution_unblock_report.json"))
@@ -28,6 +29,9 @@ def main() -> int:
 
     report = publication_readiness_report(
         cposs_promotion=json.loads(args.cposs_promotion.read_text(encoding="utf-8")),
+        cposs_block_mapping=json.loads(args.cposs_block_mapping.read_text(encoding="utf-8"))
+        if args.cposs_block_mapping.exists()
+        else None,
         fingerprint_plan=json.loads(args.fingerprint_plan.read_text(encoding="utf-8")),
         release_boundary=json.loads(args.release_boundary.read_text(encoding="utf-8")),
         execution_unblock=json.loads(args.execution_unblock.read_text(encoding="utf-8")),

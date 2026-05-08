@@ -7,14 +7,21 @@ from typing import Any
 
 def _promotion_gate_summary(cposs_promotion_gate: dict[str, Any]) -> str:
     promoted_count = cposs_promotion_gate.get("promoted_count", 0)
+    mapped_count = cposs_promotion_gate.get("literature_mapped_count", 0)
     milestones = cposs_promotion_gate.get("milestones", [])
     if not milestones:
-        return f"CPOSS promotion gate records {promoted_count} promoted benchmark pairs."
+        return (
+            f"CPOSS promotion gate records {promoted_count} promoted benchmark pairs "
+            f"and {mapped_count} literature-mapped prebenchmark candidates."
+        )
     milestone_text = ", ".join(
         f"{milestone.get('pair_count')} pairs: {milestone.get('status')} ({milestone.get('remaining')} remaining)"
         for milestone in milestones
     )
-    return f"CPOSS promotion gate records {promoted_count} promoted benchmark pairs; milestones: {milestone_text}."
+    return (
+        f"CPOSS promotion gate records {promoted_count} promoted benchmark pairs and "
+        f"{mapped_count} literature-mapped prebenchmark candidates; milestones: {milestone_text}."
+    )
 
 
 def _first_pending_milestone(cposs_promotion_gate: dict[str, Any]) -> dict[str, Any] | None:
@@ -29,7 +36,8 @@ def _fingerprint_candidate_slice_summary(fingerprint_artifact_plan: dict[str, An
     if not family_rows:
         return "Fingerprint artifact plan gates chemistry-slice figures on verified pair counts."
     family_text = ", ".join(
-        f"{row.get('family')}={row.get('candidate_count')} candidates/{row.get('promoted_count')} promoted"
+        f"{row.get('family')}={row.get('candidate_count')} candidates/"
+        f"{row.get('literature_mapped_count', 0)} mapped/{row.get('promoted_count')} promoted"
         for row in family_rows
     )
     return f"Fingerprint artifact plan gates chemistry-slice figures and tracks pre-benchmark candidate slices: {family_text}."
@@ -49,12 +57,47 @@ def _environment_summary(environment_blockers: dict[str, Any]) -> str:
     )
 
 
+def _block_mapping_summary(cposs_block_mapping: dict[str, Any]) -> str:
+    summary = (
+        "CPOSS block-to-form mapping report covers "
+        f"{cposs_block_mapping.get('block_count', 0)} unique candidate blocks; "
+        f"{cposs_block_mapping.get('locked_block_count', 0)} are locked and "
+        f"{cposs_block_mapping.get('candidate_mapping_ready_count', 0)} candidate pairs are mapping-ready."
+    )
+    top_block = _top_block_mapping_target(cposs_block_mapping)
+    if not top_block:
+        return summary
+    return (
+        summary
+        + " Top block target: "
+        f"{top_block.get('family')} {top_block.get('block_id')} via "
+        f"{top_block.get('top_candidate_id')}."
+    )
+
+
+def _top_block_mapping_target(cposs_block_mapping: dict[str, Any]) -> dict[str, Any] | None:
+    queue = cposs_block_mapping.get("block_curation_queue", [])
+    return dict(queue[0]) if queue else None
+
+
+def _block_mapping_next_step(cposs_block_mapping: dict[str, Any]) -> str:
+    top_block = _top_block_mapping_target(cposs_block_mapping)
+    if not top_block:
+        return "Lock CPOSS block-to-experimental-form mappings before setting any promote decision."
+    return (
+        "Lock CPOSS block-to-experimental-form mappings before promotion, starting with "
+        f"{top_block.get('family')} {top_block.get('block_id')} for "
+        f"{top_block.get('top_candidate_id')}."
+    )
+
+
 def roadmap_status_report(
     *,
     project_status: dict[str, Any],
     readiness: dict[str, Any],
     cposs_bridge: dict[str, Any],
     cposs_promotion_gate: dict[str, Any] | None = None,
+    cposs_block_mapping: dict[str, Any] | None = None,
     fingerprint_artifact_plan: dict[str, Any] | None = None,
     environment_blockers: dict[str, Any] | None = None,
     has_preprint_draft: bool,
@@ -65,6 +108,7 @@ def roadmap_status_report(
     has_cposs_pair_triage: bool = False,
     has_cposs_candidate_cards: bool = False,
     has_cposs_evidence_workpack: bool = False,
+    has_cposs_block_mapping: bool = False,
     has_backend_disagreement: bool = False,
     has_cposs_backend_disagreement: bool = False,
     has_cposs_disagreement_inspection: bool = False,
@@ -88,6 +132,7 @@ def roadmap_status_report(
     uma_therapeutic_contrast_verified = "uma_therapeutic_contrast" in docker_status
     aimnet2_therapeutic_contrast_verified = "aimnet2_therapeutic_contrast" in docker_status
     promotion_gate = cposs_promotion_gate or {}
+    block_mapping = cposs_block_mapping or {}
     pending_promotion_milestone = _first_pending_milestone(promotion_gate)
     artifact_plan = fingerprint_artifact_plan or {}
     environment_report = environment_blockers or {}
@@ -110,6 +155,9 @@ def roadmap_status_report(
                 "CPOSS triage queue has curator-fillable evidence workpacks."
                 if has_cposs_evidence_workpack
                 else "CPOSS evidence workpack is missing.",
+                _block_mapping_summary(block_mapping)
+                if has_cposs_block_mapping
+                else "CPOSS block-to-form mapping report is missing.",
                 "Prioritized CPOSS pairs have multi-backend disagreement evidence."
                 if has_cposs_backend_disagreement
                 else "Prioritized CPOSS pairs still need multi-backend disagreement evidence.",
@@ -136,7 +184,7 @@ def roadmap_status_report(
                 else "CPOSS benchmark promotion gate is missing.",
             ],
             "remaining": [
-                "Promote pair candidates into curated records after experimental stability evidence is attached."
+                "Upgrade literature-mapped candidates into verified records after block-to-form mapping is locked."
                 if has_cposs_pair_candidates
                 else "Promote local structure summaries into curated pair records.",
                 "Work through the triage queue to add experimental stability labels and citations."
@@ -149,9 +197,12 @@ def roadmap_status_report(
                     if has_cposs_candidate_cards
                     else "Create claim-safe candidate cards for prioritized CPOSS pairs."
                 ),
-                "Complete evidence workpack fields before promoting candidate pairs."
+                "Use per-candidate upgrade requirements before promoting candidate pairs."
                 if has_cposs_evidence_workpack
                 else "Create curator-fillable evidence forms for candidate pairs.",
+                _block_mapping_next_step(block_mapping)
+                if has_cposs_block_mapping
+                else "Generate the CPOSS block-to-form mapping queue from the evidence workpack.",
                 "Inspect CPOSS backend-disagreement families before selecting paper-facing examples."
                 if has_cposs_backend_disagreement
                 else "Run candidate-card commands with AIMNet2 and UMA for top CPOSS pairs.",
@@ -177,8 +228,8 @@ def roadmap_status_report(
                     else "Create source-discovery records for the next medication targets."
                 ),
                 (
-                    "Use the CPOSS promotion gate to fill "
-                    f"{pending_promotion_milestone.get('remaining')} more verified pairs for the "
+                    "Use the CPOSS promotion gate to upgrade "
+                    f"{pending_promotion_milestone.get('remaining')} literature-mapped candidates into verified pairs for the "
                     f"{pending_promotion_milestone.get('pair_count')}-pair milestone, then continue to 50 and 100+."
                 )
                 if pending_promotion_milestone

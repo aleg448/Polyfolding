@@ -33,6 +33,9 @@
         "scripts/build_cposs_pair_triage_report.py",
         "scripts/build_cposs_candidate_cards.py",
         "scripts/build_cposs_evidence_workpack.py",
+        "scripts/seed_cposs_block_form_mapping_manifest.py",
+        "scripts/build_cposs_block_mapping_report.py",
+        "scripts/build_cposs_block_mapping_dossier.py",
         "scripts/run_cposs_structure_inference.py",
         "scripts/build_cposs_backend_disagreement_report.py",
         "scripts/build_cposs_disagreement_inspection.py"
@@ -43,6 +46,8 @@
         "outputs/cposs_pair_triage_report.md",
         "outputs/cposs_candidate_cards.md",
         "outputs/cposs_evidence_workpack.md",
+        "outputs/cposs_block_form_mapping.md",
+        "outputs/cposs_block_mapping_dossier.md",
         "outputs/cposs_high_priority_backend_disagreement.md",
         "outputs/cposs_cbz_disagreement_inspection.md"
       ]
@@ -70,9 +75,14 @@
       "id": "cposs_promotion",
       "label": "CPOSS benchmark promotion",
       "scripts": [
+        "scripts/seed_cposs_block_form_mapping_manifest.py",
+        "scripts/build_cposs_block_mapping_report.py",
+        "scripts/build_cposs_block_mapping_dossier.py",
         "scripts/build_cposs_promoted_pairs.py"
       ],
       "primary_outputs": [
+        "outputs/cposs_block_form_mapping.md",
+        "outputs/cposs_block_mapping_dossier.md",
         "outputs/cposs_promotion_gate.md",
         "outputs/cposs_promoted_pairs.jsonl"
       ]
@@ -193,6 +203,9 @@
         "scripts/build_medication_cif_ingestion_report.py",
         "scripts/build_medication_figures.py",
         "scripts/build_medication_research_bundle.py",
+        "scripts/seed_cposs_block_form_mapping_manifest.py",
+        "scripts/build_cposs_block_mapping_report.py",
+        "scripts/build_cposs_block_mapping_dossier.py",
         "scripts/build_cposs_promoted_pairs.py",
         "scripts/build_fingerprint_artifact_plan.py",
         "scripts/build_evidence_tier_report.py",
@@ -217,6 +230,8 @@
         "outputs/medication_measurement_summary.md",
         "outputs/figures/medication_case_study_coverage.svg",
         "outputs/medication_research_bundle_manifest.md",
+        "outputs/cposs_block_form_mapping.md",
+        "outputs/cposs_block_mapping_dossier.md",
         "outputs/cposs_promotion_gate.md",
         "outputs/crystalprobe_fingerprint_artifact_plan.md",
         "outputs/crystalprobe_evidence_tiers.md",
@@ -233,6 +248,7 @@
   ],
   "guardrails": [
     "Raw gated CCDC source files stay local and ignored.",
+    "CPOSS evidence workpack overlays live in data/curation/cposs_evidence_overrides_v0.1.json and may fill review fields without promoting candidates.",
     "Medication backend blockers are tracked in data/curation/medication_backend_blockers_v0.1.json; the current selected proof blocks have MACE, AIMNet2, and UMA measurements.",
     "Generated outputs are reproducible artifacts, not source-controlled evidence by default.",
     "Active Python dependency visibility is recorded separately from dependencies installed in alternate environments such as .venv, Docker, or isolated fairchem envs.",
