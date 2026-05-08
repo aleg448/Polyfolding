@@ -54,3 +54,5 @@ def test_full_suite_plan_mentions_current_cposs_and_fingerprint_summaries():
     assert "field-completion, curation-queue, block-to-form mapping, and chemistry-family summaries" in plan
     assert "ACR, CBZ, FLU, and IBP" in plan
     assert "pre-benchmark planning context" in plan
+    assert "Positioning Against FastCSP" in plan
+    assert "FastCSP generates and ranks candidate crystal landscapes" in plan

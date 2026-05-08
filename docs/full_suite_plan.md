@@ -35,6 +35,18 @@ The next adapter implementations should land in this order:
 5. Ensemble wrapper over MACE-OFF/AIMNet2.
 6. FastCSP quick-mode integration.
 
+## Positioning Against FastCSP
+
+FastCSP is the closest recent complement to CrystalProbe. It is closer to a complete CSP production workflow: it combines random molecular crystal generation with UMA-powered relaxation, ranking, and free-energy calculations, and reports known experimental structures within 5 kJ/mol on a curated set of mostly rigid molecules.
+
+CrystalProbe should therefore avoid head-to-head positioning as a generator of crystal landscapes. The stronger role is downstream and orthogonal: FastCSP generates and ranks candidate crystal landscapes; CrystalProbe audits, compares, calibrates, curates, and decides which candidate records can become trustworthy benchmark or publication claims.
+
+This positioning sets three release risks:
+
+- Do not overclaim candidate evidence. Current CPOSS outputs remain inspection and curation artifacts until stability evidence, license decisions, disorder annotations, and promotion review produce verified pairs.
+- Do not blur licensing boundaries. CCDC/CSD-derived CIFs, coordinate-derived reports, and generated figures stay license-review-required or local-only until human review explicitly clears them.
+- Do not compare absolute model energies across backends as if they were a shared thermodynamic scale. MACE, AIMNet2, and UMA are strongest here as within-backend ranking tools, while backend disagreement remains an inspection signal until calibrated.
+
 ## AMPETP Pilot Role
 
 AMPETP, CCDC 1102740, is now the first research-grade pilot target. It is not a polymorph-pair benchmark record, but it proves the vertical slice needed before the full benchmark paper: local CCDC source handling, block extraction, ASE parsing, MACE/AIMNet execution, bond-level diagnostics, backend-agreement reporting, and a paper-ready case-study draft.

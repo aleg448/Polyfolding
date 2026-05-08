@@ -1,4 +1,9 @@
+from pathlib import Path
+
 from crystalprobe.insight.status import project_status_markdown, project_status_report
+
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_project_status_report_extracts_blockers():
@@ -141,3 +146,10 @@ def test_project_status_summarizes_execution_unblock_report():
     assert "## Execution Unblock" in markdown
     assert "Active Python dependency blockers: `4`" in markdown
     assert "Select or repair the CrystalProbe Python runner." in markdown
+
+
+def test_readme_records_fastcsp_positioning_and_claim_risks():
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    assert "FastCSP generates and ranks candidate crystal landscapes" in readme
+    assert "CrystalProbe audits, compares, calibrates, curates" in readme
+    assert "MACE, AIMNet2, and UMA absolute energies are not automatically comparable" in readme

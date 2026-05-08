@@ -16,6 +16,12 @@ The near-term goal is to make polymorph-pair evaluation reproducible before buil
 
 The repository is intentionally structured so benchmark curation, model inference, uncertainty calibration, and paper generation can progress independently while sharing one tested contract.
 
+## Positioning
+
+FastCSP is the closest recent complement and comparison point. It is a full CSP workflow that combines random molecular crystal generation with UMA-powered relaxation, ranking, and free-energy calculations, reporting recovery of known experimental structures within 5 kJ/mol on a curated set of mostly rigid molecules.
+
+CrystalProbe should not compete head-on as another crystal-landscape generator. Its role is narrower and more evidence-focused: FastCSP generates and ranks candidate crystal landscapes; CrystalProbe audits, compares, calibrates, curates, and decides which records are trustworthy enough for benchmark or publication claims.
+
 ## Current Research State
 
 - AMPETP is the first paper-ready single-structure pilot, with MACE, AIMNet2, UMA, sensitivity, figures, and research-bundle reports generated locally.
@@ -23,6 +29,12 @@ The repository is intentionally structured so benchmark curation, model inferenc
 - The local execution queue is clear when the configured `.venv` and `.venv-fairchem` runners are available: dependency visibility, medication backend blockers, and queue runner blockers report no active execution blockers.
 - CPOSS records remain candidate-only. Verified benchmark and fingerprint-paper claims are blocked until experimental stability evidence, license decisions, disorder annotations, and promotion review produce at least 20 verified pairs.
 - Raw CCDC/CSD-derived CIFs and extracted coordinate-bearing blocks are not release artifacts unless license review explicitly permits redistribution.
+
+## Claim Risks
+
+- Overclaiming is the largest risk. Current CPOSS outputs are candidate and inspection evidence, not benchmark truth.
+- Licensing is the second risk. CCDC/CSD-derived CIFs and coordinate-derived reports are not automatically redistributable; release-boundary reports must be reviewed before public sharing.
+- Model-energy interpretation is the third risk. MACE, AIMNet2, and UMA absolute energies are not automatically comparable across backends. CrystalProbe should compare rankings within a backend and use backend disagreement as an inspection signal unless calibration evidence says otherwise.
 
 ## Quick Start
 
