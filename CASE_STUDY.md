@@ -61,6 +61,13 @@ The evidence atlas command is:
 python scripts\build_evidence_atlas.py
 ```
 
+The energy and molecule stress-test commands are:
+
+```powershell
+python scripts\build_molecule_bug_hunt_database.py
+python scripts\build_energy_verification_report.py
+```
+
 The public artifact integrity check is:
 
 ```powershell
@@ -91,6 +98,9 @@ Generated outputs:
 - `outputs/crystalprobe_evidence_atlas.md`
 - `docs/evidence_atlas.md`
 - `docs/evidence_atlas.html`
+- `outputs/crystalprobe_energy_verification.md`
+- `outputs/crystalprobe_molecule_bug_hunt.sqlite`
+- `docs/molecule_bug_hunt.md`
 - `outputs/public_artifact_integrity.md`
 - `outputs/public_artifact_integrity.json`
 
@@ -122,6 +132,8 @@ The gallery in `docs/public_demo.md` embeds stable copies of these SVGs from `do
 The molecule viewer registry in `docs/molecule_viewers.md` adds source-hosted COD/JSmol viewer links for candidate structures. The generated HTML page at `docs/viewers/paracetamol_form_i_vs_form_ii_seed.html` can display the remote COD pages when a browser permits embedding, but it does not embed CIF text or atom coordinates and keeps every structure labeled `candidate_unverified`.
 
 The Evidence Atlas in `docs/evidence_atlas.html` is the database-facing version of the same philosophy: molecules, polymorph pairs, structures, evidence sources, blockers, predictions, viewer links, and release-boundary artifacts are searchable from one static page and queryable from `outputs/crystalprobe_evidence_atlas.sqlite`.
+
+The energy verification report and molecule bug-hunt database add a QA layer for weird failures before they become scientific claims: salts, charges, stereochemistry, hydrates, duplicate-connectivity cases, OOD prediction rows, missing uncertainty, missing predictions, and non-verified energy rows are visible rather than silently passing through the system.
 
 ## Public Review Checklist And Stronger Candidate
 

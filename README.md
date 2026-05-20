@@ -6,11 +6,13 @@ For a public-facing walkthrough of the project motivation, architecture, demo, r
 For the reviewer-facing visual demo gallery, see [`docs/public_demo.md`](docs/public_demo.md).
 For the public demo checklist and one stronger unverified example, see [`docs/public_demo_checklist.md`](docs/public_demo_checklist.md) and [`docs/cases/cposs_ibp_candidate.md`](docs/cases/cposs_ibp_candidate.md).
 For the queryable database and static explorer, see [`docs/evidence_atlas.md`](docs/evidence_atlas.md) and [`docs/evidence_atlas.html`](docs/evidence_atlas.html).
+For many-molecule software stress testing, see [`docs/molecule_bug_hunt.md`](docs/molecule_bug_hunt.md).
 For candidate-safe molecule/crystal viewers that open source-hosted COD/JSmol pages without embedding coordinates, see [`docs/molecule_viewers.md`](docs/molecule_viewers.md).
 For the publication-path research spine mapping historical simulation, CSP, uncertainty, and reproducible-research ideas to modern CrystalProbe modules, see [`docs/historical_research_opportunities.md`](docs/historical_research_opportunities.md).
 To rebuild the first implemented historical-method report, run `python scripts\build_historical_research_modules_report.py`.
 To run the current research loop and first evidence packet, run `python scripts\run_research_cycle.py --pair-id paracetamol_form_i_vs_form_ii_seed`.
 To rebuild the evidence database and static explorer, run `python scripts\build_evidence_atlas.py`.
+To rebuild the molecule stress database and energy verification layer, run `python scripts\build_molecule_bug_hunt_database.py` and `python scripts\build_energy_verification_report.py`.
 To rebuild the candidate-safe molecule viewers, run `python scripts\build_molecule_viewer_report.py`.
 
 The near-term goal is to make polymorph-pair evaluation reproducible before building larger CSP automation on top of it. This repository currently contains the source-controlled research suite for:
@@ -29,6 +31,8 @@ The near-term goal is to make polymorph-pair evaluation reproducible before buil
 - Historical method implementations for motif priors, active evidence triage, landscape auditing, free-energy probes, and calibrated abstention.
 - Research-cycle, evidence-packet, and evidence-resolution reports that turn those method surfaces into concrete promotion worklists without auto-promoting candidate evidence.
 - A SQLite Evidence Atlas and static explorer for molecules, polymorph pairs, predictions, evidence, blockers, viewer links, and release-boundary artifacts.
+- Energy-layer verification reports for prediction units, lower-energy winner semantics, OOD/uncertainty behavior, verified-calibration availability, and non-verified abstention.
+- A many-molecule bug-hunt database for salts, charges, stereochemistry, hydrates, fused rings, tautomer-like cases, large molecules, and duplicate-connectivity traps.
 - Candidate-safe molecule viewer pages that route reviewers to source-hosted COD/JSmol visualizers without redistributing coordinates.
 
 The repository is intentionally structured so benchmark curation, model inference, uncertainty calibration, and paper generation can progress independently while sharing one tested contract.

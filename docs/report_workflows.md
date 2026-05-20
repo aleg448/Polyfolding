@@ -378,6 +378,35 @@ Primary outputs:
 - `docs/evidence_atlas.md`
 - `docs/evidence_atlas.html`
 
+## Molecule bug-hunt stress database
+
+Use this workflow to build a many-molecule software stress database for parser, visualization, curation, and energy-layer edge cases. It is QA coverage, not a source-verified chemistry database.
+
+```powershell
+python scripts\build_molecule_bug_hunt_database.py
+```
+
+Primary outputs:
+
+- `outputs/crystalprobe_molecule_bug_hunt.sqlite`
+- `outputs/crystalprobe_molecule_bug_hunt.json`
+- `outputs/crystalprobe_molecule_bug_hunt.md`
+- `docs/molecule_bug_hunt.md`
+
+## Energy-layer verification
+
+Use this workflow to audit pair-energy rows for unit consistency, finite values, lower-energy winner semantics, uncertainty coverage, OOD flags, missing predictions, verified-calibration availability, and stress-catalog coverage.
+
+```powershell
+python scripts\build_molecule_bug_hunt_database.py
+python scripts\build_energy_verification_report.py
+```
+
+Primary outputs:
+
+- `outputs/crystalprobe_energy_verification.json`
+- `outputs/crystalprobe_energy_verification.md`
+
 ## Historical research cycle and evidence packet
 
 Use this workflow to turn the historical-method modules into a concrete research loop. It rebuilds the historical opportunity matrix, active evidence triage, a single-pair evidence packet, candidate-only evidence resolution, the combined historical-module report, and the cycle execution record.

@@ -171,6 +171,7 @@ def test_docs_index_lists_historical_research_opportunities():
     assert "docs/evidence_atlas.md" in docs_index
     assert "docs/evidence_atlas.html" in docs_index
     assert "docs/historical_research_opportunities.md" in docs_index
+    assert "docs/molecule_bug_hunt.md" in docs_index
     assert "docs/molecule_viewers.md" in docs_index
     assert "candidate, reviewed, and verified evidence gates" in historical
     assert "active_evidence_triage" in historical

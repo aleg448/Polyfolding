@@ -233,6 +233,31 @@
       ]
     },
     {
+      "id": "molecule_bug_hunt",
+      "label": "Molecule bug-hunt stress database",
+      "scripts": [
+        "scripts/build_molecule_bug_hunt_database.py"
+      ],
+      "primary_outputs": [
+        "outputs/crystalprobe_molecule_bug_hunt.sqlite",
+        "outputs/crystalprobe_molecule_bug_hunt.json",
+        "outputs/crystalprobe_molecule_bug_hunt.md",
+        "docs/molecule_bug_hunt.md"
+      ]
+    },
+    {
+      "id": "energy_verification",
+      "label": "Energy-layer verification",
+      "scripts": [
+        "scripts/build_molecule_bug_hunt_database.py",
+        "scripts/build_energy_verification_report.py"
+      ],
+      "primary_outputs": [
+        "outputs/crystalprobe_energy_verification.json",
+        "outputs/crystalprobe_energy_verification.md"
+      ]
+    },
+    {
       "id": "historical_research_cycle",
       "label": "Historical research cycle and evidence packet",
       "scripts": [

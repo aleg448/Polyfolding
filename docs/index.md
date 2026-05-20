@@ -11,6 +11,7 @@ CrystalProbe is organized around one principle: every polymorph prediction shoul
 - `docs/cases/cposs_ibp_candidate.md`: stronger unverified CPOSS IBP candidate case with explicit blockers.
 - `docs/evidence_atlas.md`: queryable evidence database summary with SQLite and static explorer links.
 - `docs/evidence_atlas.html`: static search/filter explorer for molecule, pair, evidence, viewer, blocker, and artifact records.
+- `docs/molecule_bug_hunt.md`: many-molecule software stress database for parser, energy-layer, and visualization QA.
 - `docs/molecule_viewers.md`: candidate-safe remote COD/JSmol viewer registry for molecule/crystal inspection.
 - `docs/historical_research_opportunities.md`: historical simulation, CSP, uncertainty, and reproducible-research ideas now practical as CrystalProbe modules.
 - `scripts/check_public_artifact.py`: public artifact integrity gate for required files, unverified labels, release-boundary classification, and coordinate-file safety.
@@ -19,6 +20,8 @@ CrystalProbe is organized around one principle: every polymorph prediction shoul
 - `scripts/build_evidence_packet_report.py`: single-pair evidence packet for promotion work and claim-gate review.
 - `scripts/build_evidence_resolution_report.py`: candidate-only source/literature resolution layer for evidence-packet blockers.
 - `scripts/build_evidence_atlas.py`: builds the SQLite evidence database, JSON/Markdown summaries, and static HTML explorer.
+- `scripts/build_energy_verification_report.py`: audits pair-energy rows for units, winners, uncertainty, OOD flags, and claim eligibility.
+- `scripts/build_molecule_bug_hunt_database.py`: builds the many-molecule stress database used to expose parser and energy-layer edge cases.
 - `scripts/build_molecule_viewer_report.py`: builds candidate-safe viewer pages that point to source-hosted COD/JSmol visualizers without embedding coordinates.
 - `docs/architecture.md`: local module architecture.
 - `docs/full_suite_plan.md`: full CrystalProbe build plan.
@@ -72,6 +75,11 @@ CrystalProbe is organized around one principle: every polymorph prediction shoul
 - `outputs/crystalprobe_evidence_atlas.sqlite`: queryable SQLite evidence atlas.
 - `outputs/crystalprobe_evidence_atlas.json`: machine-readable normalized evidence atlas.
 - `outputs/crystalprobe_evidence_atlas.md`: human-readable evidence atlas summary.
+- `outputs/crystalprobe_energy_verification.json`: machine-readable energy-layer verification report.
+- `outputs/crystalprobe_energy_verification.md`: human-readable energy-layer verification report.
+- `outputs/crystalprobe_molecule_bug_hunt.sqlite`: SQLite software stress database for many-molecule bug hunting.
+- `outputs/crystalprobe_molecule_bug_hunt.json`: machine-readable molecule bug-hunt report.
+- `outputs/crystalprobe_molecule_bug_hunt.md`: human-readable molecule bug-hunt report.
 - `outputs/crystalprobe_molecule_viewers.json`: machine-readable candidate-safe molecule viewer registry.
 - `outputs/crystalprobe_molecule_viewers.md`: human-readable candidate-safe molecule viewer registry.
 - `outputs/crystalprobe_research_cycle.json`: machine-readable research-cycle execution record.

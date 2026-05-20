@@ -72,6 +72,8 @@ def test_release_boundary_classifies_environment_blocker_outputs_public():
         artifact_paths=[
             "outputs/crystalprobe_environment_blockers.json",
             "outputs/crystalprobe_environment_blockers.md",
+            "outputs/crystalprobe_energy_verification.json",
+            "outputs/crystalprobe_energy_verification.md",
             "outputs/crystalprobe_execution_unblock_report.json",
             "outputs/crystalprobe_execution_unblock_report.md",
             "outputs/crystalprobe_evidence_atlas.json",
@@ -91,6 +93,9 @@ def test_release_boundary_classifies_environment_blocker_outputs_public():
             "outputs/crystalprobe_historical_research_modules.md",
             "outputs/crystalprobe_molecule_viewers.json",
             "outputs/crystalprobe_molecule_viewers.md",
+            "outputs/crystalprobe_molecule_bug_hunt.json",
+            "outputs/crystalprobe_molecule_bug_hunt.md",
+            "outputs/crystalprobe_molecule_bug_hunt.sqlite",
             "outputs/crystalprobe_project_status.json",
             "outputs/crystalprobe_project_status.md",
             "outputs/crystalprobe_publication_readiness.json",
@@ -143,9 +148,11 @@ def test_release_boundary_default_paths_include_script_bootstrap():
     assert "data/curation/evidence_resolution_candidates_v0.1.json" in DEFAULT_REPO_PATHS
     assert "data/curation/historical_opportunity_matrix_v0.1.json" in DEFAULT_REPO_PATHS
     assert "data/curation/medication_polymorphism_evidence_v0.1.json" in DEFAULT_REPO_PATHS
+    assert "data/curation/molecule_bug_hunt_stress_v0.1.json" in DEFAULT_REPO_PATHS
     assert "docs/evidence_atlas.md" in DEFAULT_REPO_PATHS
     assert "docs/evidence_atlas.html" in DEFAULT_REPO_PATHS
     assert "docs/historical_research_opportunities.md" in DEFAULT_REPO_PATHS
+    assert "docs/molecule_bug_hunt.md" in DEFAULT_REPO_PATHS
     assert "docs/molecule_viewers.md" in DEFAULT_REPO_PATHS
     assert "docs/release_boundary_review_2026-05-06.md" in DEFAULT_REPO_PATHS
     report = release_boundary_report(artifact_paths=DEFAULT_REPO_PATHS)
@@ -179,6 +186,7 @@ def test_release_boundary_default_paths_include_status_and_roadmap_surface():
         "scripts/build_project_status_dashboard.py",
         "scripts/build_active_evidence_triage_report.py",
         "scripts/build_evidence_atlas.py",
+        "scripts/build_energy_verification_report.py",
         "scripts/build_evidence_packet_report.py",
         "scripts/build_evidence_resolution_report.py",
         "scripts/build_historical_opportunity_report.py",
@@ -198,10 +206,12 @@ def test_release_boundary_default_paths_include_status_and_roadmap_surface():
         "scripts/build_medication_seed_ranking_report.py",
         "scripts/build_medication_stereochemistry_report.py",
         "scripts/build_medication_stereochemistry_dossier.py",
+        "scripts/build_molecule_bug_hunt_database.py",
         "scripts/build_molecule_viewer_report.py",
         "src/crystalprobe/core/io.py",
         "src/crystalprobe/datahub/cif_repair.py",
         "src/crystalprobe/insight/active_evidence_triage.py",
+        "src/crystalprobe/insight/energy_verification.py",
         "src/crystalprobe/insight/environment.py",
         "src/crystalprobe/insight/evidence_atlas.py",
         "src/crystalprobe/insight/evidence_packet.py",
@@ -216,6 +226,7 @@ def test_release_boundary_default_paths_include_status_and_roadmap_surface():
         "src/crystalprobe/insight/medication_seed_ranking.py",
         "src/crystalprobe/insight/medication_stereochemistry.py",
         "src/crystalprobe/insight/medication_stereochemistry_dossier.py",
+        "src/crystalprobe/insight/molecule_bug_hunt.py",
         "src/crystalprobe/insight/molecule_viewers.py",
         "src/crystalprobe/insight/publication.py",
         "src/crystalprobe/insight/report_consistency.py",
@@ -227,6 +238,7 @@ def test_release_boundary_default_paths_include_status_and_roadmap_surface():
         "src/crystalprobe/uncertainty/calibrated_abstention.py",
         "tests/test_active_evidence_triage.py",
         "tests/test_calibrated_abstention.py",
+        "tests/test_energy_verification.py",
         "tests/test_environment.py",
         "tests/test_evidence_atlas.py",
         "tests/test_evidence_packet.py",
@@ -241,6 +253,7 @@ def test_release_boundary_default_paths_include_status_and_roadmap_surface():
         "tests/test_medication_seed_ranking.py",
         "tests/test_medication_stereochemistry.py",
         "tests/test_medication_stereochemistry_dossier.py",
+        "tests/test_molecule_bug_hunt.py",
         "tests/test_molecule_viewers.py",
         "tests/test_motif_prior.py",
         "tests/test_publication.py",

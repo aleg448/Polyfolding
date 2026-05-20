@@ -16,7 +16,7 @@
 | `blockers` | `17` |
 | `viewer_links` | `2` |
 | `predictions` | `2` |
-| `artifacts` | `240` |
+| `artifacts` | `253` |
 
 ## Claim Status
 

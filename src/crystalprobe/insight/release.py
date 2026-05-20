@@ -98,14 +98,19 @@ def _classify(path: str) -> ReleaseRecord:
             reason="Evidence-tier policy output contains claim-boundary metadata, not raw gated coordinates.",
         )
     if normalized in {
+        "outputs/crystalprobe_energy_verification.json",
+        "outputs/crystalprobe_energy_verification.md",
         "outputs/crystalprobe_evidence_atlas.json",
         "outputs/crystalprobe_evidence_atlas.md",
         "outputs/crystalprobe_evidence_atlas.sqlite",
+        "outputs/crystalprobe_molecule_bug_hunt.json",
+        "outputs/crystalprobe_molecule_bug_hunt.md",
+        "outputs/crystalprobe_molecule_bug_hunt.sqlite",
     }:
         return ReleaseRecord(
             path=path,
             category="candidate_public",
-            reason="Evidence-atlas database contains normalized metadata, claim gates, links, and release categories without raw coordinate payloads.",
+            reason="Energy, evidence-atlas, or molecule bug-hunt database contains normalized metadata, QA fixtures, claim gates, links, and release categories without raw coordinate payloads.",
         )
     if normalized in {
         "outputs/crystalprobe_environment_blockers.json",
