@@ -1,8 +1,38 @@
 {
   "schema_version": "0.1.0",
-  "status": "medication_backend_blockers_cleared",
-  "blockers": [],
+  "status": "medication_generation_followup_blockers_recorded",
+  "blockers": [
+    {
+      "structure_id": "atomoxetine_hcl_yignei_1302784",
+      "backend": "mace",
+      "status": "blocked_no_deposited_coordinates",
+      "reason": "The local YIGNEI CIF states `No coordinates were deposited by the authors`; ASE therefore has no atom sites to read.",
+      "next_action": "Find a license-compatible coordinate-bearing atomoxetine HCl structure or generate hypothetical candidates; do not report this seed as measured.",
+      "command": ".venv\\Scripts\\python.exe scripts\\run_structure_inference.py outputs\\_structure_inference_blocks\\atomoxetine_hcl_yignei_1302784.cif --structure-id atomoxetine_hcl_yignei_1302784 --backend mace --output outputs\\medication_measurements\\atomoxetine_hcl_yignei_1302784_mace.json"
+    },
+    {
+      "structure_id": "atomoxetine_hcl_yignei01_1302785",
+      "backend": "mace",
+      "status": "blocked_no_deposited_coordinates",
+      "reason": "The local YIGNEI01 CIF states `No coordinates were deposited by the authors`; ASE therefore has no atom sites to read.",
+      "next_action": "Find a license-compatible coordinate-bearing atomoxetine HCl structure or generate hypothetical candidates; do not report this seed as measured.",
+      "command": ".venv\\Scripts\\python.exe scripts\\run_structure_inference.py outputs\\_structure_inference_blocks\\atomoxetine_hcl_yignei01_1302785.cif --structure-id atomoxetine_hcl_yignei01_1302785 --backend mace --output outputs\\medication_measurements\\atomoxetine_hcl_yignei01_1302785_mace.json"
+    }
+  ],
   "resolved": [
+    {
+      "structure_id": "modafinil_r_minus_241714",
+      "backend": "mace",
+      "status": "measured_local_only",
+      "output": "outputs/medication_measurements/modafinil_r_minus_241714_mace.json"
+    },
+    {
+      "structure_id": "modafinil_form_i_1456987",
+      "backend": "mace",
+      "status": "measured_local_only_after_cif_spacegroup_repair",
+      "output": "outputs/medication_measurements/modafinil_form_i_1456987_mace.json",
+      "repair": "Normalized local-only CIF space-group spelling from `P 1 21 1` to ASE-readable `P 21` during read."
+    },
     {
       "structure_id": "atomoxetine_hcl_1519130",
       "backend": "aimnet2",

@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from crystalprobe.insight.status import project_status_markdown, project_status_report
+from scripts.build_status_chain import STATUS_CHAIN_STEPS, status_chain_commands
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -153,3 +154,55 @@ def test_readme_records_fastcsp_positioning_and_claim_risks():
     assert "FastCSP generates and ranks candidate crystal landscapes" in readme
     assert "CrystalProbe audits, compares, calibrates, curates" in readme
     assert "MACE, AIMNet2, and UMA absolute energies are not automatically comparable" in readme
+    assert "Medication stereochemistry claim-scope reports" in readme
+    assert "S/R rankings must not be collapsed into polymorph benchmark claims" in readme
+
+
+def test_docs_index_lists_medication_stereochemistry_reports():
+    docs_index = (ROOT / "docs" / "index.md").read_text(encoding="utf-8")
+    assert "outputs/medication_stereochemistry.json" in docs_index
+    assert "outputs/medication_stereochemistry_dossier.md" in docs_index
+
+
+def test_docs_index_lists_historical_research_opportunities():
+    docs_index = (ROOT / "docs" / "index.md").read_text(encoding="utf-8")
+    historical = (ROOT / "docs" / "historical_research_opportunities.md").read_text(encoding="utf-8")
+
+    assert "docs/evidence_atlas.md" in docs_index
+    assert "docs/evidence_atlas.html" in docs_index
+    assert "docs/historical_research_opportunities.md" in docs_index
+    assert "docs/molecule_viewers.md" in docs_index
+    assert "candidate, reviewed, and verified evidence gates" in historical
+    assert "active_evidence_triage" in historical
+    assert "free_energy_probe" in historical
+    assert "CrystalProbe is an open, claim-gated reliability layer" in historical
+    assert "scripts/build_historical_research_modules_report.py" in historical
+    assert "scripts/run_research_cycle.py" in historical
+    assert "src/crystalprobe/insight/evidence_packet.py" in historical
+    assert "src/crystalprobe/insight/evidence_resolution.py" in historical
+
+
+def test_project_status_dashboard_script_has_honest_default_test_summary():
+    script = (ROOT / "scripts" / "build_project_status_dashboard.py").read_text(encoding="utf-8")
+    assert 'default="not_recorded"' in script
+    assert "54 passed, 1 skipped" not in script
+    assert "avoid stale verification claims" in script
+
+
+def test_status_chain_orders_dependent_reports():
+    commands = status_chain_commands(
+        test_summary="197 passed, 3 skipped",
+        docker_status="not_run",
+        git_status="dirty",
+    )
+
+    assert [step for step, _ in commands] == list(STATUS_CHAIN_STEPS)
+    assert commands[0][1][:5] == [
+        "scripts/build_project_status_dashboard.py",
+        "--test-summary",
+        "197 passed, 3 skipped",
+        "--docker-status",
+        "not_run",
+    ]
+    assert commands[1][1] == ["scripts/build_roadmap_status_report.py"]
+    assert commands[2][1] == ["scripts/build_handoff_report.py"]

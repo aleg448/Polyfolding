@@ -28,9 +28,14 @@ ARTIFACTS = [
     ("outputs/medication_measurement_summary.md", "medication_measurement_summary_markdown"),
     ("outputs/crystalprobe_source_acquisition.json", "source_acquisition_json"),
     ("outputs/crystalprobe_source_acquisition.md", "source_acquisition_markdown"),
+    ("outputs/medication_stereochemistry.json", "medication_stereochemistry_json"),
+    ("outputs/medication_stereochemistry.md", "medication_stereochemistry_markdown"),
+    ("outputs/medication_stereochemistry_dossier.json", "medication_stereochemistry_dossier_json"),
+    ("outputs/medication_stereochemistry_dossier.md", "medication_stereochemistry_dossier_markdown"),
     ("outputs/crystalprobe_fingerprint_artifact_plan.json", "fingerprint_artifact_plan_json"),
     ("outputs/crystalprobe_fingerprint_artifact_plan.md", "fingerprint_artifact_plan_markdown"),
     ("outputs/figures/medication_case_study_coverage.svg", "medication_case_study_figure"),
+    ("outputs/figures/medication_stereochemistry_scope.svg", "medication_stereochemistry_scope_figure"),
 ]
 
 OPTIONAL_ARTIFACTS = [
@@ -48,6 +53,10 @@ OPTIONAL_ARTIFACTS = [
 REBUILD_COMMANDS = [
     "python scripts\\build_source_acquisition_report.py",
     "python scripts\\build_medication_cif_ingestion_report.py --extract",
+    "python scripts\\build_medication_polymorphism_autonomy_report.py",
+    "python scripts\\build_medication_seed_ranking_report.py",
+    "python scripts\\build_medication_stereochemistry_report.py",
+    "python scripts\\build_medication_stereochemistry_dossier.py",
     "python scripts\\build_medication_figures.py",
     "python scripts\\build_fingerprint_artifact_plan.py",
     "python scripts\\build_medication_research_bundle.py",

@@ -83,6 +83,30 @@ def test_measurement_queue_uses_source_discovery_actionability():
     assert report["items"][2]["action_type"] == "deeper_source_search"
 
 
+def test_measurement_queue_prioritizes_stereochemistry_scope_curation():
+    report = measurement_queue_report(
+        {
+            "profiles": [
+                {
+                    "name": "modafinil",
+                    "priority_group": "adhd_core",
+                    "readiness": "measured_needs_claim_guardrails",
+                    "enantiomer_labeled_block_count": 2,
+                },
+                {
+                    "name": "atomoxetine hydrochloride",
+                    "priority_group": "adhd_core",
+                    "readiness": "measured_needs_claim_guardrails",
+                },
+            ]
+        }
+    )
+
+    assert report["items"][0]["substance"] == "modafinil"
+    assert report["items"][0]["action_type"] == "curate_stereochemistry_scope"
+    assert "S/R, racemate, and form labels" in report["items"][0]["first_step"]
+
+
 def test_measurement_queue_markdown_renders_policy():
     markdown = measurement_queue_markdown(measurement_queue_report({"profiles": []}))
 

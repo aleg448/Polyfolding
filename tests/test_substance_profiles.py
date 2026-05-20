@@ -150,6 +150,36 @@ def test_substance_profile_report_merges_source_discovery_actionability():
     assert "download CIFs" in profile["next_actions"]
 
 
+def test_substance_profile_report_merges_medication_stereochemistry_scope():
+    report = substance_profile_report(
+        therapeutic_priority={
+            "priority_groups": [
+                {
+                    "group_id": "adhd",
+                    "targets": [{"name": "modafinil", "next_action": "review"}],
+                }
+            ]
+        },
+        medication_stereochemistry={
+            "targets": [
+                {
+                    "target": "modafinil",
+                    "stereochemistry_status": "paired_enantiomer_records_available",
+                    "claim_scopes": ["enantiomeric_crystal_comparison"],
+                    "enantiomer_labeled_block_count": 2,
+                    "blockers": ["do not collapse enantiomeric records into polymorph benchmark claims"],
+                }
+            ]
+        },
+    )
+    profile = report["profiles"][0]
+
+    assert profile["stereochemistry_status"] == "paired_enantiomer_records_available"
+    assert profile["enantiomer_labeled_block_count"] == 2
+    assert "do not collapse enantiomeric records into polymorph benchmark claims" in profile["blocked_claims"]
+    assert "Curate enantiomer/racemate/form scope" in profile["next_actions"][-1]
+
+
 def test_substance_profile_markdown_renders_policy():
     report = substance_profile_report(
         therapeutic_priority={

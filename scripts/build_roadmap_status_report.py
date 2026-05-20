@@ -42,6 +42,11 @@ def main() -> int:
     parser.add_argument("--cposs-promotion-gate", type=Path, default=Path("outputs/cposs_promotion_gate.json"))
     parser.add_argument("--fingerprint-artifact-plan", type=Path, default=Path("outputs/crystalprobe_fingerprint_artifact_plan.json"))
     parser.add_argument("--environment-blockers", type=Path, default=Path("outputs/crystalprobe_environment_blockers.json"))
+    parser.add_argument(
+        "--medication-stereochemistry-dossier",
+        type=Path,
+        default=Path("outputs/medication_stereochemistry_dossier.json"),
+    )
     parser.add_argument("--json-out", type=Path, default=Path("outputs/crystalprobe_roadmap_status.json"))
     parser.add_argument("--md-out", type=Path, default=Path("outputs/crystalprobe_roadmap_status.md"))
     args = parser.parse_args()
@@ -57,6 +62,11 @@ def main() -> int:
     cposs_block_mapping = (
         json.loads(args.cposs_block_mapping.read_text(encoding="utf-8")) if args.cposs_block_mapping.exists() else None
     )
+    medication_stereochemistry_dossier = (
+        json.loads(args.medication_stereochemistry_dossier.read_text(encoding="utf-8"))
+        if args.medication_stereochemistry_dossier.exists()
+        else None
+    )
 
     report = roadmap_status_report(
         project_status=json.loads(args.project_status.read_text(encoding="utf-8")),
@@ -66,6 +76,7 @@ def main() -> int:
         cposs_block_mapping=cposs_block_mapping,
         fingerprint_artifact_plan=fingerprint_artifact_plan,
         environment_blockers=environment_blockers,
+        medication_stereochemistry_dossier=medication_stereochemistry_dossier,
         has_preprint_draft=args.preprint.exists(),
         has_joss_draft=args.joss.exists(),
         has_fastcsp_plan=args.fastcsp_plan.exists(),
@@ -88,6 +99,7 @@ def main() -> int:
         has_cposs_promotion_gate=args.cposs_promotion_gate.exists(),
         has_fingerprint_artifact_plan=args.fingerprint_artifact_plan.exists(),
         has_environment_blockers=args.environment_blockers.exists(),
+        has_medication_stereochemistry_dossier=args.medication_stereochemistry_dossier.exists(),
     )
     atomic_write_json(args.json_out, report)
     atomic_write_text(args.md_out, roadmap_status_markdown(report))

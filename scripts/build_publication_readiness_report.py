@@ -23,6 +23,7 @@ def main() -> int:
     parser.add_argument("--release-boundary", type=Path, default=Path("outputs/crystalprobe_release_boundary.json"))
     parser.add_argument("--execution-unblock", type=Path, default=Path("outputs/crystalprobe_execution_unblock_report.json"))
     parser.add_argument("--handoff", type=Path, default=Path("outputs/crystalprobe_handoff_summary.json"))
+    parser.add_argument("--medication-stereochemistry-dossier", type=Path, default=Path("outputs/medication_stereochemistry_dossier.json"))
     parser.add_argument("--json-out", type=Path, default=Path("outputs/crystalprobe_publication_readiness.json"))
     parser.add_argument("--md-out", type=Path, default=Path("outputs/crystalprobe_publication_readiness.md"))
     args = parser.parse_args()
@@ -36,6 +37,11 @@ def main() -> int:
         release_boundary=json.loads(args.release_boundary.read_text(encoding="utf-8")),
         execution_unblock=json.loads(args.execution_unblock.read_text(encoding="utf-8")),
         handoff=json.loads(args.handoff.read_text(encoding="utf-8")),
+        medication_stereochemistry_dossier=(
+            json.loads(args.medication_stereochemistry_dossier.read_text(encoding="utf-8"))
+            if args.medication_stereochemistry_dossier.exists()
+            else None
+        ),
     )
     atomic_write_json(args.json_out, report)
     atomic_write_text(args.md_out, publication_readiness_markdown(report))

@@ -47,6 +47,39 @@ def _report():
             ],
             "next_publication_steps": ["Curate 20 verified pairs.", "Review release boundary."],
         },
+        risk_register={
+            "risks": [
+                {
+                    "risk_id": "fastcsp_positioning_drift",
+                    "severity": "medium",
+                    "status": "mitigated",
+                    "next_mitigation": "Keep positioning.",
+                },
+                {
+                    "risk_id": "medication_stereochemistry_scope_confusion",
+                    "severity": "high",
+                    "status": "watch",
+                    "next_mitigation": "Keep enantiomeric crystal comparison separate from polymorph benchmark claims.",
+                },
+                {
+                    "risk_id": "overclaiming_candidate_evidence",
+                    "severity": "critical",
+                    "status": "open",
+                    "next_mitigation": "Promote verified pairs.",
+                },
+            ]
+        },
+        report_consistency={
+            "status": "reports_consistent",
+            "blocked_check_count": 0,
+            "checks": [
+                {
+                    "check": "test_summary_alignment",
+                    "status": "passed",
+                    "detail": "project=145 passed, roadmap=145 passed, handoff=145 passed",
+                }
+            ],
+        },
     )
 
 
@@ -61,6 +94,12 @@ def test_handoff_report_distills_status_inputs():
     assert report["next_batch"][0]["substance"] == "modafinil"
     assert report["publication_readiness"]["status"] == "publication_blocked"
     assert report["publication_readiness"]["blocked_gate_count"] == 2
+    assert report["report_consistency"]["status"] == "reports_consistent"
+    assert report["report_consistency"]["blocked_check_count"] == 0
+    assert [risk["risk_id"] for risk in report["top_risks"]] == [
+        "overclaiming_candidate_evidence",
+        "medication_stereochemistry_scope_confusion",
+    ]
 
 
 def test_handoff_markdown_renders_approval_batch_and_policy():
@@ -69,6 +108,10 @@ def test_handoff_markdown_renders_approval_batch_and_policy():
     assert markdown.startswith("# CrystalProbe Handoff Summary")
     assert "Run recorded Docker commands later." in markdown
     assert "Publication Gates" in markdown
+    assert "Report Consistency" in markdown
+    assert "test_summary_alignment" in markdown
+    assert "Top Risks" in markdown
+    assert "medication_stereochemistry_scope_confusion" in markdown
     assert "verified_pair_milestone_20" in markdown
     assert "Confirm local-only medication CIF policy." in markdown
     assert "source reports remain canonical" in markdown

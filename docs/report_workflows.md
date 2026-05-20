@@ -111,6 +111,12 @@ Use this report for medication-priority targets that need coordinates before mea
 python scripts\build_source_discovery_report.py
 python scripts\build_source_acquisition_report.py
 python scripts\build_medication_cif_ingestion_report.py --extract
+python scripts\build_medication_polymorphism_autonomy_report.py
+python scripts\build_medication_benchmark_evidence_report.py
+python scripts\build_medication_polymorph_generation_report.py
+python scripts\build_medication_seed_ranking_report.py
+python scripts\build_medication_stereochemistry_report.py
+python scripts\build_medication_stereochemistry_dossier.py
 python scripts\build_medication_figures.py
 python scripts\build_medication_research_bundle.py
 ```
@@ -125,7 +131,20 @@ Primary outputs:
 - `outputs/medication_cif_ingestion.md`
 - `outputs/medication_measurement_summary.json`
 - `outputs/medication_measurement_summary.md`
+- `outputs/medication_polymorphism_autonomy.json`
+- `outputs/medication_polymorphism_autonomy.md`
+- `outputs/medication_benchmark_evidence.json`
+- `outputs/medication_benchmark_evidence.md`
+- `outputs/medication_polymorph_generation.json`
+- `outputs/medication_polymorph_generation.md`
+- `outputs/medication_seed_ranking.json`
+- `outputs/medication_seed_ranking.md`
+- `outputs/medication_stereochemistry.json`
+- `outputs/medication_stereochemistry.md`
+- `outputs/medication_stereochemistry_dossier.json`
+- `outputs/medication_stereochemistry_dossier.md`
 - `outputs/figures/medication_case_study_coverage.svg`
+- `outputs/figures/medication_stereochemistry_scope.svg`
 - `outputs/medication_research_bundle_manifest.json`
 - `outputs/medication_research_bundle_manifest.md`
 
@@ -134,6 +153,20 @@ The current reports classify modafinil, atomoxetine hydrochloride, and methylphe
 Medication single-structure measurements use selected block IDs from `data/curation/medication_cif_selection_v0.1.json`. Run MACE first, then AIMNet2 and UMA only for selected blocks that parse cleanly.
 
 Medication backend runs are tracked in `data/curation/medication_backend_blockers_v0.1.json` and rendered into `outputs/medication_measurement_summary.md`. The current blocker file is cleared: the selected modafinil, atomoxetine hydrochloride, and methylphenidate hydrochloride proof blocks each have MACE, AIMNet2, and UMA measurements. Do not reintroduce a blocker unless the corresponding backend output is missing or fails validation.
+
+`scripts\run_structure_inference.py --repair-cif-spacegroup` can normalize local-only CIF space-group spelling such as `P 1 21 1` to ASE-readable `P 21` during read. Use it only as a parser compatibility repair and record the repair in the measurement blocker/resolution log.
+
+The autonomous polymorphism report turns ingestion and measurement metadata into local-only triage verdicts. It can flag same-formula multi-block medication candidates without human validation, but it cannot promote them above unverified autonomous evidence until form labels, stereochemistry, measurement coverage, and license boundaries are resolved.
+
+The medication benchmark evidence gate reads optional source dossiers from `data/curation/medication_polymorphism_evidence_v0.1.json`. It records whether an autonomous candidate is still `unverified_autonomous_candidate`, can become `source_verified_autonomous_benchmark_candidate`, or remains outside polymorphism-benchmark scope. Without human expert review, it never labels a medication pair as expert-verified benchmark truth.
+
+The medication polymorph generation report uses the autonomy report, evidence gate, and selected-block extraction output to decide whether a target has local seed structures ready for generation or still needs measurements and evidence-gate resolution. Existing local CIF blocks are seed candidates, not generated landscapes.
+
+The medication seed ranking report compares only structures sharing the same backend and normalizes total cell energy to the selected candidate formula unit where formula counts are divisible. It is backend-inspection evidence, not experimental stability truth.
+
+The medication stereochemistry report separates enantiomeric crystal comparison from polymorph claims. S/R or +/- records are useful for medication crystallography, but they remain a distinct claim scope and must not be collapsed into benchmark polymorph records without explicit evidence-dossier mapping.
+
+The medication stereochemistry dossier turns the S/R claim-scope lane into a curator checklist. It records whether source racemate/enantiomer scope, local block stereochemistry, solid-form labels, ranking interpretation, and promotion decision are present before any enantiomeric claim-scope output is used outside local inspection.
 
 ## CPOSS benchmark promotion
 
@@ -144,6 +177,7 @@ python scripts\seed_cposs_block_form_mapping_manifest.py
 python scripts\build_cposs_block_mapping_report.py
 python scripts\build_cposs_block_mapping_dossier.py
 python scripts\build_cposs_promoted_pairs.py --block-mapping outputs\cposs_block_form_mapping.json
+python scripts\build_cposs_promotion_burndown_report.py
 ```
 
 Primary outputs:
@@ -155,8 +189,12 @@ Primary outputs:
 - `outputs/cposs_block_mapping_dossier.json`
 - `outputs/cposs_block_mapping_dossier.md`
 - `outputs/cposs_promoted_pairs.jsonl`
+- `outputs/cposs_promotion_burndown.json`
+- `outputs/cposs_promotion_burndown.md`
 
 The promotion gate only emits canonical `PolymorphPair` records for candidates with experimental stability ordering, citation, license decisions, disorder annotations, curator, reviewer, and a promote decision. When `outputs\cposs_block_form_mapping.json` exists, `scripts\build_cposs_promoted_pairs.py` enforces it as an additional hard gate, so a `promote` decision still remains blocked until both structures in the candidate pair are mapping-ready.
+
+The promotion burn-down report converts the gate output into a milestone-sized action plan for the first 20 verified pairs. It selects the next candidate pairs, deduplicates their block rows, summarizes blockers, and keeps the result explicitly below benchmark status until the promotion gate emits records.
 
 ## Therapeutic sensitivity contrast
 
@@ -253,12 +291,17 @@ When `outputs/cposs_block_form_mapping.json` exists, publication readiness also 
 
 ```powershell
 python scripts\build_publication_readiness_report.py
+python scripts\build_risk_register_report.py
 ```
 
 Primary outputs:
 
 - `outputs/crystalprobe_publication_readiness.json`
 - `outputs/crystalprobe_publication_readiness.md`
+- `outputs/crystalprobe_risk_register.json`
+- `outputs/crystalprobe_risk_register.md`
+
+The risk register consolidates the highest-release-impact failure modes across publication readiness, release boundary, CPOSS promotion, block mapping, and fingerprint artifact readiness. It is a claim-control report: it does not replace the source reports, and it only marks risks mitigated when generated evidence supports that status.
 
 ## Substance research profiles
 
@@ -305,23 +348,85 @@ Primary outputs:
 - `outputs/crystalprobe_evidence_tiers.json`
 - `outputs/crystalprobe_evidence_tiers.md`
 
+## Candidate molecule viewers
+
+Use this workflow to build source-hosted molecule/crystal viewer pages for candidate records. The pages point to COD/JSmol source pages and CIF source links, but they do not embed atom coordinates or change benchmark promotion status.
+
+```powershell
+python scripts\build_molecule_viewer_report.py
+```
+
+Primary outputs:
+
+- `outputs/crystalprobe_molecule_viewers.md`
+- `docs/molecule_viewers.md`
+- `docs/viewers/paracetamol_form_i_vs_form_ii_seed.html`
+
+## Evidence atlas database and explorer
+
+Use this workflow to build a queryable database from manifest records, demo predictions, evidence packets, candidate source resolution, molecule viewers, and release-boundary reports. The atlas is a metadata/query layer and does not promote records or embed coordinate payloads.
+
+```powershell
+python scripts\build_evidence_atlas.py
+```
+
+Primary outputs:
+
+- `outputs/crystalprobe_evidence_atlas.sqlite`
+- `outputs/crystalprobe_evidence_atlas.json`
+- `outputs/crystalprobe_evidence_atlas.md`
+- `docs/evidence_atlas.md`
+- `docs/evidence_atlas.html`
+
+## Historical research cycle and evidence packet
+
+Use this workflow to turn the historical-method modules into a concrete research loop. It rebuilds the historical opportunity matrix, active evidence triage, a single-pair evidence packet, candidate-only evidence resolution, the combined historical-module report, and the cycle execution record.
+
+```powershell
+python scripts\build_historical_opportunity_report.py
+python scripts\build_active_evidence_triage_report.py
+python scripts\build_evidence_packet_report.py --pair-id paracetamol_form_i_vs_form_ii_seed
+python scripts\build_evidence_resolution_report.py
+python scripts\build_historical_research_modules_report.py
+python scripts\run_research_cycle.py --pair-id paracetamol_form_i_vs_form_ii_seed --test-summary "CURRENT_TEST_SUMMARY" --git-status dirty
+```
+
+Primary outputs:
+
+- `outputs/crystalprobe_historical_opportunities.md`
+- `outputs/crystalprobe_active_evidence_triage.md`
+- `outputs/crystalprobe_evidence_packet.md`
+- `outputs/crystalprobe_evidence_resolution.md`
+- `outputs/crystalprobe_historical_research_modules.md`
+- `outputs/crystalprobe_research_cycle.md`
+
+The evidence packet is a promotion worklist. The evidence-resolution report can record candidate literature, COD source IDs, and proposed replacement fields, but it remains candidate-only until source/form/license review promotes the canonical manifest.
+
 ## Writing and roadmap artifacts
 
 These commands rebuild the current manuscript-facing layer from the generated evidence reports.
+Pass a fresh `--test-summary` value after a live `pytest` run. The project-status generator defaults to `not_recorded` rather than an old pass count so generated dashboards do not silently overstate verification.
+For the dependent status trio, prefer `build_status_chain.py` because it runs project status, roadmap status, and handoff in order and prevents stale downstream reads.
 
 ```powershell
 python scripts\build_preliminary_findings_memo.py
 python scripts\build_chemrxiv_preprint_draft.py
+python scripts\build_status_chain.py --test-summary "CURRENT_TEST_SUMMARY" --git-status dirty
 python scripts\build_project_status_dashboard.py --test-summary "CURRENT_TEST_SUMMARY"
 python scripts\build_roadmap_status_report.py
 python scripts\build_release_boundary_report.py
 python scripts\build_source_discovery_report.py
 python scripts\build_source_acquisition_report.py
 python scripts\build_medication_cif_ingestion_report.py
+python scripts\build_medication_polymorphism_autonomy_report.py
+python scripts\build_medication_benchmark_evidence_report.py
+python scripts\build_medication_polymorph_generation_report.py
+python scripts\build_medication_seed_ranking_report.py
 python scripts\seed_cposs_block_form_mapping_manifest.py
 python scripts\build_cposs_block_mapping_report.py
 python scripts\build_cposs_block_mapping_dossier.py
 python scripts\build_cposs_promoted_pairs.py
+python scripts\build_cposs_promotion_burndown_report.py
 python scripts\build_fingerprint_artifact_plan.py
 python scripts\build_evidence_tier_report.py
 python scripts\build_substance_profiles.py
@@ -330,7 +435,9 @@ python scripts\build_model_guardrails_report.py
 python scripts\build_environment_blockers_report.py
 python scripts\build_execution_unblock_report.py
 python scripts\build_handoff_report.py
+python scripts\build_report_consistency_report.py
 python scripts\build_publication_readiness_report.py
+python scripts\build_risk_register_report.py
 python scripts\build_uncertainty_proxy_report.py
 ```
 
@@ -340,6 +447,7 @@ Primary outputs:
 
 - `outputs/crystalprobe_preliminary_findings_memo.md`
 - `outputs/crystalprobe_chemrxiv_preprint_draft.md`
+- `outputs/crystalprobe_status_chain.json`
 - `outputs/crystalprobe_project_status.md`
 - `outputs/crystalprobe_roadmap_status.md`
 - `outputs/crystalprobe_release_boundary.md`
@@ -347,9 +455,14 @@ Primary outputs:
 - `outputs/crystalprobe_source_acquisition.md`
 - `outputs/medication_cif_ingestion.md`
 - `outputs/medication_measurement_summary.md`
+- `outputs/medication_polymorphism_autonomy.md`
+- `outputs/medication_benchmark_evidence.md`
+- `outputs/medication_polymorph_generation.md`
+- `outputs/medication_seed_ranking.md`
 - `outputs/cposs_block_form_mapping.md`
 - `outputs/cposs_block_mapping_dossier.md`
 - `outputs/cposs_promotion_gate.md`
+- `outputs/cposs_promotion_burndown.md`
 - `outputs/crystalprobe_fingerprint_artifact_plan.md`
 - `outputs/crystalprobe_evidence_tiers.md`
 - `outputs/crystalprobe_substance_profiles.md`
@@ -358,7 +471,9 @@ Primary outputs:
 - `outputs/crystalprobe_environment_blockers.md`
 - `outputs/crystalprobe_execution_unblock_report.md`
 - `outputs/crystalprobe_handoff_summary.md`
+- `outputs/crystalprobe_report_consistency.md`
 - `outputs/crystalprobe_publication_readiness.md`
+- `outputs/crystalprobe_risk_register.md`
 - `outputs/crystalprobe_uncertainty_proxy_v0.md`
 
 ## Verification

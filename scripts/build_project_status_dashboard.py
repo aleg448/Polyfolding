@@ -24,7 +24,11 @@ def main() -> int:
     parser.add_argument("--evidence-tiers", type=Path, default=Path("outputs/crystalprobe_evidence_tiers.json"))
     parser.add_argument("--execution-unblock", type=Path, default=Path("outputs/crystalprobe_execution_unblock_report.json"))
     parser.add_argument("--blockers", type=Path, default=Path("BLOCKERS.md"))
-    parser.add_argument("--test-summary", default="54 passed, 1 skipped")
+    parser.add_argument(
+        "--test-summary",
+        default="not_recorded",
+        help="Latest live pytest summary, for example '196 passed, 3 skipped'. Defaults to not_recorded to avoid stale verification claims.",
+    )
     parser.add_argument("--docker-status", default="not_run")
     parser.add_argument("--git-status", default="not_recorded")
     parser.add_argument("--json-out", type=Path, default=Path("outputs/crystalprobe_project_status.json"))

@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="850" height="560" viewBox="0 0 850 560" role="img">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="425.0" y="46.0" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" fill="#0f172a" text-anchor="middle">Calibration reliability</text>
+<line x1="90.0" y1="464.0" x2="792.0" y2="464.0" stroke="#0f172a" stroke-width="1.6"/>
+<line x1="90.0" y1="108.0" x2="90.0" y2="464.0" stroke="#0f172a" stroke-width="1.6"/>
+<line x1="90.0" y1="464.0" x2="90.0" y2="470.0" stroke="#0f172a" stroke-width="1"/>
+<line x1="84.0" y1="464.0" x2="90.0" y2="464.0" stroke="#0f172a" stroke-width="1"/>
+<text x="90.0" y="488.0" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#475569" text-anchor="middle">0.0</text>
+<text x="78.0" y="468.0" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#475569" text-anchor="end">0.0</text>
+<line x1="230.4" y1="464.0" x2="230.4" y2="470.0" stroke="#0f172a" stroke-width="1"/>
+<line x1="84.0" y1="392.8" x2="90.0" y2="392.8" stroke="#0f172a" stroke-width="1"/>
+<text x="230.4" y="488.0" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#475569" text-anchor="middle">0.2</text>
+<text x="78.0" y="396.8" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#475569" text-anchor="end">0.2</text>
+<line x1="230.4" y1="108.0" x2="230.4" y2="464.0" stroke="#e5e7eb" stroke-width="0.8"/>
+<line x1="90.0" y1="392.8" x2="792.0" y2="392.8" stroke="#e5e7eb" stroke-width="0.8"/>
+<line x1="370.8" y1="464.0" x2="370.8" y2="470.0" stroke="#0f172a" stroke-width="1"/>
+<line x1="84.0" y1="321.6" x2="90.0" y2="321.6" stroke="#0f172a" stroke-width="1"/>
+<text x="370.8" y="488.0" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#475569" text-anchor="middle">0.4</text>
+<text x="78.0" y="325.6" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#475569" text-anchor="end">0.4</text>
+<line x1="370.8" y1="108.0" x2="370.8" y2="464.0" stroke="#e5e7eb" stroke-width="0.8"/>
+<line x1="90.0" y1="321.6" x2="792.0" y2="321.6" stroke="#e5e7eb" stroke-width="0.8"/>
+<line x1="511.2" y1="464.0" x2="511.2" y2="470.0" stroke="#0f172a" stroke-width="1"/>
+<line x1="84.0" y1="250.4" x2="90.0" y2="250.4" stroke="#0f172a" stroke-width="1"/>
+<text x="511.2" y="488.0" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#475569" text-anchor="middle">0.6</text>
+<text x="78.0" y="254.4" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#475569" text-anchor="end">0.6</text>
+<line x1="511.2" y1="108.0" x2="511.2" y2="464.0" stroke="#e5e7eb" stroke-width="0.8"/>
+<line x1="90.0" y1="250.4" x2="792.0" y2="250.4" stroke="#e5e7eb" stroke-width="0.8"/>
+<line x1="651.6" y1="464.0" x2="651.6" y2="470.0" stroke="#0f172a" stroke-width="1"/>
+<line x1="84.0" y1="179.2" x2="90.0" y2="179.2" stroke="#0f172a" stroke-width="1"/>
+<text x="651.6" y="488.0" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#475569" text-anchor="middle">0.8</text>
+<text x="78.0" y="183.2" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#475569" text-anchor="end">0.8</text>
+<line x1="651.6" y1="108.0" x2="651.6" y2="464.0" stroke="#e5e7eb" stroke-width="0.8"/>
+<line x1="90.0" y1="179.2" x2="792.0" y2="179.2" stroke="#e5e7eb" stroke-width="0.8"/>
+<line x1="792.0" y1="464.0" x2="792.0" y2="470.0" stroke="#0f172a" stroke-width="1"/>
+<line x1="84.0" y1="108.0" x2="90.0" y2="108.0" stroke="#0f172a" stroke-width="1"/>
+<text x="792.0" y="488.0" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#475569" text-anchor="middle">1.0</text>
+<text x="78.0" y="112.0" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#475569" text-anchor="end">1.0</text>
+<text x="441.0" y="522.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="middle">Predicted confidence</text>
+<text x="28.0" y="286.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#334155" text-anchor="middle">Empirical accuracy</text>
+<line x1="90.0" y1="464.0" x2="792.0" y2="108.0" stroke="#94a3b8" stroke-width="1.5"/>
+<rect x="184.0" y="232.0" width="514.0" height="88.0" rx="6" fill="#f8fafc" stroke="#cbd5e1"/>
+<text x="425.0" y="266.0" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" fill="#334155" text-anchor="middle">No verified calibration points yet</text>
+<text x="425.0" y="294.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#64748b" text-anchor="middle">The module renders this state instead of fabricating reliability evidence.</text>
+<text x="56.0" y="526.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#475569" text-anchor="start">ECE: 0.000; Brier: 0.000</text>
+</svg>

@@ -12,6 +12,8 @@ def handoff_report(
     measurement_queue: dict[str, Any],
     execution_unblock: dict[str, Any],
     publication_readiness: dict[str, Any] | None = None,
+    risk_register: dict[str, Any] | None = None,
+    report_consistency: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Build a compact handoff view from generated status artifacts."""
 
@@ -49,6 +51,8 @@ def handoff_report(
             "approval_batch": list(execution_unblock.get("approval_batch", [])),
         },
         "publication_readiness": _publication_summary(publication_readiness),
+        "report_consistency": _report_consistency_summary(report_consistency),
+        "top_risks": _top_risks(risk_register),
         "deliverables": deliverables,
         "next_batch": next_batch,
         "human_input_needed": list(project_status.get("remaining_user_input", [])),
@@ -68,6 +72,7 @@ def handoff_markdown(report: dict[str, Any]) -> str:
     cposs = report.get("cposs_bridge", {})
     unblock = report.get("execution_unblock", {})
     publication = report.get("publication_readiness", {})
+    consistency = report.get("report_consistency", {})
     lines = [
         "# CrystalProbe Handoff Summary",
         "",
@@ -79,6 +84,8 @@ def handoff_markdown(report: dict[str, Any]) -> str:
         f"- Execution blockers: `{unblock.get('blocker_count', 0)}`",
         f"- Publication readiness: `{publication.get('status', 'not_available')}`",
         f"- Publication blocked gates: `{publication.get('blocked_gate_count', 0)}`",
+        f"- Report consistency: `{consistency.get('status', 'not_available')}`",
+        f"- Report consistency blocked checks: `{consistency.get('blocked_check_count', 0)}`",
         "",
         "## Approval Batch",
         "",
@@ -107,6 +114,22 @@ def handoff_markdown(report: dict[str, Any]) -> str:
     if publication.get("next_publication_steps"):
         lines.extend(["", "## Top Publication Steps", ""])
         lines.extend(f"- {item}" for item in publication["next_publication_steps"])
+    lines.extend(["", "## Report Consistency", ""])
+    if consistency.get("checks"):
+        lines.extend(
+            f"- `{check['check']}`: `{check['status']}` - {check['detail']}"
+            for check in consistency["checks"]
+        )
+    else:
+        lines.append("- Report consistency report is not available.")
+    lines.extend(["", "## Top Risks", ""])
+    if report.get("top_risks"):
+        lines.extend(
+            f"- `{risk['risk_id']}`: `{risk['severity']}` / `{risk['status']}` - {risk['next_mitigation']}"
+            for risk in report["top_risks"]
+        )
+    else:
+        lines.append("- Risk register is not available.")
     lines.extend(
         [
             "",
@@ -147,3 +170,37 @@ def _publication_summary(publication_readiness: dict[str, Any] | None) -> dict[s
         "gates": list(publication_readiness.get("gates", [])),
         "next_publication_steps": list(publication_readiness.get("next_publication_steps", []))[:5],
     }
+
+
+def _report_consistency_summary(report_consistency: dict[str, Any] | None) -> dict[str, Any]:
+    if not report_consistency:
+        return {
+            "status": "not_available",
+            "blocked_check_count": 0,
+            "checks": [],
+        }
+    return {
+        "status": report_consistency.get("status"),
+        "blocked_check_count": report_consistency.get("blocked_check_count", 0),
+        "checks": list(report_consistency.get("checks", [])),
+    }
+
+
+def _top_risks(risk_register: dict[str, Any] | None) -> list[dict[str, Any]]:
+    if not risk_register:
+        return []
+    severity_rank = {"critical": 0, "high": 1, "medium": 2, "low": 3}
+    status_rank = {"open": 0, "watch": 1, "blocked": 1, "mitigated": 3}
+    risks = [
+        dict(risk)
+        for risk in risk_register.get("risks", [])
+        if risk.get("status") != "mitigated"
+    ]
+    risks.sort(
+        key=lambda risk: (
+            severity_rank.get(str(risk.get("severity")), 9),
+            status_rank.get(str(risk.get("status")), 9),
+            str(risk.get("risk_id")),
+        )
+    )
+    return risks[:5]

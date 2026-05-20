@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="560" viewBox="0 0 1120 560" role="img">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="560.0" y="46.0" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" fill="#0f172a" text-anchor="middle">Unverified CPOSS candidate backend summary</text>
+<text x="56.0" y="88.0" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="400" fill="#475569" text-anchor="start">ibuprofen: ibp_ibp01_psicrys_vs_ibp06_psicrys | status: candidate/unverified</text>
+<rect x="56.0" y="110.0" width="92.0" height="24.0" rx="12" fill="#fef3c7" stroke="#d97706"/>
+<text x="102.0" y="127.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="#92400e" text-anchor="middle">unverified</text>
+<text x="184.0" y="127.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#92400e" text-anchor="start">Backend outputs are inspection evidence only; experimental stability ranking is blocked.</text>
+<text x="56.0" y="148.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#334155" text-anchor="start">Backend</text>
+<text x="330.0" y="148.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#334155" text-anchor="start">Gap, log-scaled</text>
+<text x="884.0" y="148.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#334155" text-anchor="start">Lower structure</text>
+<line x1="50.0" y1="144.0" x2="1062.0" y2="144.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="56.0" y="179.0" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#111827" text-anchor="start">aimnet2</text>
+<text x="56.0" y="204.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#64748b" text-anchor="start">flags: high_force_atom</text>
+<rect x="330.0" y="156.0" width="520.0" height="26.0" rx="4" fill="#e5e7eb" stroke="none"/>
+<rect x="330.0" y="156.0" width="520.0" height="26.0" rx="4" fill="#2563eb" stroke="none"/>
+<text x="340.0" y="175.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="#111827" text-anchor="start">632.533 kJ/mol/f.u.</text>
+<text x="884.0" y="177.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#111827" text-anchor="start">IBP01_PsiCrys</text>
+<line x1="50.0" y1="218.0" x2="1062.0" y2="218.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="56.0" y="253.0" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#111827" text-anchor="start">mace</text>
+<text x="56.0" y="278.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#64748b" text-anchor="start">flags: high_force_atom</text>
+<rect x="330.0" y="230.0" width="520.0" height="26.0" rx="4" fill="#e5e7eb" stroke="none"/>
+<rect x="330.0" y="230.0" width="66.3" height="26.0" rx="4" fill="#2563eb" stroke="none"/>
+<text x="340.0" y="249.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="#111827" text-anchor="start">1.277 kJ/mol/f.u.</text>
+<text x="884.0" y="251.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#111827" text-anchor="start">IBP01_PsiCrys</text>
+<line x1="50.0" y1="292.0" x2="1062.0" y2="292.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="56.0" y="327.0" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#111827" text-anchor="start">uma</text>
+<text x="56.0" y="352.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#64748b" text-anchor="start">flags: none</text>
+<rect x="330.0" y="304.0" width="520.0" height="26.0" rx="4" fill="#e5e7eb" stroke="none"/>
+<rect x="330.0" y="304.0" width="250.4" height="26.0" rx="4" fill="#2563eb" stroke="none"/>
+<text x="340.0" y="323.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="#111827" text-anchor="start">21.340 kJ/mol/f.u.</text>
+<text x="884.0" y="325.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#111827" text-anchor="start">IBP01_PsiCrys</text>
+<text x="56.0" y="488.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#475569" text-anchor="start">Blocked before promotion: source-license review, experimental stability citation, disorder annotation, curator, reviewer.</text>
+<text x="56.0" y="518.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#475569" text-anchor="start">No raw or coordinate-bearing CPOSS/CCDC/CSD artifact is embedded in this public figure.</text>
+</svg>

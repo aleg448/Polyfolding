@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CrystalProbe Viewer: paracetamol_form_i_vs_form_ii_seed</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1f2937;
+      --muted: #5f6b7a;
+      --line: #d7dde5;
+      --panel: #f7f9fb;
+      --accent: #087f8c;
+      --warn: #9a5b00;
+      --bg: #ffffff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, Segoe UI, Arial, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.45;
+    }
+    header, main {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+    header {
+      padding: 28px 0 16px;
+      border-bottom: 1px solid var(--line);
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 26px;
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+    .subhead {
+      margin: 0;
+      color: var(--muted);
+      max-width: 850px;
+    }
+    .badge-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .badge {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 13px;
+      background: var(--panel);
+    }
+    .badge.warn {
+      border-color: #f0c77b;
+      color: var(--warn);
+      background: #fff8ea;
+    }
+    main {
+      padding: 22px 0 36px;
+    }
+    .viewer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 18px;
+    }
+    .viewer-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .viewer-card h2 {
+      font-size: 18px;
+      margin: 0;
+      padding: 14px 16px 4px;
+      letter-spacing: 0;
+    }
+    .meta {
+      display: grid;
+      grid-template-columns: 130px 1fr;
+      gap: 6px 10px;
+      padding: 8px 16px 14px;
+      font-size: 14px;
+    }
+    .meta dt {
+      color: var(--muted);
+    }
+    .meta dd {
+      margin: 0;
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+    .remote-frame {
+      width: 100%;
+      height: 430px;
+      border: 0;
+      border-top: 1px solid var(--line);
+      background: var(--panel);
+    }
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 12px 16px 16px;
+      border-top: 1px solid var(--line);
+    }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      min-height: 36px;
+      padding: 0 12px;
+      border: 1px solid var(--accent);
+      border-radius: 6px;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .policy {
+      margin-top: 20px;
+      padding: 16px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+    .policy h2 {
+      margin: 0 0 8px;
+      font-size: 17px;
+      letter-spacing: 0;
+    }
+    .policy ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+    .empty {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CrystalProbe Viewer: paracetamol_form_i_vs_form_ii_seed</h1>
+    <p class="subhead">Remote source viewers for candidate structures. This page is intentionally a navigation layer: it does not embed CIF text or atom coordinates. If a source blocks inline display, use the Open COD JSmol button.</p>
+    <div class="badge-row">
+      <span class="badge warn">candidate_unverified</span>
+      <span class="badge">promotion: do_not_promote_candidate_only</span>
+      <span class="badge">ordering: A&gt;B</span>
+    </div>
+  </header>
+  <main>
+    <section class="viewer-grid" aria-label="Remote molecule viewers">
+      <article class="viewer-card" data-claim-label="candidate_unverified">
+        <h2>A: Form I</h2>
+        <dl class="meta">
+          <dt>Source</dt><dd>COD:7105573</dd>
+          <dt>Viewer type</dt><dd>cod_jsmol_remote_page</dd>
+          <dt>Space group</dt><dd>P 1 21/n 1</dd>
+          <dt>License</dt><dd>CC0-1.0</dd>
+          <dt>Disorder</dt><dd>False</dd>
+          <dt>Policy</dt><dd>remote_source_only_no_coordinates_embedded</dd>
+        </dl>
+        <iframe class="remote-frame" src="https://www.crystallography.net/cod/7105573.html" title="Remote COD/JSmol viewer for COD:7105573" loading="lazy" referrerpolicy="no-referrer"></iframe>
+        <div class="actions">
+          <a class="button" href="https://www.crystallography.net/cod/7105573.html" target="_blank" rel="noopener noreferrer">Open COD JSmol</a>
+          <a class="button" href="https://www.crystallography.net/cod/7105573.cif" target="_blank" rel="noopener noreferrer">Open CIF Source</a>
+        </div>
+      </article>
+      <article class="viewer-card" data-claim-label="candidate_unverified">
+        <h2>B: Form II</h2>
+        <dl class="meta">
+          <dt>Source</dt><dd>COD:2105052</dd>
+          <dt>Viewer type</dt><dd>cod_jsmol_remote_page</dd>
+          <dt>Space group</dt><dd>P b c a</dd>
+          <dt>License</dt><dd>CC0-1.0</dd>
+          <dt>Disorder</dt><dd>False</dd>
+          <dt>Policy</dt><dd>remote_source_only_no_coordinates_embedded</dd>
+        </dl>
+        <iframe class="remote-frame" src="https://www.crystallography.net/cod/2105052.html" title="Remote COD/JSmol viewer for COD:2105052" loading="lazy" referrerpolicy="no-referrer"></iframe>
+        <div class="actions">
+          <a class="button" href="https://www.crystallography.net/cod/2105052.html" target="_blank" rel="noopener noreferrer">Open COD JSmol</a>
+          <a class="button" href="https://www.crystallography.net/cod/2105052.cif" target="_blank" rel="noopener noreferrer">Open CIF Source</a>
+        </div>
+      </article>
+    </section>
+    <section class="policy">
+      <h2>Visualization Policy</h2>
+      <ul>
+<li>Viewer artifacts are candidate-public navigation aids, not benchmark evidence.</li>
+<li>No atom coordinates, CIF text, or gated source blocks are embedded in generated viewer pages.</li>
+<li>External viewer links must preserve the source page license and citation context.</li>
+<li>Records remain candidate_unverified until source, form, license, and stability evidence are reviewed.</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

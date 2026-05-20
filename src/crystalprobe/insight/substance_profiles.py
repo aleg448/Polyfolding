@@ -14,6 +14,7 @@ def substance_profile_report(
     cposs_disagreement: dict[str, Any] | None = None,
     source_discovery: dict[str, Any] | None = None,
     source_acquisition: dict[str, Any] | None = None,
+    medication_stereochemistry: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Merge local curation and measurement artifacts into substance profiles."""
 
@@ -29,6 +30,7 @@ def substance_profile_report(
     _merge_cposs_disagreement(profiles, cposs_disagreement or {})
     _merge_source_discovery(profiles, source_discovery or {})
     _merge_source_acquisition(profiles, source_acquisition or {})
+    _merge_medication_stereochemistry(profiles, medication_stereochemistry or {})
 
     for profile in profiles.values():
         profile["readiness"] = _readiness(profile)
@@ -111,6 +113,12 @@ def substance_profile_markdown(report: dict[str, Any]) -> str:
                 "- Source acquisition: "
                 f"`{profile['source_acquisition_status']}` with "
                 f"`{profile.get('local_coordinate_source_count', 0)}` local coordinate source(s)."
+            )
+        if profile.get("stereochemistry_status"):
+            lines.append(
+                "- Stereochemistry: "
+                f"`{profile['stereochemistry_status']}` with "
+                f"`{profile.get('enantiomer_labeled_block_count', 0)}` enantiomer-labeled block(s)."
             )
         if profile.get("blocked_claims"):
             lines.append("- Blocked claims:")
@@ -277,6 +285,24 @@ def _merge_source_acquisition(profiles: dict[str, dict[str, Any]], source_acquis
             _append_unique(
                 profile["next_actions"],
                 "Run local-only single-structure measurements and keep redistribution blocked until license review.",
+            )
+
+
+def _merge_medication_stereochemistry(profiles: dict[str, dict[str, Any]], stereochemistry: dict[str, Any]) -> None:
+    for target in stereochemistry.get("targets", []):
+        profile = profiles.get(_key(str(target.get("target", ""))))
+        if not profile:
+            continue
+        profile["stereochemistry_status"] = target.get("stereochemistry_status")
+        profile["stereochemistry_claim_scopes"] = list(target.get("claim_scopes", []))
+        profile["enantiomer_labeled_block_count"] = int(target.get("enantiomer_labeled_block_count", 0) or 0)
+        profile["stereochemistry_blockers"] = list(target.get("blockers", []))
+        for blocker in target.get("blockers", []):
+            _append_unique(profile["blocked_claims"], str(blocker))
+        if profile["enantiomer_labeled_block_count"] > 0:
+            _append_unique(
+                profile["next_actions"],
+                "Curate enantiomer/racemate/form scope before using S/R records as polymorph evidence.",
             )
 
 

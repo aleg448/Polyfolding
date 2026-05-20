@@ -13,6 +13,7 @@ def publication_readiness_report(
     release_boundary: dict[str, Any],
     execution_unblock: dict[str, Any],
     handoff: dict[str, Any],
+    medication_stereochemistry_dossier: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Summarize whether current artifacts are ready for public scientific claims."""
 
@@ -28,6 +29,7 @@ def publication_readiness_report(
             all(row.get("status") == "ready" for row in fingerprint_plan.get("figures", [])),
             _fingerprint_detail(fingerprint_plan),
         ),
+        *_medication_stereochemistry_gates(medication_stereochemistry_dossier),
         _gate(
             "release_boundary",
             int((release_boundary.get("counts") or {}).get("license_review_required", 0)) == 0
@@ -55,9 +57,13 @@ def publication_readiness_report(
         "approval_batch": list(execution_unblock.get("approval_batch", [])),
         "next_publication_steps": _next_steps(gates, cposs_promotion, cposs_block_mapping or {}, handoff),
         "policy": [
+            "CrystalProbe is positioned as an audit, curation, calibration, and claim-readiness layer that complements FastCSP-style crystal-landscape generation.",
             "Publication readiness requires verified benchmark evidence, not just backend disagreement.",
             "CCDC/CSD-derived generated reports and figures require source-license review before public sharing.",
+            "MACE, AIMNet2, and UMA absolute energies are not a shared thermodynamic scale; cross-backend disagreement is an inspection signal unless calibrated.",
             "Medication single-structure measurements are backend-behaviour evidence, not polymorph stability claims.",
+            "Medication stereochemistry panels are claim-scope artifacts and must not be interpreted as polymorph benchmark validation.",
+            "Medication stereochemistry dossiers must be claim-scope ready before enantiomeric panels are cited as curated evidence.",
         ],
     }
 
@@ -97,9 +103,19 @@ def _gate(name: str, passed: bool, detail: str) -> dict[str, str]:
 
 def _fingerprint_detail(fingerprint_plan: dict[str, Any]) -> str:
     blocked = [row.get("figure_id") for row in fingerprint_plan.get("figures", []) if row.get("status") != "ready"]
+    ready_claim_scope = [
+        row.get("figure_id")
+        for row in fingerprint_plan.get("figures", [])
+        if row.get("status") == "ready" and str(row.get("figure_id", "")).startswith("medication_")
+    ]
+    ready_text = (
+        f" Ready medication claim-scope panels: {', '.join(str(item) for item in ready_claim_scope)}."
+        if ready_claim_scope
+        else ""
+    )
     if not blocked:
-        return "All planned fingerprint figures are ready."
-    return f"Blocked figures: {', '.join(str(item) for item in blocked)}."
+        return f"All planned fingerprint figures are ready.{ready_text}"
+    return f"Blocked figures: {', '.join(str(item) for item in blocked)}.{ready_text}"
 
 
 def _release_detail(release_boundary: dict[str, Any]) -> str:
@@ -128,6 +144,20 @@ def _block_mapping_gates(cposs_block_mapping: dict[str, Any] | None) -> list[dic
     ]
 
 
+def _medication_stereochemistry_gates(dossier: dict[str, Any] | None) -> list[dict[str, str]]:
+    if not dossier or int(dossier.get("dossier_count", 0)) == 0:
+        return []
+    ready = int(dossier.get("ready_for_claim_scope_count", 0))
+    count = int(dossier.get("dossier_count", 0))
+    return [
+        _gate(
+            "medication_stereochemistry_dossier",
+            ready == count,
+            f"{ready} of {count} medication stereochemistry dossiers are claim-scope ready.",
+        )
+    ]
+
+
 def _next_steps(
     gates: list[dict[str, str]],
     cposs_promotion: dict[str, Any],
@@ -146,6 +176,8 @@ def _next_steps(
         steps.append(f"Lock block-to-experimental-form mappings for {remaining} CPOSS candidate pairs before promotion.")
     if "fingerprint_figures" in blocked:
         steps.append("Keep fingerprint figures blocked until verified-pair counts support ranking and calibration claims.")
+    if "medication_stereochemistry_dossier" in blocked:
+        steps.append("Resolve medication stereochemistry dossier fields before citing enantiomeric crystal comparisons as curated evidence.")
     if "release_boundary" in blocked:
         steps.append("Human-review license-review-required and local-only artifacts before any public release.")
     if "execution_unblocked" in blocked:

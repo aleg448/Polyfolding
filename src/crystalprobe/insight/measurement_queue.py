@@ -158,6 +158,13 @@ def _classify(profile: dict[str, Any], readiness: str, evidence_tier: str) -> tu
             "license-controlled local coordinates are available and should be measured before claim curation",
         )
     if readiness == "measured_needs_claim_guardrails":
+        if int(profile.get("enantiomer_labeled_block_count", 0) or 0) > 0:
+            return (
+                "curate_stereochemistry_scope",
+                91,
+                False,
+                "paired or partial enantiomer evidence needs stereochemical claim-scope curation before polymorph use",
+            )
         return (
             "curate_claim_boundary",
             89 if priority_group == "adhd_core" else 60,
@@ -242,6 +249,8 @@ def _first_step(profile: dict[str, Any], action_type: str) -> str:
         return "Run MACE first, then AIMNet2 and UMA where the selected CIF block parses cleanly."
     if action_type == "curate_claim_boundary":
         return "Record which backends are complete, keep coordinates local-only, and block stability claims until experimental evidence exists."
+    if action_type == "curate_stereochemistry_scope":
+        return "Map S/R, racemate, and form labels; keep enantiomeric crystal comparison separate from polymorph benchmark claims."
     if action_type == "validate_coordinate_access":
         return "Validate the cited CSD/CCDC or publication coordinate route and record license constraints before measurement."
     if action_type == "deeper_source_search":

@@ -2,6 +2,17 @@
 
 CrystalProbe is an interpretability-first research suite for trustworthy polymorph prediction.
 
+For a public-facing walkthrough of the project motivation, architecture, demo, result boundaries, and drug-discovery reliability thesis, see [`CASE_STUDY.md`](CASE_STUDY.md).
+For the reviewer-facing visual demo gallery, see [`docs/public_demo.md`](docs/public_demo.md).
+For the public demo checklist and one stronger unverified example, see [`docs/public_demo_checklist.md`](docs/public_demo_checklist.md) and [`docs/cases/cposs_ibp_candidate.md`](docs/cases/cposs_ibp_candidate.md).
+For the queryable database and static explorer, see [`docs/evidence_atlas.md`](docs/evidence_atlas.md) and [`docs/evidence_atlas.html`](docs/evidence_atlas.html).
+For candidate-safe molecule/crystal viewers that open source-hosted COD/JSmol pages without embedding coordinates, see [`docs/molecule_viewers.md`](docs/molecule_viewers.md).
+For the publication-path research spine mapping historical simulation, CSP, uncertainty, and reproducible-research ideas to modern CrystalProbe modules, see [`docs/historical_research_opportunities.md`](docs/historical_research_opportunities.md).
+To rebuild the first implemented historical-method report, run `python scripts\build_historical_research_modules_report.py`.
+To run the current research loop and first evidence packet, run `python scripts\run_research_cycle.py --pair-id paracetamol_form_i_vs_form_ii_seed`.
+To rebuild the evidence database and static explorer, run `python scripts\build_evidence_atlas.py`.
+To rebuild the candidate-safe molecule viewers, run `python scripts\build_molecule_viewer_report.py`.
+
 The near-term goal is to make polymorph-pair evaluation reproducible before building larger CSP automation on top of it. This repository currently contains the source-controlled research suite for:
 
 - A Pydantic schema for polymorph-pair benchmark records.
@@ -12,7 +23,13 @@ The near-term goal is to make polymorph-pair evaluation reproducible before buil
 - Optional backend discovery for CIF parsing, MLIPs, and FastCSP.
 - Draft benchmark curation records, guarded promotion gates, and paper outlines.
 - Local-only medication CIF ingestion, measurement summaries, and case-study figures.
+- Medication stereochemistry claim-scope reports for enantiomer, racemate, and form-label guardrails.
 - CPOSS candidate triage, evidence workpacks, and publication-readiness gates.
+- Historical opportunity mapping for claim-gated modules inspired by CSP blind tests, statistical simulation, active learning, calibration, and reproducible research.
+- Historical method implementations for motif priors, active evidence triage, landscape auditing, free-energy probes, and calibrated abstention.
+- Research-cycle, evidence-packet, and evidence-resolution reports that turn those method surfaces into concrete promotion worklists without auto-promoting candidate evidence.
+- A SQLite Evidence Atlas and static explorer for molecules, polymorph pairs, predictions, evidence, blockers, viewer links, and release-boundary artifacts.
+- Candidate-safe molecule viewer pages that route reviewers to source-hosted COD/JSmol visualizers without redistributing coordinates.
 
 The repository is intentionally structured so benchmark curation, model inference, uncertainty calibration, and paper generation can progress independently while sharing one tested contract.
 
@@ -26,6 +43,7 @@ CrystalProbe should not compete head-on as another crystal-landscape generator. 
 
 - AMPETP is the first paper-ready single-structure pilot, with MACE, AIMNet2, UMA, sensitivity, figures, and research-bundle reports generated locally.
 - Modafinil, atomoxetine hydrochloride, and methylphenidate hydrochloride have local-only CCDC/CSD-derived CIF proof blocks selected and measured with MACE, AIMNet2, and UMA.
+- Modafinil has S/R enantiomer-labeled records available for local enantiomeric crystal comparison, but its stereochemistry dossier is still claim-scope blocked until racemate/enantiomer scope, solid-form labels, and promotion decision are curated.
 - The local execution queue is clear when the configured `.venv` and `.venv-fairchem` runners are available: dependency visibility, medication backend blockers, and queue runner blockers report no active execution blockers.
 - CPOSS records remain candidate-only. Verified benchmark and fingerprint-paper claims are blocked until experimental stability evidence, license decisions, disorder annotations, and promotion review produce at least 20 verified pairs.
 - Raw CCDC/CSD-derived CIFs and extracted coordinate-bearing blocks are not release artifacts unless license review explicitly permits redistribution.
@@ -35,10 +53,14 @@ CrystalProbe should not compete head-on as another crystal-landscape generator. 
 - Overclaiming is the largest risk. Current CPOSS outputs are candidate and inspection evidence, not benchmark truth.
 - Licensing is the second risk. CCDC/CSD-derived CIFs and coordinate-derived reports are not automatically redistributable; release-boundary reports must be reviewed before public sharing.
 - Model-energy interpretation is the third risk. MACE, AIMNet2, and UMA absolute energies are not automatically comparable across backends. CrystalProbe should compare rankings within a backend and use backend disagreement as an inspection signal unless calibration evidence says otherwise.
+- Stereochemistry scope confusion is an additional medication-specific risk. Enantiomer-labeled, racemic, salt, solvate, co-crystal, and true polymorph records can answer different questions; S/R rankings must not be collapsed into polymorph benchmark claims without the stereochemistry dossier passing its required fields.
 
 ## Quick Start
 
 ```powershell
+python scripts\build_public_artifact.py
+python scripts\check_public_artifact.py
+python scripts\run_public_demo.py --backend-smoke auto
 python -m pytest -q
 $env:PYTHONPATH='src'
 python -m crystalprobe.benchmark.cli validate data\benchmark\v0.1\manifest.jsonl

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="330" viewBox="0 0 1180 330" role="img">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="590.0" y="46.0" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" fill="#0f172a" text-anchor="middle">CrystalProbe public demo pipeline</text>
+<rect x="44.0" y="116.0" width="190.0" height="74.0" rx="8" fill="#eef2ff" stroke="#334155"/>
+<text x="60.0" y="144.0" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="400" fill="#111827" text-anchor="start">Manifest and</text>
+<text x="60.0" y="166.0" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="400" fill="#111827" text-anchor="start">evidence labels</text>
+<line x1="242.0" y1="153.0" x2="216.4" y2="153.0" stroke="#475569" stroke-width="2"/>
+<polygon points="216.4,153.0 206.4,147.0 206.4,159.0" fill="#475569"/>
+<rect x="224.4" y="116.0" width="190.0" height="74.0" rx="8" fill="#eef2ff" stroke="#334155"/>
+<text x="240.4" y="144.0" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="400" fill="#111827" text-anchor="start">Energy predictions</text>
+<text x="240.4" y="166.0" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="400" fill="#111827" text-anchor="start">and uncertainty</text>
+<line x1="422.4" y1="153.0" x2="396.8" y2="153.0" stroke="#475569" stroke-width="2"/>
+<polygon points="396.8,153.0 386.8,147.0 386.8,159.0" fill="#475569"/>
+<rect x="404.8" y="116.0" width="190.0" height="74.0" rx="8" fill="#eef2ff" stroke="#334155"/>
+<text x="420.8" y="144.0" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="400" fill="#111827" text-anchor="start">Ranking and slice</text>
+<text x="420.8" y="166.0" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="400" fill="#111827" text-anchor="start">metrics</text>
+<line x1="602.8" y1="153.0" x2="577.2" y2="153.0" stroke="#475569" stroke-width="2"/>
+<polygon points="577.2,153.0 567.2,147.0 567.2,159.0" fill="#475569"/>
+<rect x="585.2" y="116.0" width="190.0" height="74.0" rx="8" fill="#eef2ff" stroke="#334155"/>
+<text x="601.2" y="144.0" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="400" fill="#111827" text-anchor="start">Calibration and OOD</text>
+<text x="601.2" y="166.0" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="400" fill="#111827" text-anchor="start">checks</text>
+<line x1="783.2" y1="153.0" x2="757.6" y2="153.0" stroke="#475569" stroke-width="2"/>
+<polygon points="757.6,153.0 747.6,147.0 747.6,159.0" fill="#475569"/>
+<rect x="765.6" y="116.0" width="190.0" height="74.0" rx="8" fill="#eef2ff" stroke="#334155"/>
+<text x="781.6" y="144.0" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="400" fill="#111827" text-anchor="start">Claim gate</text>
+<line x1="963.6" y1="153.0" x2="938.0" y2="153.0" stroke="#475569" stroke-width="2"/>
+<polygon points="938.0,153.0 928.0,147.0 928.0,159.0" fill="#475569"/>
+<rect x="946.0" y="116.0" width="190.0" height="74.0" rx="8" fill="#eef2ff" stroke="#334155"/>
+<text x="962.0" y="144.0" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="400" fill="#111827" text-anchor="start">Reports and ledger</text>
+</svg>

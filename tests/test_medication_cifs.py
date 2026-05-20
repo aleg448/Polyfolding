@@ -62,6 +62,7 @@ def test_medication_cif_ingestion_indexes_selected_block(tmp_path):
     assert report["selected_block_count"] == 1
     assert report["targets"][0]["source_status"] == "coordinates_available_locally"
     assert report["targets"][0]["selected_blocks"][0]["ccdc_deposition"] == "CCDC 1"
+    assert report["targets"][0]["selected_blocks"][0]["coordinate_status"] == "coordinate_bearing"
     assert "fixture_parent" in medication_cif_ingestion_markdown(report)
 
 
@@ -84,6 +85,7 @@ def test_extract_selected_blocks_writes_standalone_cif(tmp_path):
     )
 
     assert report["rows"][0]["status"] == "extracted"
+    assert report["rows"][0]["coordinate_status"] == "coordinate_bearing"
     assert (output / "fixture_parent.cif").is_file()
 
 

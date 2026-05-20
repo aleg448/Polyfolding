@@ -1,0 +1,63 @@
+{
+  "schema_version": "0.1.0",
+  "status": "medication_polymorphism_evidence_scaffold",
+  "scope": "Local evidence dossier metadata for medication polymorphism benchmark promotion. This file does not contain coordinate-bearing CIF content.",
+  "records": [
+    {
+      "target": "modafinil",
+      "citation_doi": "10.1021/cg0700723",
+      "citation_url": "https://doi.org/10.1021/cg0700723",
+      "stability_ordering": "Racemic modafinil form I is reported as the most stable variety under ordinary temperature-pressure conditions; form III can become the defective steady-state form under dry high-energy milling.",
+      "stability_claim": "Crystal Growth & Design 2007 reports seven forms of racemic modafinil, identifies form I as the most stable variety in T,P space, and describes milling-condition-dependent form I/form III behavior.",
+      "form_label_map": {
+        "mapping_status": "blocked: local CIF blocks include enantiomer records and a form-I-like record; form III/form IV local coordinates are not mapped in the current selection.",
+        "source_forms": [
+          "racemic modafinil form I",
+          "racemic modafinil form III",
+          "additional racemic modafinil solid forms reported in the literature"
+        ],
+        "local_candidate_blocks": [
+          "(S)-(+)modafinil",
+          "(R)-(-)modafinil",
+          "I"
+        ]
+      },
+      "identity_decision": "same neutral modafinil formula for selected parent-like local blocks, but racemate/enantiomer scope remains unresolved for benchmark pairing",
+      "stereochemistry_decision": "blocked: local candidate set includes enantiomer-labeled records that must not be treated as polymorphs without scope resolution",
+      "license_decision": "local evidence only; no coordinate redistribution until CCDC/CSD terms are reviewed",
+      "disorder_decision": "pending: disorder status must be extracted from the mapped local form records",
+      "contradiction_search": "pending: source search found modafinil polymorph literature, but local block-to-source-form contradictions are not fully resolved",
+      "curator": "autonomous_crystalprobe",
+      "reviewer": "autonomous_crystalprobe_second_pass",
+      "promotion_decision": "do_not_promote_until_local_form_mapping_and_shared_backend_measurements"
+    },
+    {
+      "target": "atomoxetine hydrochloride",
+      "citation_doi": "10.1002/jps.20643",
+      "citation_url": "https://doi.org/10.1002/jps.20643",
+      "stability_ordering": "The commercial atomoxetine HCl form is reported as the thermodynamically stable polymorph; a metastable crystalline form and amorphous form were also found during development.",
+      "stability_claim": "Journal of Pharmaceutical Sciences 2006 reports stable and metastable atomoxetine HCl crystalline forms, with the stable form selected for commercial product and the metastable form determined by powder diffraction.",
+      "form_label_map": {
+        "mapping_status": "blocked: ATOMOXETINE_publ, YIGNEI, and YIGNEI01 need exact mapping to source stable/metastable form labels before promotion.",
+        "source_forms": [
+          "stable atomoxetine HCl form",
+          "metastable atomoxetine HCl form",
+          "amorphous atomoxetine HCl form"
+        ],
+        "local_candidate_blocks": [
+          "ATOMOXETINE_publ",
+          "YIGNEI",
+          "YIGNEI01"
+        ]
+      },
+      "identity_decision": "same atomoxetine hydrochloride salt formula family in selected local records",
+      "stereochemistry_decision": "pending: atomoxetine HCl local records need exact stereochemical/form-label scope checked against source forms",
+      "license_decision": "local evidence only; no coordinate redistribution until CCDC/CSD terms are reviewed",
+      "disorder_decision": "pending: disorder status must be extracted from the mapped local form records",
+      "contradiction_search": "blocked: source search supports stable/metastable atomoxetine HCl forms, but local YIGNEI and YIGNEI01 CIF records state that no coordinates were deposited; one additional coordinate-bearing form is needed before polymorph ranking.",
+      "curator": "autonomous_crystalprobe",
+      "reviewer": "autonomous_crystalprobe_second_pass",
+      "promotion_decision": "do_not_promote_until_local_form_mapping_and_shared_backend_measurements"
+    }
+  ]
+}

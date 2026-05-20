@@ -4,6 +4,7 @@ from crystalprobe.insight.figures import (
     backend_measurement_svg,
     guardrail_svg,
     medication_case_study_svg,
+    medication_stereochemistry_svg,
     provenance_flow_svg,
     sensitivity_delta_svg,
     structure_projection_svg,
@@ -55,6 +56,25 @@ def test_medication_case_study_svg_renders_targets_and_pending_runs():
 
     assert "modafinil" in svg
     assert "Pending backend runs" in svg
+
+
+def test_medication_stereochemistry_svg_renders_enantiomer_scope():
+    svg = medication_stereochemistry_svg(
+        {
+            "targets": [
+                {
+                    "target": "modafinil",
+                    "stereochemistry_status": "paired_enantiomer_records_available",
+                    "enantiomer_labeled_block_count": 2,
+                    "claim_scopes": ["enantiomeric_crystal_comparison"],
+                }
+            ]
+        }
+    )
+
+    assert "modafinil" in svg
+    assert "2 S/R blocks" in svg
+    assert "Enantiomer-labeled blocks" in svg
 
 
 def test_sensitivity_delta_svg_skips_reference():

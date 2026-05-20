@@ -12,6 +12,7 @@ FIGURE_REQUIREMENTS = [
     ("uncertainty_calibration", "Reliability/calibration curve"),
     ("diagnostic_failure_modes", "Diagnostic failure-mode rates"),
     ("medication_case_studies", "Representative medication case-study panel"),
+    ("medication_stereochemistry", "Medication stereochemistry scope panel"),
 ]
 
 
@@ -33,6 +34,9 @@ def fingerprint_artifact_plan(
         if figure_id == "medication_case_studies":
             ready = measured_medication_targets > 0
             blocker = "" if ready else "requires at least one measured medication target"
+        elif figure_id == "medication_stereochemistry":
+            ready = bool(generated_figures.get(figure_id))
+            blocker = "" if ready else "requires generated medication stereochemistry scope figure"
         else:
             ready = promoted_count >= minimum_pair_milestones[0]
             blocker = "" if ready else f"requires at least {minimum_pair_milestones[0]} verified benchmark pairs"
@@ -62,6 +66,7 @@ def fingerprint_artifact_plan(
         "policy": [
             "Fingerprint figures that report ranking accuracy or calibration require verified benchmark pairs.",
             "Medication case-study figures can use local-only measurements if release boundaries stay explicit.",
+            "Medication stereochemistry figures are claim-scope figures and must not imply polymorph benchmark promotion.",
             "Backend disagreement remains an inspection proxy until calibrated against verified pairs.",
         ],
     }

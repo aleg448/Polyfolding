@@ -214,6 +214,7 @@ def extract_selected_blocks(
                         "structure_id": selected["structure_id"],
                         "output": str(output),
                         "status": "extracted",
+                        "coordinate_status": _coordinate_status(block.text),
                     }
                 )
             except Exception as exc:  # pragma: no cover - exercised by integration path.
@@ -289,9 +290,18 @@ def _selected_block_report(block: Any, selected: dict[str, Any]) -> dict[str, An
         "z": tags.get("_cell_formula_units_Z"),
         "ccdc_deposition": selected.get("ccdc_deposition") or tags.get("_database_code_depnum_ccdc_archive"),
         "source_index": block.source_index,
+        "coordinate_status": _coordinate_status(block.text),
         "parse_status": parse_status,
         "parse_error": parse_error,
     }
+
+
+def _coordinate_status(text: str) -> str:
+    if "_atom_site_fract_x" in text or "_atom_site_Cartn_x" in text:
+        return "coordinate_bearing"
+    if "No coordinates were deposited" in text:
+        return "no_deposited_coordinates"
+    return "no_atom_site_coordinates"
 
 
 def _ase_parse_status(text: str) -> tuple[str, str | None]:

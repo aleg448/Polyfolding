@@ -57,6 +57,18 @@ def _environment_summary(environment_blockers: dict[str, Any]) -> str:
     )
 
 
+def _fastcsp_positioning_summary(has_fastcsp_plan: bool) -> str:
+    if has_fastcsp_plan:
+        return (
+            "FastCSP is treated as a complementary crystal-landscape generation and ranking workflow; "
+            "CrystalProbe focuses on audit, curation, calibration, and claim-readiness gates."
+        )
+    return (
+        "FastCSP positioning is not yet documented in the roadmap inputs; CrystalProbe should remain an audit "
+        "and claim-readiness layer rather than a competing generator."
+    )
+
+
 def _block_mapping_summary(cposs_block_mapping: dict[str, Any]) -> str:
     summary = (
         "CPOSS block-to-form mapping report covers "
@@ -91,6 +103,38 @@ def _block_mapping_next_step(cposs_block_mapping: dict[str, Any]) -> str:
     )
 
 
+def _stereochemistry_dossier_summary(dossier_report: dict[str, Any]) -> str:
+    dossiers = dossier_report.get("dossiers", [])
+    summary = (
+        "Medication stereochemistry dossier records "
+        f"{dossier_report.get('dossier_count', 0)} enantiomer-scope dossiers; "
+        f"{dossier_report.get('ready_for_claim_scope_count', 0)} are claim-scope ready."
+    )
+    if not dossiers:
+        return summary
+    top_dossier = dict(dossiers[0])
+    missing_fields = ", ".join(str(field) for field in top_dossier.get("missing_fields", [])) or "none"
+    return (
+        summary
+        + " Top dossier: "
+        f"{top_dossier.get('target')} `{top_dossier.get('dossier_status')}` "
+        f"missing {missing_fields}."
+    )
+
+
+def _stereochemistry_dossier_next_step(dossier_report: dict[str, Any]) -> str:
+    dossiers = dossier_report.get("dossiers", [])
+    for dossier in dossiers:
+        if dossier.get("dossier_status") != "claim_scope_ready":
+            next_actions = dossier.get("next_actions", [])
+            first_action = str(next_actions[0]) if next_actions else "resolve missing dossier fields."
+            return (
+                "Resolve medication stereochemistry dossier fields before citing S/R rankings as curated evidence, "
+                f"starting with {dossier.get('target')}: {first_action}"
+            )
+    return "Keep medication stereochemistry dossiers under release-boundary review before citing claim-scope panels."
+
+
 def roadmap_status_report(
     *,
     project_status: dict[str, Any],
@@ -100,6 +144,7 @@ def roadmap_status_report(
     cposs_block_mapping: dict[str, Any] | None = None,
     fingerprint_artifact_plan: dict[str, Any] | None = None,
     environment_blockers: dict[str, Any] | None = None,
+    medication_stereochemistry_dossier: dict[str, Any] | None = None,
     has_preprint_draft: bool,
     has_joss_draft: bool,
     has_fastcsp_plan: bool,
@@ -122,6 +167,7 @@ def roadmap_status_report(
     has_cposs_promotion_gate: bool = False,
     has_fingerprint_artifact_plan: bool = False,
     has_environment_blockers: bool = False,
+    has_medication_stereochemistry_dossier: bool = False,
 ) -> dict[str, Any]:
     """Map current local artifacts to the four CrystalProbe roadmap deliverables."""
 
@@ -136,6 +182,7 @@ def roadmap_status_report(
     pending_promotion_milestone = _first_pending_milestone(promotion_gate)
     artifact_plan = fingerprint_artifact_plan or {}
     environment_report = environment_blockers or {}
+    stereochemistry_dossier = medication_stereochemistry_dossier or {}
     deliverables = [
         {
             "deliverable": "Polymorph-pair benchmark",
@@ -182,6 +229,9 @@ def roadmap_status_report(
                 _promotion_gate_summary(promotion_gate)
                 if has_cposs_promotion_gate
                 else "CPOSS benchmark promotion gate is missing.",
+                _stereochemistry_dossier_summary(stereochemistry_dossier)
+                if has_medication_stereochemistry_dossier
+                else "Medication stereochemistry dossier is missing.",
             ],
             "remaining": [
                 "Upgrade literature-mapped candidates into verified records after block-to-form mapping is locked."
@@ -236,6 +286,9 @@ def roadmap_status_report(
                 else "Use the CPOSS promotion gate to keep verified pair records release-ready as the benchmark grows."
                 if has_cposs_promotion_gate
                 else "Add a promotion gate from evidence workpacks to canonical benchmark pair records.",
+                _stereochemistry_dossier_next_step(stereochemistry_dossier)
+                if has_medication_stereochemistry_dossier
+                else "Generate medication stereochemistry dossiers before using enantiomeric records as curated evidence.",
             ],
         },
         {
@@ -322,6 +375,7 @@ def roadmap_status_report(
             "status": "planned_not_integrated" if has_fastcsp_plan else "not_started",
             "evidence": [
                 "FastCSP integration plan exists." if has_fastcsp_plan else "No FastCSP integration plan found.",
+                _fastcsp_positioning_summary(has_fastcsp_plan),
                 "Docker/fairchem environment is documented and UMA access now verifies through fairchem.",
                 "OMAT24/OMol25 model guardrails are documented before scientific use."
                 if has_model_guardrails
@@ -331,7 +385,7 @@ def roadmap_status_report(
                 else "Active Python dependency blocker report is missing.",
             ],
             "remaining": [
-                "Wire CrystalProbe uncertainty/reporting outputs into a fairchem/UMA-compatible workflow.",
+                "Wire CrystalProbe audit, curation, and uncertainty reports around fairchem/UMA or FastCSP outputs without rebranding CrystalProbe as a crystal generator.",
                 "Read FastCSP code and identify small upstream PR targets.",
                 "Run a FastCSP-specific integration smoke test."
                 if docker_verified

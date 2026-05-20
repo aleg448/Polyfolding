@@ -1,0 +1,119 @@
+{
+  "schema_version": "0.1.0",
+  "status": "historical_opportunities_recorded",
+  "policy": [
+    "Historical methods are implementation opportunities, not validation evidence.",
+    "Only verified CrystalProbe records can support headline benchmark claims.",
+    "Optional scientific backends should record missing-backend states instead of hiding them."
+  ],
+  "opportunities": [
+    {
+      "opportunity_id": "blind_slice_replay",
+      "historical_thread": "CSP blind-test discipline",
+      "older_source": "Dunitz/Gavezzotti crystal predictability debate and CCDC blind-test lineage",
+      "old_blocker": "Expensive search, uneven evidence records, and hard-to-rebuild comparisons",
+      "modern_enabler": "MLIP inference, public artifact checks, structured evidence tiers, and CI",
+      "implementation_target": "blind_test_replay",
+      "publication_value": 5,
+      "implementation_readiness": 4,
+      "claim_risk": 4,
+      "claim_gate": "verified_records_only"
+    },
+    {
+      "opportunity_id": "motif_prior",
+      "historical_thread": "Hydrogen-bond and packing-motif priors",
+      "older_source": "Etter hydrogen-bond preference rules",
+      "old_blocker": "Manual motif interpretation and limited automated feature extraction",
+      "modern_enabler": "CIF parsers, curated functional-group tags, and deterministic report figures",
+      "implementation_target": "motif_prior",
+      "publication_value": 4,
+      "implementation_readiness": 5,
+      "claim_risk": 2,
+      "claim_gate": "explanatory_signal_only"
+    },
+    {
+      "opportunity_id": "landscape_audit",
+      "historical_thread": "Energy-landscape search and minima ranking",
+      "older_source": "Metropolis Monte Carlo, simulated annealing, basin-hopping, and replica exchange",
+      "old_blocker": "Many local minima, expensive relaxations, and weak provenance for search paths",
+      "modern_enabler": "GPU-backed MLIPs, cheap ensemble screening, and structured ledgers",
+      "implementation_target": "landscape_audit",
+      "publication_value": 5,
+      "implementation_readiness": 4,
+      "claim_risk": 3,
+      "claim_gate": "audit_signal_until_verified"
+    },
+    {
+      "opportunity_id": "free_energy_probe",
+      "historical_thread": "Free-energy estimation and enhanced sampling",
+      "older_source": "Zwanzig FEP, Bennett acceptance ratio, umbrella sampling, metadynamics, and REMD",
+      "old_blocker": "Slow sampling and limited convergence diagnostics for routine use",
+      "modern_enabler": "MLIP trajectories, parallel execution, bootstrap diagnostics, and abstention policies",
+      "implementation_target": "free_energy_probe",
+      "publication_value": 5,
+      "implementation_readiness": 3,
+      "claim_risk": 5,
+      "claim_gate": "method_demo_until_calibrated"
+    },
+    {
+      "opportunity_id": "active_evidence_triage",
+      "historical_thread": "Active learning and expensive black-box optimization",
+      "older_source": "Query by committee and Efficient Global Optimization",
+      "old_blocker": "Manual experiment selection and costly model evaluations",
+      "modern_enabler": "Backend disagreement, source-acquisition ledgers, and cheap queue scoring",
+      "implementation_target": "active_evidence_triage",
+      "publication_value": 5,
+      "implementation_readiness": 5,
+      "claim_risk": 2,
+      "claim_gate": "prioritization_not_claim"
+    },
+    {
+      "opportunity_id": "calibrated_abstention",
+      "historical_thread": "Bootstrap, conformal prediction, and calibrated abstention",
+      "older_source": "Efron's bootstrap and Vovk/Gammerman/Shafer conformal prediction",
+      "old_blocker": "Sparse calibration data and limited routine resampling",
+      "modern_enabler": "Stored predictions, repeated runs, verified slices, and deterministic reports",
+      "implementation_target": "calibrated_abstention",
+      "publication_value": 5,
+      "implementation_readiness": 4,
+      "claim_risk": 3,
+      "claim_gate": "verified_calibration_required"
+    },
+    {
+      "opportunity_id": "source_registry",
+      "historical_thread": "Crystallographic standards and databases",
+      "older_source": "CIF, CSD, and COD",
+      "old_blocker": "Provenance and licensing were often separated from downstream computation",
+      "modern_enabler": "Record-level schemas, release-boundary checks, and docs-as-tests",
+      "implementation_target": "source_registry_hardening",
+      "publication_value": 4,
+      "implementation_readiness": 5,
+      "claim_risk": 2,
+      "claim_gate": "license_review_required"
+    },
+    {
+      "opportunity_id": "reproducible_artifacts",
+      "historical_thread": "Literate and reproducible computational research",
+      "older_source": "Knuth, Claerbout/Karrenbach, and Buckheit/Donoho",
+      "old_blocker": "Fragile local environments and unrebuildable figures",
+      "modern_enabler": "Git, CI, JSON manifests, deterministic SVGs, and executable demos",
+      "implementation_target": "public_artifact_integrity",
+      "publication_value": 5,
+      "implementation_readiness": 5,
+      "claim_risk": 1,
+      "claim_gate": "rebuildable_public_artifacts"
+    },
+    {
+      "opportunity_id": "mlip_backend_disagreement",
+      "historical_thread": "Machine-learned interatomic potentials",
+      "older_source": "Behler-Parrinello neural network potentials and GAP",
+      "old_blocker": "Quantum-level energy surfaces were too expensive for broad search and sampling",
+      "modern_enabler": "MACE, AIMNet2, UMA, fairchem, and optional backend adapters",
+      "implementation_target": "backend_disagreement_fingerprint",
+      "publication_value": 5,
+      "implementation_readiness": 4,
+      "claim_risk": 3,
+      "claim_gate": "within_backend_or_calibrated_only"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="520" viewBox="0 0 1100 520" role="img">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="550.0" y="46.0" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" fill="#0f172a" text-anchor="middle">Optional backend readiness</text>
+<text x="56.0" y="88.0" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="400" fill="#475569" text-anchor="start">Scientific backends are useful when installed, but the public demo does not hide missing stacks.</text>
+<text x="60.0" y="114.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#334155" text-anchor="start">Backend</text>
+<text x="315.0" y="114.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#334155" text-anchor="start">Import</text>
+<text x="485.0" y="114.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#334155" text-anchor="start">Smoke</text>
+<text x="665.0" y="114.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#334155" text-anchor="start">Detail</text>
+<line x1="50.0" y1="104.0" x2="1044.0" y2="104.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="60.0" y="132.0" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#111827" text-anchor="start">aimnet2</text>
+<rect x="315.0" y="110.0" width="54.0" height="24.0" rx="12" fill="#f1f5f9" stroke="#94a3b8"/>
+<text x="342.0" y="127.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="#475569" text-anchor="middle">no</text>
+<rect x="485.0" y="110.0" width="71.0" height="24.0" rx="12" fill="#fef3c7" stroke="#d97706"/>
+<text x="520.5" y="127.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="#92400e" text-anchor="middle">skipped</text>
+<text x="665.0" y="128.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#475569" text-anchor="start">Required backend modules or ASE are not importable.</text>
+<line x1="50.0" y1="166.0" x2="1044.0" y2="166.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="60.0" y="194.0" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#111827" text-anchor="start">ase_cif</text>
+<rect x="315.0" y="172.0" width="54.0" height="24.0" rx="12" fill="#f1f5f9" stroke="#94a3b8"/>
+<text x="342.0" y="189.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="#475569" text-anchor="middle">no</text>
+<rect x="485.0" y="172.0" width="120.0" height="24.0" rx="12" fill="#f1f5f9" stroke="#94a3b8"/>
+<text x="545.0" y="189.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="#475569" text-anchor="middle">not applicable</text>
+<text x="665.0" y="190.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#475569" text-anchor="start">ase_cif unavailable: missing Python module(s): ase.</text>
+<text x="665.0" y="208.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#475569" text-anchor="start">Install ASE to parse CIF files and construct atomistic</text>
+<text x="665.0" y="226.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#475569" text-anchor="start">structures.</text>
+<line x1="50.0" y1="228.0" x2="1044.0" y2="228.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="60.0" y="256.0" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#111827" text-anchor="start">fastcsp</text>
+<rect x="315.0" y="234.0" width="54.0" height="24.0" rx="12" fill="#f1f5f9" stroke="#94a3b8"/>
+<text x="342.0" y="251.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="#475569" text-anchor="middle">no</text>
+<rect x="485.0" y="234.0" width="120.0" height="24.0" rx="12" fill="#f1f5f9" stroke="#94a3b8"/>
+<text x="545.0" y="251.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="#475569" text-anchor="middle">not applicable</text>
+<text x="665.0" y="252.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#475569" text-anchor="start">fastcsp unavailable: missing Python module(s):</text>
+<text x="665.0" y="270.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#475569" text-anchor="start">fairchem. Clone/install facebookresearch/fairchem with</text>
+<text x="665.0" y="288.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#475569" text-anchor="start">FastCSP extras.</text>
+<line x1="50.0" y1="290.0" x2="1044.0" y2="290.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="60.0" y="318.0" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#111827" text-anchor="start">mace_off</text>
+<rect x="315.0" y="296.0" width="54.0" height="24.0" rx="12" fill="#f1f5f9" stroke="#94a3b8"/>
+<text x="342.0" y="313.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="#475569" text-anchor="middle">no</text>
+<rect x="485.0" y="296.0" width="71.0" height="24.0" rx="12" fill="#fef3c7" stroke="#d97706"/>
+<text x="520.5" y="313.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="#92400e" text-anchor="middle">skipped</text>
+<text x="665.0" y="314.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#475569" text-anchor="start">Required backend modules or ASE are not importable.</text>
+<line x1="50.0" y1="352.0" x2="1044.0" y2="352.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="60.0" y="380.0" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#111827" text-anchor="start">uma</text>
+<rect x="315.0" y="358.0" width="54.0" height="24.0" rx="12" fill="#f1f5f9" stroke="#94a3b8"/>
+<text x="342.0" y="375.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="#475569" text-anchor="middle">no</text>
+<rect x="485.0" y="358.0" width="127.0" height="24.0" rx="12" fill="#fef3c7" stroke="#d97706"/>
+<text x="548.5" y="375.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="#92400e" text-anchor="middle">not implemented</text>
+<text x="665.0" y="376.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#475569" text-anchor="start">UMA availability is reported; public H2O smoke is not</text>
+<text x="665.0" y="394.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#475569" text-anchor="start">wired yet.</text>
+</svg>

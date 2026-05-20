@@ -59,6 +59,12 @@
         "scripts/build_source_discovery_report.py",
         "scripts/build_source_acquisition_report.py",
         "scripts/build_medication_cif_ingestion_report.py",
+        "scripts/build_medication_polymorphism_autonomy_report.py",
+        "scripts/build_medication_benchmark_evidence_report.py",
+        "scripts/build_medication_polymorph_generation_report.py",
+        "scripts/build_medication_seed_ranking_report.py",
+        "scripts/build_medication_stereochemistry_report.py",
+        "scripts/build_medication_stereochemistry_dossier.py",
         "scripts/build_medication_figures.py",
         "scripts/build_medication_research_bundle.py"
       ],
@@ -67,7 +73,14 @@
         "outputs/crystalprobe_source_acquisition.md",
         "outputs/medication_cif_ingestion.md",
         "outputs/medication_measurement_summary.md",
+        "outputs/medication_polymorphism_autonomy.md",
+        "outputs/medication_benchmark_evidence.md",
+        "outputs/medication_polymorph_generation.md",
+        "outputs/medication_seed_ranking.md",
+        "outputs/medication_stereochemistry.md",
+        "outputs/medication_stereochemistry_dossier.md",
         "outputs/figures/medication_case_study_coverage.svg",
+        "outputs/figures/medication_stereochemistry_scope.svg",
         "outputs/medication_research_bundle_manifest.md"
       ]
     },
@@ -78,12 +91,14 @@
         "scripts/seed_cposs_block_form_mapping_manifest.py",
         "scripts/build_cposs_block_mapping_report.py",
         "scripts/build_cposs_block_mapping_dossier.py",
-        "scripts/build_cposs_promoted_pairs.py"
+        "scripts/build_cposs_promoted_pairs.py",
+        "scripts/build_cposs_promotion_burndown_report.py"
       ],
       "primary_outputs": [
         "outputs/cposs_block_form_mapping.md",
         "outputs/cposs_block_mapping_dossier.md",
         "outputs/cposs_promotion_gate.md",
+        "outputs/cposs_promotion_burndown.md",
         "outputs/cposs_promoted_pairs.jsonl"
       ]
     },
@@ -173,10 +188,12 @@
       "id": "publication_readiness",
       "label": "Publication readiness",
       "scripts": [
-        "scripts/build_publication_readiness_report.py"
+        "scripts/build_publication_readiness_report.py",
+        "scripts/build_risk_register_report.py"
       ],
       "primary_outputs": [
-        "outputs/crystalprobe_publication_readiness.md"
+        "outputs/crystalprobe_publication_readiness.md",
+        "outputs/crystalprobe_risk_register.md"
       ]
     },
     {
@@ -190,23 +207,78 @@
       ]
     },
     {
+      "id": "molecule_viewers",
+      "label": "Candidate molecule viewers",
+      "scripts": [
+        "scripts/build_molecule_viewer_report.py"
+      ],
+      "primary_outputs": [
+        "outputs/crystalprobe_molecule_viewers.md",
+        "docs/molecule_viewers.md",
+        "docs/viewers/paracetamol_form_i_vs_form_ii_seed.html"
+      ]
+    },
+    {
+      "id": "evidence_atlas",
+      "label": "Evidence atlas database and explorer",
+      "scripts": [
+        "scripts/build_evidence_atlas.py"
+      ],
+      "primary_outputs": [
+        "outputs/crystalprobe_evidence_atlas.sqlite",
+        "outputs/crystalprobe_evidence_atlas.json",
+        "outputs/crystalprobe_evidence_atlas.md",
+        "docs/evidence_atlas.md",
+        "docs/evidence_atlas.html"
+      ]
+    },
+    {
+      "id": "historical_research_cycle",
+      "label": "Historical research cycle and evidence packet",
+      "scripts": [
+        "scripts/build_historical_opportunity_report.py",
+        "scripts/build_active_evidence_triage_report.py",
+        "scripts/build_evidence_packet_report.py",
+        "scripts/build_evidence_resolution_report.py",
+        "scripts/build_historical_research_modules_report.py",
+        "scripts/run_research_cycle.py"
+      ],
+      "primary_outputs": [
+        "outputs/crystalprobe_historical_opportunities.md",
+        "outputs/crystalprobe_active_evidence_triage.md",
+        "outputs/crystalprobe_evidence_packet.md",
+        "outputs/crystalprobe_evidence_resolution.md",
+        "outputs/crystalprobe_historical_research_modules.md",
+        "outputs/crystalprobe_research_cycle.md"
+      ]
+    },
+    {
       "id": "writing_and_status",
       "label": "Writing and roadmap artifacts",
       "scripts": [
         "scripts/build_preliminary_findings_memo.py",
         "scripts/build_chemrxiv_preprint_draft.py",
+        "scripts/build_status_chain.py",
         "scripts/build_project_status_dashboard.py",
         "scripts/build_roadmap_status_report.py",
         "scripts/build_release_boundary_report.py",
+        "scripts/build_risk_register_report.py",
         "scripts/build_source_discovery_report.py",
         "scripts/build_source_acquisition_report.py",
         "scripts/build_medication_cif_ingestion_report.py",
+        "scripts/build_medication_polymorphism_autonomy_report.py",
+        "scripts/build_medication_benchmark_evidence_report.py",
+        "scripts/build_medication_polymorph_generation_report.py",
+        "scripts/build_medication_seed_ranking_report.py",
+        "scripts/build_medication_stereochemistry_report.py",
+        "scripts/build_medication_stereochemistry_dossier.py",
         "scripts/build_medication_figures.py",
         "scripts/build_medication_research_bundle.py",
         "scripts/seed_cposs_block_form_mapping_manifest.py",
         "scripts/build_cposs_block_mapping_report.py",
         "scripts/build_cposs_block_mapping_dossier.py",
         "scripts/build_cposs_promoted_pairs.py",
+        "scripts/build_cposs_promotion_burndown_report.py",
         "scripts/build_fingerprint_artifact_plan.py",
         "scripts/build_evidence_tier_report.py",
         "scripts/build_substance_profiles.py",
@@ -215,24 +287,35 @@
         "scripts/build_environment_blockers_report.py",
         "scripts/build_execution_unblock_report.py",
         "scripts/build_handoff_report.py",
+        "scripts/build_report_consistency_report.py",
         "scripts/build_publication_readiness_report.py",
         "scripts/build_uncertainty_proxy_report.py"
       ],
       "primary_outputs": [
         "outputs/crystalprobe_preliminary_findings_memo.md",
         "outputs/crystalprobe_chemrxiv_preprint_draft.md",
+        "outputs/crystalprobe_status_chain.json",
         "outputs/crystalprobe_project_status.md",
         "outputs/crystalprobe_roadmap_status.md",
         "outputs/crystalprobe_release_boundary.md",
+        "outputs/crystalprobe_risk_register.md",
         "outputs/crystalprobe_source_discovery.md",
         "outputs/crystalprobe_source_acquisition.md",
         "outputs/medication_cif_ingestion.md",
         "outputs/medication_measurement_summary.md",
+        "outputs/medication_polymorphism_autonomy.md",
+        "outputs/medication_benchmark_evidence.md",
+        "outputs/medication_polymorph_generation.md",
+        "outputs/medication_seed_ranking.md",
+        "outputs/medication_stereochemistry.md",
+        "outputs/medication_stereochemistry_dossier.md",
         "outputs/figures/medication_case_study_coverage.svg",
+        "outputs/figures/medication_stereochemistry_scope.svg",
         "outputs/medication_research_bundle_manifest.md",
         "outputs/cposs_block_form_mapping.md",
         "outputs/cposs_block_mapping_dossier.md",
         "outputs/cposs_promotion_gate.md",
+        "outputs/cposs_promotion_burndown.md",
         "outputs/crystalprobe_fingerprint_artifact_plan.md",
         "outputs/crystalprobe_evidence_tiers.md",
         "outputs/crystalprobe_substance_profiles.md",
@@ -241,6 +324,7 @@
         "outputs/crystalprobe_environment_blockers.md",
         "outputs/crystalprobe_execution_unblock_report.md",
         "outputs/crystalprobe_handoff_summary.md",
+        "outputs/crystalprobe_report_consistency.md",
         "outputs/crystalprobe_publication_readiness.md",
         "outputs/crystalprobe_uncertainty_proxy_v0.md"
       ]

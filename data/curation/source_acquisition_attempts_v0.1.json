@@ -60,8 +60,13 @@
     {
       "name": "atomoxetine hydrochloride",
       "task": "validate_coordinate_access",
-      "status": "measured_local_only",
+      "status": "partial_measured_local_only_coordinate_seed_gap",
       "source_evidence": [
+        {
+          "label": "Stable and metastable atomoxetine HCl forms",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/16732589/",
+          "evidence": "Reports two atomoxetine HCl polymorphs and an amorphous form; the stable commercial form was determined by single-crystal diffraction and the metastable form by powder diffraction."
+        },
         {
           "label": "Powder Diffraction article",
           "url": "https://www.cambridge.org/core/journals/powder-diffraction/article/crystal-structure-of-atomoxetine-hydrochloride-strattera-c17h22nocl/7D6D94A8FB8058C6FD6A61BB7E24E99A",
@@ -82,9 +87,9 @@
       "local_coordinate_sources": [
         {
           "path": "data/sources/ccdc/1302784-1519130.cif",
-          "status": "available_local_only",
+          "status": "partial_coordinate_bearing_available_local_only",
           "selected_manifest": "data/curation/medication_cif_selection_v0.1.json",
-          "notes": "Contains CCDC 1519130 and related atomoxetine hydrochloride records."
+          "notes": "Contains coordinate-bearing CCDC 1519130; local YIGNEI and YIGNEI01 records state that no coordinates were deposited and cannot be used as measured seed structures."
         }
       ],
       "measurement_outputs": [
@@ -93,9 +98,10 @@
         "outputs/medication_measurements/atomoxetine_hcl_1519130_uma.json"
       ],
       "required_user_input": [
-        "Confirm whether the atomoxetine hydrochloride CIF bundle may be used only locally or may also be referenced in a public evidence bundle."
+        "Confirm whether the atomoxetine hydrochloride CIF bundle may be used only locally or may also be referenced in a public evidence bundle.",
+        "Find or import at least one additional coordinate-bearing atomoxetine HCl form before any atomoxetine polymorph ranking or generated-form calibration claim."
       ],
-      "claim_boundary": "coordinates_available_local_only_measurement_allowed_no_redistribution"
+      "claim_boundary": "single_coordinate_bearing_seed_measured_local_only_no_polymorph_ranking"
     },
     {
       "name": "methylphenidate hydrochloride",

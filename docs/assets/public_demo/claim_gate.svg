@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1050" height="470" viewBox="0 0 1050 470" role="img">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="525.0" y="46.0" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" fill="#0f172a" text-anchor="middle">CrystalProbe claim gate</text>
+<text x="56.0" y="88.0" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="400" fill="#475569" text-anchor="start">Benchmark claims are allowed only from verified evidence slices.</text>
+<text x="56.0" y="156.0" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" fill="#111827" text-anchor="start">candidate</text>
+<text x="56.0" y="182.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="400" fill="#475569" text-anchor="start">workflow smoke only</text>
+<rect x="250.0" y="132.0" width="520.0" height="28.0" rx="4" fill="#e5e7eb" stroke="none"/>
+<rect x="250.0" y="132.0" width="520.0" height="28.0" rx="4" fill="#f59e0b" stroke="none"/>
+<text x="788.0" y="153.0" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="400" fill="#111827" text-anchor="start">5 records</text>
+<text x="250.0" y="186.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="400" fill="#334155" text-anchor="start">No. Candidate records support workflow smoke tests only.</text>
+<text x="56.0" y="234.0" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" fill="#111827" text-anchor="start">reviewed</text>
+<text x="56.0" y="260.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="400" fill="#475569" text-anchor="start">internal analysis</text>
+<rect x="250.0" y="210.0" width="520.0" height="28.0" rx="4" fill="#e5e7eb" stroke="none"/>
+<rect x="250.0" y="210.0" width="0.0" height="28.0" rx="4" fill="#2563eb" stroke="none"/>
+<text x="788.0" y="231.0" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="400" fill="#111827" text-anchor="start">0 records</text>
+<text x="250.0" y="264.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="400" fill="#334155" text-anchor="start">Limited. Reviewed records can support internal analysis, not headline claims.</text>
+<text x="56.0" y="312.0" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" fill="#111827" text-anchor="start">verified</text>
+<text x="56.0" y="338.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="400" fill="#475569" text-anchor="start">headline claims allowed</text>
+<rect x="250.0" y="288.0" width="520.0" height="28.0" rx="4" fill="#e5e7eb" stroke="none"/>
+<rect x="250.0" y="288.0" width="0.0" height="28.0" rx="4" fill="#16a34a" stroke="none"/>
+<text x="788.0" y="309.0" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="400" fill="#111827" text-anchor="start">0 records</text>
+<text x="250.0" y="342.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="400" fill="#334155" text-anchor="start">Yes, but only for verified-only benchmark slices.</text>
+<text x="56.0" y="422.0" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="400" fill="#0f172a" text-anchor="start">Decision: blocked_headline_benchmark_claims_until_verified_records_exist</text>
+</svg>

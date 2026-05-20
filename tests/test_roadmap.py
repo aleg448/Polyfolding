@@ -75,6 +75,8 @@ def test_roadmap_status_markdown_contains_remaining_work():
     assert "CBZ backend-disagreement inspection" in markdown
     assert "UMA access now verifies" in markdown
     assert "UMA reference measurement" in markdown
+    assert "FastCSP is treated as a complementary crystal-landscape generation and ranking workflow" in markdown
+    assert "without rebranding CrystalProbe as a crystal generator" in markdown
 
 
 def test_roadmap_status_records_completed_uma_contrast():
@@ -365,3 +367,47 @@ def test_roadmap_status_uses_environment_blockers():
         "Active-environment blocker report records optional dependency visibility for reproducible troubleshooting."
         in software["evidence"]
     )
+
+
+def test_roadmap_status_uses_medication_stereochemistry_dossier():
+    report = roadmap_status_report(
+        project_status={
+            "ampetp": {"readiness_status": "paper_pilot_ready"},
+            "verification": {"latest_local_test_summary": "1 passed", "docker_status": "verified"},
+        },
+        readiness={"status": "paper_pilot_ready"},
+        cposs_bridge={"family_count": 2, "structure_count": 16},
+        medication_stereochemistry_dossier={
+            "dossier_count": 1,
+            "ready_for_claim_scope_count": 0,
+            "dossiers": [
+                {
+                    "target": "modafinil",
+                    "dossier_status": "curation_required",
+                    "missing_fields": [
+                        "source_racemate_or_enantiomer_scope",
+                        "solid_form_label_map",
+                        "promotion_decision",
+                    ],
+                    "next_actions": [
+                        "Lock whether each source form is racemic, single-enantiomer, conglomerate, or unresolved."
+                    ],
+                }
+            ],
+        },
+        has_preprint_draft=True,
+        has_joss_draft=True,
+        has_fastcsp_plan=True,
+        has_medication_stereochemistry_dossier=True,
+    )
+
+    benchmark = report["deliverables"][0]
+    assert (
+        "Medication stereochemistry dossier records 1 enantiomer-scope dossiers; "
+        "0 are claim-scope ready. Top dossier: modafinil `curation_required` missing "
+        "source_racemate_or_enantiomer_scope, solid_form_label_map, promotion_decision."
+    ) in benchmark["evidence"]
+    assert (
+        "Resolve medication stereochemistry dossier fields before citing S/R rankings as curated evidence, "
+        "starting with modafinil: Lock whether each source form is racemic, single-enantiomer, conglomerate, or unresolved."
+    ) in benchmark["remaining"]

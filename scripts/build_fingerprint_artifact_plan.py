@@ -24,18 +24,20 @@ def main() -> int:
     parser.add_argument("--promotion-gate", type=Path, default=Path("outputs/cposs_promotion_gate.json"))
     parser.add_argument("--medication-measurements", type=Path, default=Path("outputs/medication_measurement_summary.json"))
     parser.add_argument("--medication-figure", type=Path, default=Path("outputs/figures/medication_case_study_coverage.svg"))
+    parser.add_argument("--medication-stereochemistry-figure", type=Path, default=Path("outputs/figures/medication_stereochemistry_scope.svg"))
     parser.add_argument("--json-out", type=Path, default=Path("outputs/crystalprobe_fingerprint_artifact_plan.json"))
     parser.add_argument("--md-out", type=Path, default=Path("outputs/crystalprobe_fingerprint_artifact_plan.md"))
     args = parser.parse_args()
 
+    generated_figures = {}
+    if args.medication_figure.exists():
+        generated_figures["medication_case_studies"] = str(args.medication_figure)
+    if args.medication_stereochemistry_figure.exists():
+        generated_figures["medication_stereochemistry"] = str(args.medication_stereochemistry_figure)
     report = fingerprint_artifact_plan(
         promotion_gate=_load_optional(args.promotion_gate),
         medication_measurements=_load_optional(args.medication_measurements),
-        generated_figures={
-            "medication_case_studies": str(args.medication_figure)
-        }
-        if args.medication_figure.exists()
-        else {},
+        generated_figures=generated_figures,
     )
     atomic_write_json(args.json_out, report)
     atomic_write_text(args.md_out, fingerprint_artifact_plan_markdown(report))

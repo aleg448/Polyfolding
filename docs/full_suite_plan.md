@@ -16,9 +16,9 @@ This repository implements the CrystalProbe vertical slice as a dependency-light
 - AGI-assisted evidence-tier policy for work that lacks human database validation or redistributable coordinates.
 - Backend-disagreement metrics over deterministic multi-backend sensitivity summaries.
 - CPOSS AGI-assisted candidate cards with claim boundaries and follow-up backend commands.
-- Medication CIF selection, ingestion, source-acquisition, local measurement, and backend-blocker reporting.
-- Environment, execution-unblock, handoff, and publication-readiness reports for unattended or long-running work sessions.
-- CPOSS promotion gate from evidence workpack entries to canonical benchmark records, with field-completion, curation-queue, block-to-form mapping, and chemistry-family summaries.
+- Medication CIF selection, ingestion, source-acquisition, local measurement, autonomous polymorphism triage, and backend-blocker reporting.
+- Environment, execution-unblock, handoff, publication-readiness, and risk-register reports for unattended or long-running work sessions.
+- CPOSS promotion gate from evidence workpack entries to canonical benchmark records, with field-completion, curation-queue, block-to-form mapping, promotion burn-down, and chemistry-family summaries.
 - Fingerprint artifact readiness gating, including pre-benchmark CBZ/IBP candidate-slice tracking and a generated medication case-study coverage figure.
 - Paper outlines for the fingerprint, data descriptor, and JOSS outputs.
 
@@ -101,17 +101,37 @@ Medication CIF ingestion is generated at `outputs/medication_cif_ingestion.json`
 
 The medication measurement summary is generated at `outputs/medication_measurement_summary.json` and `outputs/medication_measurement_summary.md`. It currently records three measured local-only medication targets: modafinil, atomoxetine hydrochloride, and methylphenidate hydrochloride. Each selected proof block now has MACE, AIMNet2, and UMA measurements. `data/curation/medication_backend_blockers_v0.1.json` is therefore in the `medication_backend_blockers_cleared` state with zero pending backend commands.
 
+The medication polymorphism autonomy report is generated at `outputs/medication_polymorphism_autonomy.json` and `outputs/medication_polymorphism_autonomy.md`. It is the first local autonomous triage layer for medication polymorphism detection: it groups eligible same-formula parent-like CIF blocks, checks whether at least two structures share a measured backend, and records blockers for stereochemistry, form-label, license, and measurement coverage. It deliberately emits unverified autonomous candidates rather than verified polymorphism claims.
+
+Medication stereochemistry is now treated as a first-class claim scope rather than only a blocker. Enantiomer-labeled records such as modafinil S/R forms can support enantiomeric crystal comparison, while still being blocked from polymorph promotion until racemate/enantiomer/form-label scope is explicit. This matters for medication crystallography because enantiomers, racemates, salts, solvates, co-crystals, and true polymorphs can each have different stability and pharmacological relevance.
+
+The medication stereochemistry report is generated at `outputs/medication_stereochemistry.json` and `outputs/medication_stereochemistry.md`. It summarizes enantiomer-scope targets, S/R block counts, rankability, and blockers, keeping enantiomeric crystal comparison as a separate evidence lane from polymorph benchmark promotion.
+
+The medication stereochemistry dossier is generated at `outputs/medication_stereochemistry_dossier.json` and `outputs/medication_stereochemistry_dossier.md`. It converts paired S/R evidence into a curator checklist for source racemate/enantiomer scope, local block stereochemistry, solid-form labels, ranking interpretation, and promotion decision.
+
+The medication stereochemistry scope figure is generated at `outputs/figures/medication_stereochemistry_scope.svg` and is tracked by the fingerprint artifact plan as a medication claim-scope panel, not a benchmark ranking or calibration figure.
+
+The medication benchmark evidence gate is generated at `outputs/medication_benchmark_evidence.json` and `outputs/medication_benchmark_evidence.md`, with optional source dossiers stored in `data/curation/medication_polymorphism_evidence_v0.1.json`. This is the bridge toward verified benchmark truth: autonomous candidates stay unverified until citation, stability ordering, form-label map, identity/stereochemistry decisions, contradiction search, disorder, license, curator, reviewer, and promotion decision fields are complete. Without human expert review, the maximum tier remains `source_verified_autonomous_benchmark_candidate`.
+
+The medication polymorph generation readiness report is generated at `outputs/medication_polymorph_generation.json` and `outputs/medication_polymorph_generation.md`. It starts the generation side without overclaiming: selected local CIF blocks are treated as local-only seed structures, source forms are listed from the evidence dossiers, and each target receives a next generation step such as shared-backend measurement, evidence-gate resolution, or later CSP/FastCSP-style candidate generation.
+
+The medication seed ranking report is generated at `outputs/medication_seed_ranking.json` and `outputs/medication_seed_ranking.md`. It ranks only same-backend seed measurements and normalizes energy to the candidate formula unit. This makes modafinil locally inspectable within MACE while preserving the blocker that enantiomer/form-label evidence must be resolved before verified polymorphism claims.
+
 The FAIR Chemistry model guardrail report is generated at `outputs/fairchem_model_guardrails.json` and `outputs/fairchem_model_guardrails.md`. It records that UMA and OMC25 are locally smoke-verified for current CrystalProbe paths, while OMAT24 and OMol25 remain validation-blocked for CrystalProbe scientific claims until task-specific workflows and reference policies are implemented.
 
 The uncertainty proxy v0 report is generated at `outputs/crystalprobe_uncertainty_proxy_v0.json` and `outputs/crystalprobe_uncertainty_proxy_v0.md`. It aggregates AMPETP sensitivity disagreement and CPOSS high-priority disagreement evidence into target-level inspection decisions. It is an uncalibrated backend-behavior proxy, not a thermodynamic uncertainty estimate.
 
 The CPOSS promotion gate is generated at `outputs/cposs_promotion_gate.json` and `outputs/cposs_promotion_gate.md`, with promoted records written to `outputs/cposs_promoted_pairs.jsonl` only after stability evidence, license decisions, disorder annotations, curator/reviewer, and promotion decision are complete. Evidence-populated but not block-verified candidates are classified as `literature_mapped_candidate`, not benchmark records. The gate now includes an evidence field-completion matrix, a priority-sorted curation queue, per-candidate upgrade requirements, and a chemistry-family summary covering ACR, CBZ, FLU, and IBP. The separate block-to-form report records the exact block-level mapping blockers preventing upgrade from literature-mapped candidates to verified benchmark records. The workpack is expanded beyond the first 20-entry curation milestone while remaining at 0 verified benchmark pairs.
 
+The CPOSS promotion burn-down report is generated at `outputs/cposs_promotion_burndown.json` and `outputs/cposs_promotion_burndown.md`. It converts the promotion gate and block-to-form report into a first-20-pair action plan: selected candidate pairs, deduplicated block rows, blocker counts, and acceptance gates. This is the operational bridge between candidate inspection and verified benchmark promotion.
+
 The fingerprint artifact plan is generated at `outputs/crystalprobe_fingerprint_artifact_plan.json` and `outputs/crystalprobe_fingerprint_artifact_plan.md`. It blocks ranking-accuracy and calibration figures until at least 20 verified benchmark pairs exist, while the medication case-study panel is now ready and generated at `outputs/figures/medication_case_study_coverage.svg`. The plan also surfaces the same ACR/CBZ/FLU/IBP candidate-family slices as pre-benchmark planning context without promoting them into paper-facing benchmark metrics.
 
 The substance-profile report is generated at `outputs/crystalprobe_substance_profiles.json` and `outputs/crystalprobe_substance_profiles.md`. It creates a bounded profile for each current medication-priority target, merging the therapeutic queue, local CCDC source records, lisdexamfetamine proof layers, evidence tiers, CPOSS backend disagreement, and next actions. This is now the preferred overview for deciding which substance to measure or curate next.
 
 The measurement and curation queue is generated at `outputs/crystalprobe_measurement_queue.json` and `outputs/crystalprobe_measurement_queue.md`. It converts substance profiles into ranked actions: coordinate acquisition, backend-disagreement inspection, source discovery, guarded pilot maintenance, and source seeding. The queue now consumes the environment-blockers report and records zero active runner blockers when the configured `.venv` and `.venv-fairchem` runners are available.
+
+The queue now has a dedicated `curate_stereochemistry_scope` action for enantiomer-labeled medication evidence. Modafinil currently uses this lane so S/R and racemate/form labels are curated before any polymorph benchmark interpretation.
 
 The local report rebuild order is documented in `docs/report_workflows.md` and mirrored by `data/curation/report_workflows_v0.1.json`. This covers AMPETP, CPOSS, therapeutic contrast, writing/status artifacts, and local verification commands so the generated evidence can be rebuilt before paper or release decisions.
 
@@ -120,6 +140,8 @@ A conservative release-boundary report is generated at `outputs/crystalprobe_rel
 The execution-unblock report is generated at `outputs/crystalprobe_execution_unblock_report.json` and `outputs/crystalprobe_execution_unblock_report.md`. It currently reports the execution queue as clear: active dependency visibility, configured runner availability, medication backend blockers, and queue-level runner blockers have no unresolved execution blockers.
 
 The publication-readiness report is generated at `outputs/crystalprobe_publication_readiness.json` and `outputs/crystalprobe_publication_readiness.md`. It remains intentionally blocked for scientific/release reasons: 0 verified CPOSS pairs are promoted, benchmark-grade fingerprint figures require verified pairs, local-only coordinate artifacts need license review, and medication CIF public-reference policy still needs human input.
+
+The risk register is generated at `outputs/crystalprobe_risk_register.json` and `outputs/crystalprobe_risk_register.md`. It turns the three main project risks into tested, generated gates: overclaiming candidate evidence, CCDC/CSD licensing, and cross-backend energy interpretation. It also tracks FastCSP positioning drift so CrystalProbe remains framed as the audit, curation, calibration, and claim-readiness layer around candidate crystal-landscape outputs.
 
 ## Scientific Release Criteria
 

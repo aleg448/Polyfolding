@@ -28,6 +28,7 @@ def main() -> int:
     parser.add_argument("--cposs-disagreement", type=Path, default=Path("outputs/cposs_high_priority_backend_disagreement.json"))
     parser.add_argument("--source-discovery", type=Path, default=Path("outputs/crystalprobe_source_discovery.json"))
     parser.add_argument("--source-acquisition", type=Path, default=Path("outputs/crystalprobe_source_acquisition.json"))
+    parser.add_argument("--medication-stereochemistry", type=Path, default=Path("outputs/medication_stereochemistry.json"))
     parser.add_argument("--json-out", type=Path, default=Path("outputs/crystalprobe_substance_profiles.json"))
     parser.add_argument("--md-out", type=Path, default=Path("outputs/crystalprobe_substance_profiles.md"))
     args = parser.parse_args()
@@ -40,6 +41,7 @@ def main() -> int:
         cposs_disagreement=_load_optional(args.cposs_disagreement),
         source_discovery=_load_optional(args.source_discovery),
         source_acquisition=_load_optional(args.source_acquisition),
+        medication_stereochemistry=_load_optional(args.medication_stereochemistry),
     )
     atomic_write_json(args.json_out, report)
     atomic_write_text(args.md_out, substance_profile_markdown(report))

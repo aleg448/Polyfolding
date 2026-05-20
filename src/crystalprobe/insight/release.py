@@ -98,19 +98,54 @@ def _classify(path: str) -> ReleaseRecord:
             reason="Evidence-tier policy output contains claim-boundary metadata, not raw gated coordinates.",
         )
     if normalized in {
+        "outputs/crystalprobe_evidence_atlas.json",
+        "outputs/crystalprobe_evidence_atlas.md",
+        "outputs/crystalprobe_evidence_atlas.sqlite",
+    }:
+        return ReleaseRecord(
+            path=path,
+            category="candidate_public",
+            reason="Evidence-atlas database contains normalized metadata, claim gates, links, and release categories without raw coordinate payloads.",
+        )
+    if normalized in {
         "outputs/crystalprobe_environment_blockers.json",
         "outputs/crystalprobe_environment_blockers.md",
         "outputs/crystalprobe_execution_unblock_report.json",
         "outputs/crystalprobe_execution_unblock_report.md",
         "outputs/crystalprobe_handoff_summary.json",
         "outputs/crystalprobe_handoff_summary.md",
+        "outputs/crystalprobe_active_evidence_triage.json",
+        "outputs/crystalprobe_active_evidence_triage.md",
+        "outputs/crystalprobe_evidence_packet.json",
+        "outputs/crystalprobe_evidence_packet.md",
+        "outputs/crystalprobe_evidence_resolution.json",
+        "outputs/crystalprobe_evidence_resolution.md",
+        "outputs/crystalprobe_historical_opportunities.json",
+        "outputs/crystalprobe_historical_opportunities.md",
+        "outputs/crystalprobe_historical_research_modules.json",
+        "outputs/crystalprobe_historical_research_modules.md",
+        "outputs/crystalprobe_molecule_viewers.json",
+        "outputs/crystalprobe_molecule_viewers.md",
+        "outputs/crystalprobe_project_status.json",
+        "outputs/crystalprobe_project_status.md",
         "outputs/crystalprobe_publication_readiness.json",
         "outputs/crystalprobe_publication_readiness.md",
+        "outputs/crystalprobe_release_boundary.json",
+        "outputs/crystalprobe_release_boundary.md",
+        "outputs/crystalprobe_report_consistency.json",
+        "outputs/crystalprobe_report_consistency.md",
+        "outputs/crystalprobe_research_cycle.json",
+        "outputs/crystalprobe_research_cycle.md",
+        "outputs/crystalprobe_risk_register.json",
+        "outputs/crystalprobe_risk_register.md",
+        "outputs/crystalprobe_roadmap_status.json",
+        "outputs/crystalprobe_roadmap_status.md",
+        "outputs/crystalprobe_status_chain.json",
     }:
         return ReleaseRecord(
             path=path,
             category="candidate_public",
-            reason="Execution, publication-readiness, handoff, or active-environment report contains status metadata, not gated coordinates.",
+            reason="Execution, roadmap, publication-readiness, risk, handoff, status-chain, or active-environment report contains status metadata, not gated coordinates.",
         )
     if normalized in {
         "outputs/medication_research_bundle_manifest.json",
@@ -121,13 +156,13 @@ def _classify(path: str) -> ReleaseRecord:
             category="license_review_required",
             reason="Medication bundle manifest hashes local CCDC/CSD-derived measurements; useful for internal review but requires source-license review before public sharing.",
         )
-    if normalized == "outputs/figures/medication_case_study_coverage.svg":
+    if normalized.startswith("outputs/figures/medication_") and suffix == ".svg":
         return ReleaseRecord(
             path=path,
             category="license_review_required",
-            reason="Medication case-study figure summarizes CCDC/CSD-derived local measurements and requires source-license review before public sharing.",
+            reason="Medication figure summarizes CCDC/CSD-derived local measurements or claim scopes and requires source-license review before public sharing.",
         )
-    if normalized.startswith(("src/", "scripts/", "tests/", "docs/", "data/curation/")) or normalized in {
+    if normalized.startswith(("src/", "scripts/", "tests/", "docs/", "data/curation/", "data/public_cases/")) or normalized in {
         "README.md",
         "BLOCKERS.md",
     }:
@@ -150,7 +185,7 @@ def _classify(path: str) -> ReleaseRecord:
                 reason="Generated CCDC-derived report or figure; review source-license implications before public sharing.",
             )
         return ReleaseRecord(
-                path=path,
+            path=path,
             category="license_review_required",
             reason="Generated CCDC-derived machine-readable artifact; review source-license implications before public sharing.",
         )

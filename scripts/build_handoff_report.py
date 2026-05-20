@@ -22,6 +22,8 @@ def main() -> int:
     parser.add_argument("--measurement-queue", type=Path, default=Path("outputs/crystalprobe_measurement_queue.json"))
     parser.add_argument("--execution-unblock", type=Path, default=Path("outputs/crystalprobe_execution_unblock_report.json"))
     parser.add_argument("--publication-readiness", type=Path, default=Path("outputs/crystalprobe_publication_readiness.json"))
+    parser.add_argument("--risk-register", type=Path, default=Path("outputs/crystalprobe_risk_register.json"))
+    parser.add_argument("--report-consistency", type=Path, default=Path("outputs/crystalprobe_report_consistency.json"))
     parser.add_argument("--json-out", type=Path, default=Path("outputs/crystalprobe_handoff_summary.json"))
     parser.add_argument("--md-out", type=Path, default=Path("outputs/crystalprobe_handoff_summary.md"))
     args = parser.parse_args()
@@ -34,6 +36,16 @@ def main() -> int:
         publication_readiness=(
             json.loads(args.publication_readiness.read_text(encoding="utf-8"))
             if args.publication_readiness.exists()
+            else None
+        ),
+        risk_register=(
+            json.loads(args.risk_register.read_text(encoding="utf-8"))
+            if args.risk_register.exists()
+            else None
+        ),
+        report_consistency=(
+            json.loads(args.report_consistency.read_text(encoding="utf-8"))
+            if args.report_consistency.exists()
             else None
         ),
     )

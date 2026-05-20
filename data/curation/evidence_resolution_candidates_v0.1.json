@@ -1,0 +1,77 @@
+{
+  "schema_version": "0.1.0",
+  "status": "evidence_resolution_candidates_recorded",
+  "created_utc": "2026-05-18",
+  "scope": "Candidate-only evidence gathered from public source pages for evidence packets. These records do not modify the benchmark manifest and do not promote any pair.",
+  "policy": [
+    "Candidate evidence may reduce a blocker count but does not by itself promote a record.",
+    "Source IDs, licenses, disorder annotations, and stability ordering still require curator and reviewer sign-off before the canonical manifest changes.",
+    "Public COD coordinates are useful source candidates, but CrystalProbe must still verify that selected CIFs match the intended polymorph pair and that release terms are preserved."
+  ],
+  "candidates": [
+    {
+      "pair_id": "paracetamol_form_i_vs_form_ii_seed",
+      "candidate_status": "source_candidate_recorded",
+      "promotion_decision": "do_not_promote_candidate_only",
+      "curator": "codex_literature_pass_2026-05-18",
+      "reviewer": "not_human_reviewed",
+      "proposed_stability_ordering": "A>B",
+      "stability_summary": "Candidate literature consistently describes monoclinic paracetamol Form I as stable under usual or ambient conditions and orthorhombic Form II as metastable. This supports a candidate A>B label only if structure A is confirmed as Form I and structure B is confirmed as Form II.",
+      "stability_sources": [
+        {
+          "title": "Polymorph control in batch seeded crystallizers. A case study with paracetamol",
+          "doi": "10.1039/C8CE01428K",
+          "url": "https://pubs.rsc.org/en/content/articlehtml/2019/ce/c8ce01428k",
+          "evidence_note": "States that Form I is monoclinic and most stable under usual temperatures, while Form II is orthorhombic and metastable.",
+          "evidence_role": "ambient_stability_context"
+        },
+        {
+          "title": "Direct evidence of polyamorphism in paracetamol",
+          "doi": "10.1039/C5CE01583A",
+          "url": "https://pubs.rsc.org/en/content/articlehtml/2015/ce/c5ce01583a",
+          "evidence_note": "Describes Form I as thermodynamically stable monoclinic paracetamol and Form II as metastable orthorhombic paracetamol at room-temperature crystallization conditions.",
+          "evidence_role": "room_temperature_stability_context"
+        },
+        {
+          "title": "Higher density does not mean higher stability mystery of paracetamol finally unraveled",
+          "doi": "10.1039/B927429D",
+          "url": "https://doi.org/10.1039/B927429D",
+          "evidence_note": "Candidate thermodynamic explanation source for Form I versus Form II stability; also represented by COD Form I structure entry 7105573.",
+          "evidence_role": "thermodynamic_context"
+        }
+      ],
+      "structure_candidates": {
+        "A": {
+          "proposed_form_label": "Form I",
+          "source_database": "COD",
+          "source_id": "COD:7105573",
+          "url": "https://www.crystallography.net/cod/7105573.html",
+          "cif_url": "https://www.crystallography.net/cod/7105573.cif",
+          "license": "CC0-1.0",
+          "space_group": "P 1 21/n 1",
+          "temperature_K": 100,
+          "has_disorder": false,
+          "source_note": "COD page reports formula C8 H9 N O2, space group P 1 21/n 1, coordinates present, and no disorder."
+        },
+        "B": {
+          "proposed_form_label": "Form II",
+          "source_database": "COD",
+          "source_id": "COD:2105052",
+          "url": "https://www.crystallography.net/cod/2105052.html",
+          "cif_url": "https://www.crystallography.net/cod/2105052.cif",
+          "license": "CC0-1.0",
+          "space_group": "P b c a",
+          "temperature_K": 293,
+          "has_disorder": false,
+          "source_note": "COD page reports acetaminophen, space group P b c a, coordinates present, and no disorder."
+        }
+      },
+      "remaining_manual_checks": [
+        "Download or vendor the selected COD CIFs only if the release policy accepts them as public benchmark coordinates.",
+        "Verify that Form I/Form II labels in the benchmark manifest correspond exactly to COD:7105573 and COD:2105052.",
+        "Replace manifest TODO placeholders, including InChI, source IDs, CIF paths, disorder notes, and evidence notes.",
+        "Human-review the stability ordering and source mapping before changing curation_status to reviewed."
+      ]
+    }
+  ]
+}
