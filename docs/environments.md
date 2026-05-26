@@ -9,10 +9,15 @@ Purpose: core CrystalProbe development, ASE CIF parsing, MACE-OFF, AIMNet.
 Installed highlights:
 
 - PyTorch 2.11.0+cu126
+- NumPy 1.26.4
 - ASE 3.28.0
 - MACE 0.3.15 (`mace-torch`)
 - AIMNet 0.2.0
+- RDKit 2022.09.5 (`rdkit-pypi`)
+- matscipy 1.1.1
 - CrystalProbe editable install with tests
+
+RDKit is installed in `.venv` for the SMILES-to-conformer bridge. The available Windows `rdkit-pypi` wheel is compiled against NumPy 1.x, so `.venv` intentionally uses `numpy<2`; `matscipy` is held below 1.2 to keep `pip check` clean while preserving the MACE dependency surface.
 
 ## `.venv-fairchem`
 
@@ -27,4 +32,3 @@ Installed highlights:
 ## Why Separate Environments
 
 `mace-torch` currently requires `e3nn==0.4.4`, while `fairchem-core` requires `e3nn>=0.5`. Installing both into one environment causes pip resolution failure. Keep them isolated and exchange predictions through CrystalProbe JSON Lines prediction files.
-

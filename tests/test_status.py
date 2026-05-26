@@ -168,10 +168,12 @@ def test_docs_index_lists_historical_research_opportunities():
     docs_index = (ROOT / "docs" / "index.md").read_text(encoding="utf-8")
     historical = (ROOT / "docs" / "historical_research_opportunities.md").read_text(encoding="utf-8")
 
+    assert "docs/conformer_generation.md" in docs_index
     assert "docs/evidence_atlas.md" in docs_index
     assert "docs/evidence_atlas.html" in docs_index
     assert "docs/historical_research_opportunities.md" in docs_index
     assert "docs/molecule_bug_hunt.md" in docs_index
+    assert "docs/tentative_molecule_benchmark.md" in docs_index
     assert "docs/molecule_viewers.md" in docs_index
     assert "candidate, reviewed, and verified evidence gates" in historical
     assert "active_evidence_triage" in historical

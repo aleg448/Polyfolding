@@ -258,6 +258,34 @@
       ]
     },
     {
+      "id": "tentative_molecule_benchmark",
+      "label": "Tentative molecule benchmark",
+      "scripts": [
+        "scripts/build_conformer_generation_report.py",
+        "scripts/build_backend_ready_inputs.py",
+        "scripts/build_backend_smoke_report.py",
+        "scripts/build_tentative_molecule_benchmark.py"
+      ],
+      "primary_outputs": [
+        "outputs/crystalprobe_conformer_generation.sqlite",
+        "outputs/crystalprobe_conformer_generation.json",
+        "outputs/crystalprobe_conformer_generation.md",
+        "docs/conformer_generation.md",
+        "outputs/crystalprobe_backend_ready_inputs.sqlite",
+        "outputs/crystalprobe_backend_ready_inputs.json",
+        "outputs/crystalprobe_backend_ready_inputs.md",
+        "docs/backend_ready_inputs.md",
+        "outputs/crystalprobe_backend_smoke.sqlite",
+        "outputs/crystalprobe_backend_smoke.json",
+        "outputs/crystalprobe_backend_smoke.md",
+        "docs/backend_smoke.md",
+        "outputs/crystalprobe_tentative_molecule_benchmark.sqlite",
+        "outputs/crystalprobe_tentative_molecule_benchmark.json",
+        "outputs/crystalprobe_tentative_molecule_benchmark.md",
+        "docs/tentative_molecule_benchmark.md"
+      ]
+    },
+    {
       "id": "historical_research_cycle",
       "label": "Historical research cycle and evidence packet",
       "scripts": [
@@ -360,6 +388,7 @@
     "CPOSS evidence workpack overlays live in data/curation/cposs_evidence_overrides_v0.1.json and may fill review fields without promoting candidates.",
     "Medication backend blockers are tracked in data/curation/medication_backend_blockers_v0.1.json; the current selected proof blocks have MACE, AIMNet2, and UMA measurements.",
     "Generated outputs are reproducible artifacts, not source-controlled evidence by default.",
+    "Backend-ready generated-conformer inputs and backend smoke rows are engineering readiness artifacts, not molecular benchmark evidence.",
     "Active Python dependency visibility is recorded separately from dependencies installed in alternate environments such as .venv, Docker, or isolated fairchem envs.",
     "Sensitivity probes are local perturbation diagnostics and must not be reported as polymorph rankings.",
     "AIMNet2 and UMA/FastCSP follow-ups may require Linux or Docker depending on the host environment.",

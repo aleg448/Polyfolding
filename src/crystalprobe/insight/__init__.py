@@ -1,7 +1,10 @@
 """Analysis and interpretability reports."""
 
 from crystalprobe.insight.case_study import build_single_structure_case_study, case_study_markdown
+from crystalprobe.insight.backend_ready_inputs import backend_ready_inputs_markdown, backend_ready_inputs_report
+from crystalprobe.insight.backend_smoke import backend_smoke_markdown, backend_smoke_report
 from crystalprobe.insight.cposs_inspection import cposs_disagreement_inspection_markdown, cposs_disagreement_inspection_report
+from crystalprobe.insight.conformer_generation import conformer_generation_markdown, conformer_generation_report
 from crystalprobe.insight.energy_verification import energy_verification_markdown, energy_verification_report
 from crystalprobe.insight.evidence_atlas import build_evidence_atlas, evidence_atlas_markdown
 from crystalprobe.insight.evidence_packet import evidence_packet_markdown, evidence_packet_report
@@ -17,15 +20,27 @@ from crystalprobe.insight.readiness import ampetp_readiness_report, readiness_ma
 from crystalprobe.insight.source_discovery import source_discovery_markdown, source_discovery_report
 from crystalprobe.insight.status import project_status_markdown, project_status_report
 from crystalprobe.insight.substance_profiles import substance_profile_markdown, substance_profile_report
+from crystalprobe.insight.tentative_molecule_benchmark import (
+    build_tentative_molecule_benchmark,
+    load_molecule_panel,
+    tentative_molecule_benchmark_markdown,
+)
 
 __all__ = [
     "FingerprintReport",
     "ampetp_readiness_report",
+    "backend_ready_inputs_markdown",
+    "backend_ready_inputs_report",
+    "backend_smoke_markdown",
+    "backend_smoke_report",
     "build_cposs_mini_benchmark_report",
     "build_evidence_atlas",
     "build_fingerprint_report",
+    "build_tentative_molecule_benchmark",
     "build_single_structure_case_study",
     "case_study_markdown",
+    "conformer_generation_markdown",
+    "conformer_generation_report",
     "cposs_disagreement_inspection_markdown",
     "cposs_disagreement_inspection_report",
     "energy_verification_markdown",
@@ -53,4 +68,6 @@ __all__ = [
     "source_discovery_report",
     "substance_profile_markdown",
     "substance_profile_report",
+    "load_molecule_panel",
+    "tentative_molecule_benchmark_markdown",
 ]

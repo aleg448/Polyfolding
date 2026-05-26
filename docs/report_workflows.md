@@ -14,6 +14,7 @@ Report scripts bootstrap the repo-local `src/` package path, so the documented `
 - Record active Python dependency visibility separately from dependencies installed in `.venv`, Docker, or isolated backend environments.
 - Do not interpret perturbation sensitivity results as polymorph stability rankings.
 - Record exact backend names, checkpoints, input hashes, and blockers before promoting any claim beyond a pilot result.
+- Treat backend-ready generated-conformer inputs and backend smoke rows as engineering readiness artifacts, not molecular benchmark evidence.
 - When human database validation is unavailable, rebuild the evidence-tier report and keep the target below benchmark-grade claims.
 
 ## AMPETP pilot research bundle
@@ -406,6 +407,41 @@ Primary outputs:
 
 - `outputs/crystalprobe_energy_verification.json`
 - `outputs/crystalprobe_energy_verification.md`
+
+## Tentative molecule benchmark
+
+Use this workflow to ingest the bug-hunt stress catalog plus the larger CSV molecule panel, optionally generate RDKit ETKDG conformers, run dependency-light SMILES checks, optionally run RDKit parsing/descriptors when available, preflight optional scientific backends, and record structured bug signatures. It is a tentative software benchmark, not a verified molecular-property benchmark.
+
+```powershell
+.\.venv\Scripts\python.exe scripts\build_conformer_generation_report.py
+.\.venv\Scripts\python.exe scripts\build_conformer_generation_report.py --write-xyz-dir outputs\generated_conformers --json-out outputs\local_conformer_generation_with_xyz.json --md-out outputs\local_conformer_generation_with_xyz.md --sqlite-out outputs\local_conformer_generation_with_xyz.sqlite --docs-out outputs\local_conformer_generation_with_xyz_docs.md
+.\.venv\Scripts\python.exe scripts\build_backend_ready_inputs.py
+.\.venv\Scripts\python.exe scripts\build_backend_smoke_report.py --limit 1 --backends mace aimnet2
+.\.venv\Scripts\python.exe scripts\build_tentative_molecule_benchmark.py
+```
+
+Primary outputs:
+
+- `outputs/crystalprobe_conformer_generation.sqlite`
+- `outputs/crystalprobe_conformer_generation.json`
+- `outputs/crystalprobe_conformer_generation.md`
+- `docs/conformer_generation.md`
+- `outputs/crystalprobe_backend_ready_inputs.sqlite`
+- `outputs/crystalprobe_backend_ready_inputs.json`
+- `outputs/crystalprobe_backend_ready_inputs.md`
+- `docs/backend_ready_inputs.md`
+- `outputs/crystalprobe_backend_smoke.sqlite`
+- `outputs/crystalprobe_backend_smoke.json`
+- `outputs/crystalprobe_backend_smoke.md`
+- `docs/backend_smoke.md`
+- `outputs/crystalprobe_tentative_molecule_benchmark.sqlite`
+- `outputs/crystalprobe_tentative_molecule_benchmark.json`
+- `outputs/crystalprobe_tentative_molecule_benchmark.md`
+- `docs/tentative_molecule_benchmark.md`
+
+By default, the conformer report records generated-conformer metadata without writing coordinate files. Use `python scripts\build_conformer_generation_report.py --write-xyz-dir outputs\generated_conformers` only for local backend execution, and keep those generated coordinates out of verified benchmark claims until the evidence gate is satisfied.
+
+The backend-ready input manifest hashes local generated XYZ files and tags every row as `candidate_unverified`. The backend smoke report runs a deliberately tiny execution slice and records backend-specific blockers such as missing optional packages, resource failures, or host compiler problems. These reports are engineering readiness artifacts; they do not compare cross-backend absolute energies or promote molecule rows to benchmark truth.
 
 ## Historical research cycle and evidence packet
 

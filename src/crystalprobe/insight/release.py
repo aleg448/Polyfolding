@@ -98,6 +98,15 @@ def _classify(path: str) -> ReleaseRecord:
             reason="Evidence-tier policy output contains claim-boundary metadata, not raw gated coordinates.",
         )
     if normalized in {
+        "outputs/crystalprobe_backend_ready_inputs.json",
+        "outputs/crystalprobe_backend_ready_inputs.md",
+        "outputs/crystalprobe_backend_ready_inputs.sqlite",
+        "outputs/crystalprobe_backend_smoke.json",
+        "outputs/crystalprobe_backend_smoke.md",
+        "outputs/crystalprobe_backend_smoke.sqlite",
+        "outputs/crystalprobe_conformer_generation.json",
+        "outputs/crystalprobe_conformer_generation.md",
+        "outputs/crystalprobe_conformer_generation.sqlite",
         "outputs/crystalprobe_energy_verification.json",
         "outputs/crystalprobe_energy_verification.md",
         "outputs/crystalprobe_evidence_atlas.json",
@@ -106,11 +115,14 @@ def _classify(path: str) -> ReleaseRecord:
         "outputs/crystalprobe_molecule_bug_hunt.json",
         "outputs/crystalprobe_molecule_bug_hunt.md",
         "outputs/crystalprobe_molecule_bug_hunt.sqlite",
+        "outputs/crystalprobe_tentative_molecule_benchmark.json",
+        "outputs/crystalprobe_tentative_molecule_benchmark.md",
+        "outputs/crystalprobe_tentative_molecule_benchmark.sqlite",
     }:
         return ReleaseRecord(
             path=path,
             category="candidate_public",
-            reason="Energy, evidence-atlas, or molecule bug-hunt database contains normalized metadata, QA fixtures, claim gates, links, and release categories without raw coordinate payloads.",
+            reason="Backend-ready input, backend-smoke, conformer-generation, energy, evidence-atlas, molecule bug-hunt, or tentative molecule-benchmark database contains normalized metadata, QA fixtures, hashes, claim gates, links, and release categories without raw gated-coordinate payloads.",
         )
     if normalized in {
         "outputs/crystalprobe_environment_blockers.json",
@@ -170,6 +182,8 @@ def _classify(path: str) -> ReleaseRecord:
     if normalized.startswith(("src/", "scripts/", "tests/", "docs/", "data/curation/", "data/public_cases/")) or normalized in {
         "README.md",
         "BLOCKERS.md",
+        "CASE_STUDY.md",
+        "pyproject.toml",
     }:
         return ReleaseRecord(
             path=path,

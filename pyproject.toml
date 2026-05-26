@@ -20,6 +20,10 @@ dependencies = [
 dev = [
   "pytest>=8.0"
 ]
+conformer = [
+  "numpy<2",
+  "rdkit-pypi==2022.9.5"
+]
 
 [project.scripts]
 crystalprobe = "crystalprobe.benchmark.cli:main"
@@ -29,5 +33,4 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["src"]
-
+pythonpath = [".", "src"]

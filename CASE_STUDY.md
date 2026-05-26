@@ -66,6 +66,10 @@ The energy and molecule stress-test commands are:
 ```powershell
 python scripts\build_molecule_bug_hunt_database.py
 python scripts\build_energy_verification_report.py
+.\.venv\Scripts\python.exe scripts\build_conformer_generation_report.py
+.\.venv\Scripts\python.exe scripts\build_backend_ready_inputs.py
+.\.venv\Scripts\python.exe scripts\build_backend_smoke_report.py --limit 1 --backends mace aimnet2
+.\.venv\Scripts\python.exe scripts\build_tentative_molecule_benchmark.py
 ```
 
 The public artifact integrity check is:
@@ -99,8 +103,13 @@ Generated outputs:
 - `docs/evidence_atlas.md`
 - `docs/evidence_atlas.html`
 - `outputs/crystalprobe_energy_verification.md`
+- `outputs/crystalprobe_conformer_generation.md`
+- `outputs/crystalprobe_backend_ready_inputs.md`
+- `outputs/crystalprobe_backend_smoke.md`
 - `outputs/crystalprobe_molecule_bug_hunt.sqlite`
 - `docs/molecule_bug_hunt.md`
+- `outputs/crystalprobe_tentative_molecule_benchmark.sqlite`
+- `docs/tentative_molecule_benchmark.md`
 - `outputs/public_artifact_integrity.md`
 - `outputs/public_artifact_integrity.json`
 
@@ -133,7 +142,7 @@ The molecule viewer registry in `docs/molecule_viewers.md` adds source-hosted CO
 
 The Evidence Atlas in `docs/evidence_atlas.html` is the database-facing version of the same philosophy: molecules, polymorph pairs, structures, evidence sources, blockers, predictions, viewer links, and release-boundary artifacts are searchable from one static page and queryable from `outputs/crystalprobe_evidence_atlas.sqlite`.
 
-The energy verification report and molecule bug-hunt database add a QA layer for weird failures before they become scientific claims: salts, charges, stereochemistry, hydrates, duplicate-connectivity cases, OOD prediction rows, missing uncertainty, missing predictions, and non-verified energy rows are visible rather than silently passing through the system.
+The energy verification report, conformer-generation bridge, backend-ready input manifest, backend smoke benchmark, molecule bug-hunt database, and tentative molecule benchmark add a QA layer for weird failures before they become scientific claims: salts, charges, stereochemistry, hydrates, duplicate-connectivity cases, OOD prediction rows, missing uncertainty, missing predictions, optional-backend blockers, parser failures, generated-conformer blockers, host compiler blockers, and non-verified energy rows are visible rather than silently passing through the system.
 
 ## Public Review Checklist And Stronger Candidate
 
@@ -158,6 +167,7 @@ When optional scientific backends are installed, the public demo can also record
 - Raw or coordinate-bearing CCDC/CSD-derived artifacts are not public release artifacts unless licensing review explicitly permits redistribution.
 - Absolute energies from different model backends are not treated as directly commensurate.
 - Backend disagreement is an inspection signal, not a calibrated thermodynamic uncertainty estimate.
+- Generated-conformer backend smoke results are execution evidence only; they are tagged `candidate_unverified` and cannot promote a molecule into benchmark status.
 - The current project is strongest as reliability infrastructure for molecular prediction, not as a standalone crystal structure prediction engine.
 
 ## Next Steps
