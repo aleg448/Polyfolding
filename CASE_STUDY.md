@@ -68,8 +68,10 @@ python scripts\build_molecule_bug_hunt_database.py
 python scripts\build_energy_verification_report.py
 .\.venv\Scripts\python.exe scripts\build_conformer_generation_report.py
 .\.venv\Scripts\python.exe scripts\build_backend_ready_inputs.py
-.\.venv\Scripts\python.exe scripts\build_backend_smoke_report.py --limit 1 --backends mace aimnet2
+.\.venv\Scripts\python.exe scripts\build_backend_smoke_report.py --all --backends mace aimnet2
+.\.venv\Scripts\python.exe scripts\build_backend_result_table.py
 .\.venv\Scripts\python.exe scripts\build_tentative_molecule_benchmark.py
+.\.venv\Scripts\python.exe scripts\build_molecule_bug_dashboard.py
 ```
 
 The public artifact integrity check is:
@@ -106,6 +108,8 @@ Generated outputs:
 - `outputs/crystalprobe_conformer_generation.md`
 - `outputs/crystalprobe_backend_ready_inputs.md`
 - `outputs/crystalprobe_backend_smoke.md`
+- `outputs/crystalprobe_backend_result_table.md`
+- `outputs/crystalprobe_molecule_bug_dashboard.md`
 - `outputs/crystalprobe_molecule_bug_hunt.sqlite`
 - `docs/molecule_bug_hunt.md`
 - `outputs/crystalprobe_tentative_molecule_benchmark.sqlite`
@@ -142,7 +146,7 @@ The molecule viewer registry in `docs/molecule_viewers.md` adds source-hosted CO
 
 The Evidence Atlas in `docs/evidence_atlas.html` is the database-facing version of the same philosophy: molecules, polymorph pairs, structures, evidence sources, blockers, predictions, viewer links, and release-boundary artifacts are searchable from one static page and queryable from `outputs/crystalprobe_evidence_atlas.sqlite`.
 
-The energy verification report, conformer-generation bridge, backend-ready input manifest, backend smoke benchmark, molecule bug-hunt database, and tentative molecule benchmark add a QA layer for weird failures before they become scientific claims: salts, charges, stereochemistry, hydrates, duplicate-connectivity cases, OOD prediction rows, missing uncertainty, missing predictions, optional-backend blockers, parser failures, generated-conformer blockers, host compiler blockers, and non-verified energy rows are visible rather than silently passing through the system.
+The energy verification report, conformer-generation bridge, backend-ready input manifest, backend smoke benchmark, first backend result table, molecule bug dashboard, molecule bug-hunt database, and tentative molecule benchmark add a QA layer for weird failures before they become scientific claims: salts, charges, stereochemistry, hydrates, duplicate-connectivity cases, OOD prediction rows, missing uncertainty, missing predictions, optional-backend blockers, parser failures, generated-conformer blockers, host compiler blockers, energy/force sanity rows, and non-verified energy rows are visible rather than silently passing through the system.
 
 ## Public Review Checklist And Stronger Candidate
 

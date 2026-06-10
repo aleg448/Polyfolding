@@ -264,7 +264,9 @@
         "scripts/build_conformer_generation_report.py",
         "scripts/build_backend_ready_inputs.py",
         "scripts/build_backend_smoke_report.py",
-        "scripts/build_tentative_molecule_benchmark.py"
+        "scripts/build_backend_result_table.py",
+        "scripts/build_tentative_molecule_benchmark.py",
+        "scripts/build_molecule_bug_dashboard.py"
       ],
       "primary_outputs": [
         "outputs/crystalprobe_conformer_generation.sqlite",
@@ -279,6 +281,14 @@
         "outputs/crystalprobe_backend_smoke.json",
         "outputs/crystalprobe_backend_smoke.md",
         "docs/backend_smoke.md",
+        "outputs/crystalprobe_backend_result_table.sqlite",
+        "outputs/crystalprobe_backend_result_table.json",
+        "outputs/crystalprobe_backend_result_table.md",
+        "docs/backend_result_table.md",
+        "outputs/crystalprobe_molecule_bug_dashboard.sqlite",
+        "outputs/crystalprobe_molecule_bug_dashboard.json",
+        "outputs/crystalprobe_molecule_bug_dashboard.md",
+        "docs/molecule_bug_dashboard.md",
         "outputs/crystalprobe_tentative_molecule_benchmark.sqlite",
         "outputs/crystalprobe_tentative_molecule_benchmark.json",
         "outputs/crystalprobe_tentative_molecule_benchmark.md",

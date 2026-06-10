@@ -22,6 +22,16 @@ def _manifest():
                 "atom_count": 3,
             },
             {
+                "molecule_id": "ethanol",
+                "common_name": "ethanol",
+                "status": "ready",
+                "review_status": "candidate_unverified",
+                "release_category": "local_generated_coordinate_input_metadata",
+                "xyz_path": "outputs/generated_conformers/ethanol.xyz",
+                "sha256": "def456",
+                "atom_count": 9,
+            },
+            {
                 "molecule_id": "blocked",
                 "common_name": "blocked",
                 "status": "blocked",
@@ -62,14 +72,42 @@ def test_backend_smoke_report_records_passes_and_backend_blockers():
     by_backend = {row["backend"]: row for row in report["benchmark_rows"]}
 
     assert report["status"] == "backend_smoke_recorded_with_blockers"
-    assert report["counts"]["input_rows_available"] == 1
+    assert report["counts"]["input_rows_available"] == 2
+    assert report["counts"]["input_rows_selected"] == 1
     assert report["counts"]["passed_count"] == 1
     assert report["counts"]["blocked_count"] == 1
+    assert report["counts"]["cached_environment_blocker_count"] == 0
     assert report["counts"]["claim_ready_count"] == 0
     assert by_backend["mace"]["status"] == "passed"
     assert by_backend["mace"]["energy_ev"] == -12.5
     assert by_backend["aimnet2"]["issue_signature"] == "backend_missing_windows_cpp_compiler"
     assert by_backend["aimnet2"]["review_status"] == "candidate_unverified"
+
+
+def test_backend_smoke_all_rows_caches_environment_blockers():
+    calls = []
+
+    def executor(input_row, backend, options):
+        calls.append((input_row["molecule_id"], backend))
+        return _fake_executor(input_row, backend, options)
+
+    report = backend_smoke_report(
+        _manifest(),
+        backends=("mace", "aimnet2"),
+        limit=0,
+        device="cpu",
+        executor=executor,
+    )
+    rows = {(row["molecule_id"], row["backend"]): row for row in report["benchmark_rows"]}
+
+    assert report["counts"]["input_rows_selected"] == 2
+    assert report["counts"]["backend_row_count"] == 4
+    assert report["counts"]["passed_count"] == 2
+    assert report["counts"]["blocked_count"] == 2
+    assert report["counts"]["cached_environment_blocker_count"] == 1
+    assert ("ethanol", "aimnet2") not in calls
+    assert rows[("ethanol", "aimnet2")]["issue_signature"] == "backend_missing_windows_cpp_compiler"
+    assert rows[("ethanol", "aimnet2")]["metrics"]["cached_environment_blocker"] is True
 
 
 def test_backend_smoke_dry_run_markdown_and_sqlite(tmp_path):

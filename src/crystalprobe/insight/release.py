@@ -101,6 +101,9 @@ def _classify(path: str) -> ReleaseRecord:
         "outputs/crystalprobe_backend_ready_inputs.json",
         "outputs/crystalprobe_backend_ready_inputs.md",
         "outputs/crystalprobe_backend_ready_inputs.sqlite",
+        "outputs/crystalprobe_backend_result_table.json",
+        "outputs/crystalprobe_backend_result_table.md",
+        "outputs/crystalprobe_backend_result_table.sqlite",
         "outputs/crystalprobe_backend_smoke.json",
         "outputs/crystalprobe_backend_smoke.md",
         "outputs/crystalprobe_backend_smoke.sqlite",
@@ -115,6 +118,9 @@ def _classify(path: str) -> ReleaseRecord:
         "outputs/crystalprobe_molecule_bug_hunt.json",
         "outputs/crystalprobe_molecule_bug_hunt.md",
         "outputs/crystalprobe_molecule_bug_hunt.sqlite",
+        "outputs/crystalprobe_molecule_bug_dashboard.json",
+        "outputs/crystalprobe_molecule_bug_dashboard.md",
+        "outputs/crystalprobe_molecule_bug_dashboard.sqlite",
         "outputs/crystalprobe_tentative_molecule_benchmark.json",
         "outputs/crystalprobe_tentative_molecule_benchmark.md",
         "outputs/crystalprobe_tentative_molecule_benchmark.sqlite",
@@ -122,7 +128,7 @@ def _classify(path: str) -> ReleaseRecord:
         return ReleaseRecord(
             path=path,
             category="candidate_public",
-            reason="Backend-ready input, backend-smoke, conformer-generation, energy, evidence-atlas, molecule bug-hunt, or tentative molecule-benchmark database contains normalized metadata, QA fixtures, hashes, claim gates, links, and release categories without raw gated-coordinate payloads.",
+            reason="Backend-ready input, backend-result, backend-smoke, conformer-generation, energy, evidence-atlas, molecule bug dashboard, molecule bug-hunt, or tentative molecule-benchmark database contains normalized metadata, QA fixtures, hashes, claim gates, links, and release categories without raw gated-coordinate payloads.",
         )
     if normalized in {
         "outputs/crystalprobe_environment_blockers.json",

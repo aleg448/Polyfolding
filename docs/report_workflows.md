@@ -416,8 +416,10 @@ Use this workflow to ingest the bug-hunt stress catalog plus the larger CSV mole
 .\.venv\Scripts\python.exe scripts\build_conformer_generation_report.py
 .\.venv\Scripts\python.exe scripts\build_conformer_generation_report.py --write-xyz-dir outputs\generated_conformers --json-out outputs\local_conformer_generation_with_xyz.json --md-out outputs\local_conformer_generation_with_xyz.md --sqlite-out outputs\local_conformer_generation_with_xyz.sqlite --docs-out outputs\local_conformer_generation_with_xyz_docs.md
 .\.venv\Scripts\python.exe scripts\build_backend_ready_inputs.py
-.\.venv\Scripts\python.exe scripts\build_backend_smoke_report.py --limit 1 --backends mace aimnet2
+.\.venv\Scripts\python.exe scripts\build_backend_smoke_report.py --all --backends mace aimnet2
+.\.venv\Scripts\python.exe scripts\build_backend_result_table.py
 .\.venv\Scripts\python.exe scripts\build_tentative_molecule_benchmark.py
+.\.venv\Scripts\python.exe scripts\build_molecule_bug_dashboard.py
 ```
 
 Primary outputs:
@@ -434,6 +436,14 @@ Primary outputs:
 - `outputs/crystalprobe_backend_smoke.json`
 - `outputs/crystalprobe_backend_smoke.md`
 - `docs/backend_smoke.md`
+- `outputs/crystalprobe_backend_result_table.sqlite`
+- `outputs/crystalprobe_backend_result_table.json`
+- `outputs/crystalprobe_backend_result_table.md`
+- `docs/backend_result_table.md`
+- `outputs/crystalprobe_molecule_bug_dashboard.sqlite`
+- `outputs/crystalprobe_molecule_bug_dashboard.json`
+- `outputs/crystalprobe_molecule_bug_dashboard.md`
+- `docs/molecule_bug_dashboard.md`
 - `outputs/crystalprobe_tentative_molecule_benchmark.sqlite`
 - `outputs/crystalprobe_tentative_molecule_benchmark.json`
 - `outputs/crystalprobe_tentative_molecule_benchmark.md`
@@ -441,7 +451,7 @@ Primary outputs:
 
 By default, the conformer report records generated-conformer metadata without writing coordinate files. Use `python scripts\build_conformer_generation_report.py --write-xyz-dir outputs\generated_conformers` only for local backend execution, and keep those generated coordinates out of verified benchmark claims until the evidence gate is satisfied.
 
-The backend-ready input manifest hashes local generated XYZ files and tags every row as `candidate_unverified`. The backend smoke report runs a deliberately tiny execution slice and records backend-specific blockers such as missing optional packages, resource failures, or host compiler problems. These reports are engineering readiness artifacts; they do not compare cross-backend absolute energies or promote molecule rows to benchmark truth.
+The backend-ready input manifest hashes local generated XYZ files and tags every row as `candidate_unverified`. The backend smoke report runs the current all-molecule execution slice and records backend-specific blockers such as missing optional packages, resource failures, or host compiler problems; repeated environment-level blockers are cached after the first concrete failure so the run remains smooth. The first backend result table extracts actual executed backend rows into a compact energy/force table, while the molecule bug dashboard joins parser, conformer, backend, energy/force sanity, and issue signatures per molecule. These reports are engineering readiness artifacts; they do not compare cross-backend absolute energies or promote molecule rows to benchmark truth.
 
 ## Historical research cycle and evidence packet
 

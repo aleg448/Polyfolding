@@ -30,8 +30,14 @@ def main() -> int:
     parser.add_argument("--backend", dest="backend", action="append", choices=["mace", "aimnet2", "uma"])
     parser.add_argument("--backends", nargs="+", choices=["mace", "aimnet2", "uma"])
     parser.add_argument("--limit", type=int, default=1)
+    parser.add_argument("--all", action="store_true", help="Run over every ready or warning backend input row.")
     parser.add_argument("--device", default="cpu")
     parser.add_argument("--dry-run", action="store_true", help="Record selected input/backend rows without execution.")
+    parser.add_argument(
+        "--no-cache-environment-blockers",
+        action="store_true",
+        help="Retry every molecule even after a backend hits a reusable environment blocker.",
+    )
     parser.add_argument("--json-out", type=Path, default=Path("outputs/crystalprobe_backend_smoke.json"))
     parser.add_argument("--md-out", type=Path, default=Path("outputs/crystalprobe_backend_smoke.md"))
     parser.add_argument("--sqlite-out", type=Path, default=Path("outputs/crystalprobe_backend_smoke.sqlite"))
@@ -44,9 +50,10 @@ def main() -> int:
     report = backend_smoke_report(
         manifest,
         backends=selected,
-        limit=args.limit,
+        limit=0 if args.all else args.limit,
         execute=not args.dry_run,
         device=args.device,
+        cache_environment_blockers=not args.no_cache_environment_blockers,
     )
     markdown = backend_smoke_markdown(report)
     atomic_write_json(args.json_out, report)

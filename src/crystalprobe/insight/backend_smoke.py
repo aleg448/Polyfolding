@@ -54,6 +54,7 @@ def backend_smoke_report(
     device: str | None = "cpu",
     executor: PredictionExecutor | None = None,
     backend_options: dict[str, Any] | None = None,
+    cache_environment_blockers: bool = True,
 ) -> dict[str, Any]:
     """Run or record a tiny backend smoke benchmark over generated conformers."""
 
@@ -62,20 +63,25 @@ def backend_smoke_report(
     ready_inputs = [
         row for row in input_manifest.get("rows", []) if row.get("status") in {"ready", "warning"}
     ]
-    selected_inputs = ready_inputs[:limit]
+    selected_inputs = ready_inputs if limit <= 0 else ready_inputs[:limit]
     runner = executor or _run_backend_prediction
     rows: list[dict[str, Any]] = []
+    backend_blockers: dict[str, dict[str, Any]] = {}
     for input_row in selected_inputs:
         for backend in backends:
-            rows.append(
-                _backend_row(
+            if cache_environment_blockers and backend in backend_blockers:
+                rows.append(_cached_backend_blocker_row(input_row, backend, backend_blockers[backend]))
+                continue
+            row = _backend_row(
                     input_row,
                     backend,
                     execute=execute,
                     executor=runner,
                     options=options,
                 )
-            )
+            rows.append(row)
+            if cache_environment_blockers and row["status"] == "blocked" and _is_environment_blocker(row["issue_signature"]):
+                backend_blockers[backend] = row
 
     counts = Counter(row["status"] for row in rows)
     signatures = _bug_signatures(rows)
@@ -98,6 +104,7 @@ def backend_smoke_report(
             "limit": limit,
             "execute": execute,
             "device": device,
+            "cache_environment_blockers": cache_environment_blockers,
         },
         "counts": {
             "input_rows_available": len(ready_inputs),
@@ -110,6 +117,9 @@ def backend_smoke_report(
             "warning_count": counts.get("warning", 0),
             "claim_ready_count": 0,
             "bug_signature_count": len(signatures),
+            "cached_environment_blocker_count": sum(
+                1 for row in rows if row.get("metrics", {}).get("cached_environment_blocker") is True
+            ),
         },
         "benchmark_rows": rows,
         "bug_signatures": signatures,
@@ -118,6 +128,7 @@ def backend_smoke_report(
             "Absolute energies from different backends are not commensurate benchmark claims.",
             "Generated conformer smoke results must stay below verified drug-discovery or stability claims.",
             "Blocked backend rows are useful engineering evidence and should be fixed before larger benchmarks.",
+            "Repeated environment-level backend blockers may be cached after the first concrete failure to keep all-molecule runs smooth.",
         ],
     }
 
@@ -136,6 +147,7 @@ def backend_smoke_markdown(report: dict[str, Any]) -> str:
         f"- Blocked rows: `{report['counts']['blocked_count']}`",
         f"- Failed rows: `{report['counts']['failed_count']}`",
         f"- Skipped rows: `{report['counts']['skipped_count']}`",
+        f"- Cached environment blockers: `{report['counts'].get('cached_environment_blocker_count', 0)}`",
         f"- Claim-ready rows: `{report['counts']['claim_ready_count']}`",
         f"- Claim boundary: `{report['claim_boundary']}`",
         "",
@@ -272,6 +284,24 @@ def _backend_row(
         )
 
 
+def _cached_backend_blocker_row(input_row: dict[str, Any], backend: str, cached: dict[str, Any]) -> dict[str, Any]:
+    return _row(
+        input_row,
+        backend,
+        status="blocked",
+        issue_signature=str(cached["issue_signature"]),
+        detail=(
+            "Backend execution not retried because this backend already hit an environment-level blocker "
+            f"on `{cached['molecule_id']}`: {cached['detail']}"
+        ),
+        runtime_seconds=0.0,
+        metrics={
+            "cached_environment_blocker": True,
+            "cached_from_row_id": cached["row_id"],
+        },
+    )
+
+
 def _run_backend_prediction(input_row: dict[str, Any], backend: str, options: dict[str, Any]) -> dict[str, Any]:
     from ase.io import read
 
@@ -279,20 +309,43 @@ def _run_backend_prediction(input_row: dict[str, Any], backend: str, options: di
 
     atoms = read(str(input_row["xyz_path"]), index=0)
     device = options.get("device")
+    adapter_cache = options.setdefault("_adapter_cache", {})
     if backend == "mace":
-        model = MACEOffAdapter(model=str(options.get("mace_model", "small")), device=device)
+        key = (backend, str(options.get("mace_model", "small")), device)
+        model = adapter_cache.get(key)
+        if model is None:
+            model = MACEOffAdapter(model=str(options.get("mace_model", "small")), device=device)
+            adapter_cache[key] = model
     elif backend == "aimnet2":
-        model = AIMNet2Adapter(
-            model=str(options.get("aimnet_model", "aimnet2")),
-            device=device,
-            needs_dispersion=bool(options.get("aimnet_dispersion", False)),
+        key = (
+            backend,
+            str(options.get("aimnet_model", "aimnet2")),
+            device,
+            bool(options.get("aimnet_dispersion", False)),
         )
+        model = adapter_cache.get(key)
+        if model is None:
+            model = AIMNet2Adapter(
+                model=str(options.get("aimnet_model", "aimnet2")),
+                device=device,
+                needs_dispersion=bool(options.get("aimnet_dispersion", False)),
+            )
+            adapter_cache[key] = model
     elif backend == "uma":
-        model = UMAAdapter(
-            checkpoint=str(options.get("uma_checkpoint", "uma-s-1p2")),
-            task_name=str(options.get("uma_task_name", "omc")),
-            device=device,
+        key = (
+            backend,
+            str(options.get("uma_checkpoint", "uma-s-1p2")),
+            str(options.get("uma_task_name", "omc")),
+            device,
         )
+        model = adapter_cache.get(key)
+        if model is None:
+            model = UMAAdapter(
+                checkpoint=str(options.get("uma_checkpoint", "uma-s-1p2")),
+                task_name=str(options.get("uma_task_name", "omc")),
+                device=device,
+            )
+            adapter_cache[key] = model
     else:
         raise ValueError(f"unsupported backend: {backend}")
     prediction = model.predict(atoms)
@@ -361,6 +414,13 @@ def _classify_exception(exc: Exception) -> tuple[str, str]:
     if "out of memory" in detail or "cuda" in detail and "memory" in detail:
         return "backend_resource_exhausted", "blocked"
     return "backend_execution_exception", "failed"
+
+
+def _is_environment_blocker(issue_signature: str) -> bool:
+    return issue_signature in {
+        "backend_missing_windows_cpp_compiler",
+        "optional_backend_missing_dependency",
+    }
 
 
 def _bug_signatures(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:

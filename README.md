@@ -9,6 +9,7 @@ For the queryable database and static explorer, see [`docs/evidence_atlas.md`](d
 For many-molecule software stress testing, see [`docs/molecule_bug_hunt.md`](docs/molecule_bug_hunt.md).
 For optional SMILES-to-conformer generation, see [`docs/conformer_generation.md`](docs/conformer_generation.md).
 For hashed backend-ready generated-conformer inputs and the tiny backend smoke benchmark, see [`docs/backend_ready_inputs.md`](docs/backend_ready_inputs.md) and [`docs/backend_smoke.md`](docs/backend_smoke.md).
+For the first backend result table and joined molecule QA dashboard, see [`docs/backend_result_table.md`](docs/backend_result_table.md) and [`docs/molecule_bug_dashboard.md`](docs/molecule_bug_dashboard.md).
 For the tentative molecule benchmark and bug signatures, see [`docs/tentative_molecule_benchmark.md`](docs/tentative_molecule_benchmark.md).
 For candidate-safe molecule/crystal viewers that open source-hosted COD/JSmol pages without embedding coordinates, see [`docs/molecule_viewers.md`](docs/molecule_viewers.md).
 For the publication-path research spine mapping historical simulation, CSP, uncertainty, and reproducible-research ideas to modern CrystalProbe modules, see [`docs/historical_research_opportunities.md`](docs/historical_research_opportunities.md).
@@ -17,7 +18,8 @@ To run the current research loop and first evidence packet, run `python scripts\
 To rebuild the evidence database and static explorer, run `python scripts\build_evidence_atlas.py`.
 To rebuild the molecule stress database and energy verification layer, run `python scripts\build_molecule_bug_hunt_database.py` and `python scripts\build_energy_verification_report.py`.
 To rebuild the optional conformer-generation bridge from the RDKit-enabled project runtime, run `.\.venv\Scripts\python.exe scripts\build_conformer_generation_report.py`.
-To hash generated-conformer backend inputs and run the tiny backend smoke slice, run `.\.venv\Scripts\python.exe scripts\build_backend_ready_inputs.py` and `.\.venv\Scripts\python.exe scripts\build_backend_smoke_report.py --limit 1 --backends mace aimnet2`.
+To hash generated-conformer backend inputs and run the all-molecule backend smoke slice, run `.\.venv\Scripts\python.exe scripts\build_backend_ready_inputs.py` and `.\.venv\Scripts\python.exe scripts\build_backend_smoke_report.py --all --backends mace aimnet2`.
+To build the first backend result table and joined molecule QA dashboard, run `.\.venv\Scripts\python.exe scripts\build_backend_result_table.py` and `.\.venv\Scripts\python.exe scripts\build_molecule_bug_dashboard.py`.
 To rebuild the tentative molecule benchmark with conformer rows, run `.\.venv\Scripts\python.exe scripts\build_tentative_molecule_benchmark.py`.
 To rebuild the candidate-safe molecule viewers, run `python scripts\build_molecule_viewer_report.py`.
 
@@ -41,6 +43,7 @@ The near-term goal is to make polymorph-pair evaluation reproducible before buil
 - A many-molecule bug-hunt database for salts, charges, stereochemistry, hydrates, fused rings, tautomer-like cases, large molecules, and duplicate-connectivity traps.
 - An optional RDKit ETKDG conformer-generation bridge for turning SMILES fixtures into local generated inputs without promoting them to experimental structures.
 - A backend-ready input manifest and tiny backend smoke benchmark that hash local generated XYZ files, execute optional backends when available, and record blockers without comparing cross-backend absolute energies.
+- A first backend result table and molecule bug dashboard that join parser status, conformer status, backend status, energy/force sanity, and issue signatures across the 85-molecule QA panel.
 - A tentative molecule benchmark that ingests a larger CSV panel, runs SMILES checks, optional RDKit parsing/conformer generation, preflights scientific backends, and records structured bug signatures without creating scientific claims.
 - Candidate-safe molecule viewer pages that route reviewers to source-hosted COD/JSmol visualizers without redistributing coordinates.
 

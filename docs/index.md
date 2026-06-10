@@ -14,6 +14,8 @@ CrystalProbe is organized around one principle: every polymorph prediction shoul
 - `docs/conformer_generation.md`: optional RDKit ETKDG conformer-generation bridge for turning SMILES fixtures into backend-ready local inputs.
 - `docs/backend_ready_inputs.md`: hashed local generated-conformer inputs tagged `candidate_unverified` for backend execution.
 - `docs/backend_smoke.md`: tiny optional-backend smoke benchmark over generated conformers, including blocker signatures.
+- `docs/backend_result_table.md`: first compact table of actual backend execution rows, energies, forces, models, and blockers.
+- `docs/molecule_bug_dashboard.md`: joined 85-molecule QA dashboard from parser status to issue signature.
 - `docs/molecule_bug_hunt.md`: many-molecule software stress database for parser, energy-layer, and visualization QA.
 - `docs/tentative_molecule_benchmark.md`: tentative molecule-panel benchmark with SMILES checks, optional RDKit parsing, backend preflights, and bug signatures.
 - `docs/molecule_viewers.md`: candidate-safe remote COD/JSmol viewer registry for molecule/crystal inspection.
@@ -27,6 +29,8 @@ CrystalProbe is organized around one principle: every polymorph prediction shoul
 - `scripts/build_conformer_generation_report.py`: runs the optional RDKit conformer generator and records generated/blocked rows.
 - `scripts/build_backend_ready_inputs.py`: hashes generated local XYZ files into a backend-ready input manifest.
 - `scripts/build_backend_smoke_report.py`: runs or dry-runs a small MACE/AIMNet2/UMA backend smoke slice.
+- `scripts/build_backend_result_table.py`: extracts actual backend execution rows into a compact result table.
+- `scripts/build_molecule_bug_dashboard.py`: joins parser, conformer, backend, and energy/force sanity states by molecule.
 - `scripts/build_energy_verification_report.py`: audits pair-energy rows for units, winners, uncertainty, OOD flags, and claim eligibility.
 - `scripts/build_molecule_bug_hunt_database.py`: builds the many-molecule stress database used to expose parser and energy-layer edge cases.
 - `scripts/build_tentative_molecule_benchmark.py`: builds the larger tentative molecule benchmark and SQLite bug-signature table.
@@ -92,6 +96,12 @@ CrystalProbe is organized around one principle: every polymorph prediction shoul
 - `outputs/crystalprobe_backend_smoke.sqlite`: SQLite backend smoke rows and bug signatures.
 - `outputs/crystalprobe_backend_smoke.json`: machine-readable backend smoke benchmark.
 - `outputs/crystalprobe_backend_smoke.md`: human-readable backend smoke benchmark.
+- `outputs/crystalprobe_backend_result_table.sqlite`: SQLite first backend result rows.
+- `outputs/crystalprobe_backend_result_table.json`: machine-readable first backend result table.
+- `outputs/crystalprobe_backend_result_table.md`: human-readable first backend result table.
+- `outputs/crystalprobe_molecule_bug_dashboard.sqlite`: SQLite joined molecule QA dashboard.
+- `outputs/crystalprobe_molecule_bug_dashboard.json`: machine-readable joined molecule QA dashboard.
+- `outputs/crystalprobe_molecule_bug_dashboard.md`: human-readable joined molecule QA dashboard.
 - `outputs/crystalprobe_energy_verification.json`: machine-readable energy-layer verification report.
 - `outputs/crystalprobe_energy_verification.md`: human-readable energy-layer verification report.
 - `outputs/crystalprobe_molecule_bug_hunt.sqlite`: SQLite software stress database for many-molecule bug hunting.

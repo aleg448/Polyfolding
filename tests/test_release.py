@@ -75,6 +75,9 @@ def test_release_boundary_classifies_environment_blocker_outputs_public():
             "outputs/crystalprobe_backend_ready_inputs.json",
             "outputs/crystalprobe_backend_ready_inputs.md",
             "outputs/crystalprobe_backend_ready_inputs.sqlite",
+            "outputs/crystalprobe_backend_result_table.json",
+            "outputs/crystalprobe_backend_result_table.md",
+            "outputs/crystalprobe_backend_result_table.sqlite",
             "outputs/crystalprobe_backend_smoke.json",
             "outputs/crystalprobe_backend_smoke.md",
             "outputs/crystalprobe_backend_smoke.sqlite",
@@ -105,6 +108,9 @@ def test_release_boundary_classifies_environment_blocker_outputs_public():
             "outputs/crystalprobe_molecule_bug_hunt.json",
             "outputs/crystalprobe_molecule_bug_hunt.md",
             "outputs/crystalprobe_molecule_bug_hunt.sqlite",
+            "outputs/crystalprobe_molecule_bug_dashboard.json",
+            "outputs/crystalprobe_molecule_bug_dashboard.md",
+            "outputs/crystalprobe_molecule_bug_dashboard.sqlite",
             "outputs/crystalprobe_tentative_molecule_benchmark.json",
             "outputs/crystalprobe_tentative_molecule_benchmark.md",
             "outputs/crystalprobe_tentative_molecule_benchmark.sqlite",
@@ -166,6 +172,7 @@ def test_release_boundary_default_paths_include_script_bootstrap():
     assert "data/curation/molecule_benchmark_panel_v0.1.csv" in DEFAULT_REPO_PATHS
     assert "data/curation/molecule_bug_hunt_stress_v0.1.json" in DEFAULT_REPO_PATHS
     assert "docs/backend_ready_inputs.md" in DEFAULT_REPO_PATHS
+    assert "docs/backend_result_table.md" in DEFAULT_REPO_PATHS
     assert "docs/backend_smoke.md" in DEFAULT_REPO_PATHS
     assert "docs/conformer_generation.md" in DEFAULT_REPO_PATHS
     assert "docs/environments.md" in DEFAULT_REPO_PATHS
@@ -210,6 +217,7 @@ def test_release_boundary_default_paths_include_status_and_roadmap_surface():
         "scripts/build_project_status_dashboard.py",
         "scripts/build_active_evidence_triage_report.py",
         "scripts/build_backend_ready_inputs.py",
+        "scripts/build_backend_result_table.py",
         "scripts/build_backend_smoke_report.py",
         "scripts/build_conformer_generation_report.py",
         "scripts/build_evidence_atlas.py",
@@ -233,6 +241,7 @@ def test_release_boundary_default_paths_include_status_and_roadmap_surface():
         "scripts/build_medication_seed_ranking_report.py",
         "scripts/build_medication_stereochemistry_report.py",
         "scripts/build_medication_stereochemistry_dossier.py",
+        "scripts/build_molecule_bug_dashboard.py",
         "scripts/build_molecule_bug_hunt_database.py",
         "scripts/build_molecule_viewer_report.py",
         "scripts/build_tentative_molecule_benchmark.py",
@@ -240,6 +249,7 @@ def test_release_boundary_default_paths_include_status_and_roadmap_surface():
         "src/crystalprobe/datahub/cif_repair.py",
         "src/crystalprobe/insight/active_evidence_triage.py",
         "src/crystalprobe/insight/backend_ready_inputs.py",
+        "src/crystalprobe/insight/backend_result_table.py",
         "src/crystalprobe/insight/backend_smoke.py",
         "src/crystalprobe/insight/conformer_generation.py",
         "src/crystalprobe/insight/energy_verification.py",
@@ -257,6 +267,7 @@ def test_release_boundary_default_paths_include_status_and_roadmap_surface():
         "src/crystalprobe/insight/medication_seed_ranking.py",
         "src/crystalprobe/insight/medication_stereochemistry.py",
         "src/crystalprobe/insight/medication_stereochemistry_dossier.py",
+        "src/crystalprobe/insight/molecule_bug_dashboard.py",
         "src/crystalprobe/insight/molecule_bug_hunt.py",
         "src/crystalprobe/insight/molecule_viewers.py",
         "src/crystalprobe/insight/tentative_molecule_benchmark.py",
@@ -270,6 +281,7 @@ def test_release_boundary_default_paths_include_status_and_roadmap_surface():
         "src/crystalprobe/uncertainty/calibrated_abstention.py",
         "tests/test_active_evidence_triage.py",
         "tests/test_backend_ready_inputs.py",
+        "tests/test_backend_result_table.py",
         "tests/test_backend_smoke.py",
         "tests/test_calibrated_abstention.py",
         "tests/test_conformer_generation.py",
@@ -288,6 +300,7 @@ def test_release_boundary_default_paths_include_status_and_roadmap_surface():
         "tests/test_medication_seed_ranking.py",
         "tests/test_medication_stereochemistry.py",
         "tests/test_medication_stereochemistry_dossier.py",
+        "tests/test_molecule_bug_dashboard.py",
         "tests/test_molecule_bug_hunt.py",
         "tests/test_molecule_viewers.py",
         "tests/test_tentative_molecule_benchmark.py",
