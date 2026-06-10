@@ -6,6 +6,5 @@ authors:
   - name: CrystalProbe contributors
 license: Apache-2.0
 version: 0.1.0
-repository-code: "https://github.com/REPLACE_WITH_ORG/crystalprobe"
+repository-code: "https://github.com/aleg448/Polyfolding"
 abstract: "Interpretability-first tools for polymorph-pair benchmarking and uncertainty-aware MLIP evaluation."
-

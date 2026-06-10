@@ -28,6 +28,9 @@ conformer = [
 [project.scripts]
 crystalprobe = "crystalprobe.benchmark.cli:main"
 
+[project.urls]
+Repository = "https://github.com/aleg448/Polyfolding"
+
 [tool.setuptools.packages.find]
 where = ["src"]
 
