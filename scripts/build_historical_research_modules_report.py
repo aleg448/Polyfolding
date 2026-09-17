@@ -54,7 +54,7 @@ def main() -> int:
     abstention = calibrated_abstention_decision(
         predicted_gap=1.6,
         combined_uncertainty=0.4,
-        conformal_threshold=float(conformal["threshold"]),
+        conformal_threshold=conformal["threshold"],
         evidence_status="candidate_unverified",
     )
     report = {

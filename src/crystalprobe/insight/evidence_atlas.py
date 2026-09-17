@@ -529,8 +529,15 @@ def evidence_atlas_explorer_html(report: dict[str, Any]) -> str:
     function badge(value, kind = '') {{
       return `<span class="badge ${{kind}}">${{esc(value)}}</span>`;
     }}
+    function isSafeUrl(url) {{
+      const value = String(url ?? '').trim().toLowerCase();
+      return value.startsWith('http://') || value.startsWith('https://');
+    }}
     function link(url, label) {{
       if (!url) return '';
+      // Render a plain-text label for non-http(s) URLs so a javascript:/data:
+      // scheme from a source record cannot execute when clicked.
+      if (!isSafeUrl(url)) return esc(label);
       return `<a href="${{esc(url)}}" target="_blank" rel="noopener noreferrer">${{esc(label)}}</a>`;
     }}
     function rows(items, columns) {{

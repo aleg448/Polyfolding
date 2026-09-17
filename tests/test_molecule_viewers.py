@@ -1,7 +1,12 @@
 import json
 from pathlib import Path
 
-from crystalprobe.insight.molecule_viewers import molecule_viewer_html, molecule_viewer_markdown, molecule_viewer_report
+from crystalprobe.insight.molecule_viewers import (
+    _structure_card,
+    molecule_viewer_html,
+    molecule_viewer_markdown,
+    molecule_viewer_report,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -46,3 +51,44 @@ def test_molecule_viewer_markdown_and_html_keep_external_viewer_boundary_visible
     assert "candidate_unverified" in html
     assert "<iframe" in html
     assert "_atom_site" not in html
+
+
+def _card_structure(**overrides):
+    structure = {
+        "side": "A",
+        "proposed_form_label": "Form I",
+        "source_database": "COD",
+        "source_id": "COD:1",
+        "viewer_url": "https://www.crystallography.net/cod/1.html",
+        "cif_url": None,
+        "space_group": "P 21/c",
+        "license": "CC0-1.0",
+        "has_disorder": False,
+        "viewer_kind": "cod_jsmol_remote_page",
+        "coordinate_policy": "remote_source_only_no_coordinates_embedded",
+        "claim_label": "candidate_unverified",
+        "coordinates_embedded": False,
+    }
+    structure.update(overrides)
+    return structure
+
+
+def test_structure_card_drops_javascript_scheme_urls():
+    card = _structure_card(
+        _card_structure(
+            viewer_url="javascript:alert(1)",
+            cif_url="javascript:alert(2)",
+        )
+    )
+    assert "javascript:" not in card
+    assert "<iframe" not in card  # unsafe URL must not auto-load in an iframe
+    assert "Open COD JSmol" not in card
+    assert "Open CIF Source" not in card
+    assert "Viewer URL omitted" in card
+
+
+def test_structure_card_keeps_safe_http_urls():
+    card = _structure_card(_card_structure(cif_url="https://example.org/1.cif"))
+    assert 'href="https://www.crystallography.net/cod/1.html"' in card
+    assert "<iframe" in card
+    assert 'href="https://example.org/1.cif"' in card

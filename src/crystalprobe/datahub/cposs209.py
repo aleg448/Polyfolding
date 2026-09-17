@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from math import isfinite
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Iterable
@@ -75,11 +76,22 @@ def parse_cposs_block_id(block_id: str) -> tuple[str, int | None, str | None]:
 
 
 def iter_cif_block_ids(path: Path) -> list[str]:
-    """List CIF data block identifiers without requiring ASE."""
+    """List CIF data block identifiers without requiring ASE.
+
+    Skips CIF multi-line text fields (delimited by lines starting with ``;``) so
+    a ``data_`` token appearing inside free text is not mistaken for a real data
+    block. This keeps the block count consistent with :func:`_block_tag_maps`.
+    """
 
     block_ids: list[str] = []
-    for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
-        match = BLOCK_RE.match(line.strip())
+    in_text_field = False
+    for raw_line in path.read_text(encoding="utf-8", errors="replace").splitlines():
+        if raw_line.startswith(";"):
+            in_text_field = not in_text_field
+            continue
+        if in_text_field:
+            continue
+        match = BLOCK_RE.match(raw_line.strip())
         if match:
             block_ids.append(match.group("block_id"))
     return block_ids
@@ -92,15 +104,40 @@ def _clean_cif_value(value: str) -> str:
     return value
 
 
-def _parse_float(value: str) -> float:
-    cleaned = _clean_cif_value(value).split("(", 1)[0]
-    return float(cleaned)
+CIF_NULL_VALUES = {"?", "."}
+
+
+def _parse_float(value: str) -> float | None:
+    """Parse a CIF numeric value, returning None for null/unparseable markers.
+
+    Handles standard-uncertainty suffixes (``5.123(4)``) and the CIF null
+    markers ``?`` (unknown) and ``.`` (inapplicable), which would otherwise
+    raise and abort indexing of an entire file.
+    """
+
+    cleaned = _clean_cif_value(value).split("(", 1)[0].strip()
+    if not cleaned or cleaned in CIF_NULL_VALUES:
+        return None
+    try:
+        parsed = float(cleaned)
+        return parsed if isfinite(parsed) else None
+    except ValueError:
+        return None
 
 
 def _block_tag_maps(path: Path) -> list[dict[str, str]]:
     blocks: list[dict[str, str]] = []
     current: dict[str, str] | None = None
+    in_text_field = False
     for raw_line in path.read_text(encoding="utf-8", errors="replace").splitlines():
+        # CIF multi-line text fields are delimited by lines starting with ';'.
+        # Their contents can contain '_'-prefixed words that must not be parsed
+        # as tag/value pairs, so skip everything inside them.
+        if raw_line.startswith(";"):
+            in_text_field = not in_text_field
+            continue
+        if in_text_field:
+            continue
         line = raw_line.strip()
         if not line or line.startswith("#"):
             continue
@@ -140,19 +177,29 @@ def index_cposs_cif(path: str | Path, *, with_atoms: bool = True) -> list[CpossS
         atom_rows = [(None, None) for _ in block_ids]
 
     if not (len(block_ids) == len(tag_maps) == len(atom_rows)):
+        hint = ""
+        if with_atoms and len(atom_rows) != len(block_ids):
+            # ASE only yields Atoms for blocks that carry coordinates, so a
+            # coordinate-free header/metadata block makes the atom count differ.
+            # Failing here is deliberate: aligning by position would risk
+            # attaching a formula to the wrong structure. Re-run without atoms to
+            # index cell/space-group metadata only.
+            hint = " (a coordinate-free data block likely broke ASE alignment; re-run with with_atoms=False / --no-atoms)"
         raise ValueError(
             f"CPOSS CIF block mismatch for {cif_path}: "
-            f"blocks={len(block_ids)} tags={len(tag_maps)} atoms={len(atom_rows)}"
+            f"blocks={len(block_ids)} tags={len(tag_maps)} atoms={len(atom_rows)}{hint}"
         )
 
     records: list[CpossStructureRecord] = []
     for index, (block_id, tags, atom_row) in enumerate(zip(block_ids, tag_maps, atom_rows, strict=True)):
         family, form_number, suffix = parse_cposs_block_id(block_id)
-        cell = {
-            name: _parse_float(tags[tag])
-            for tag, name in CELL_TAGS.items()
-            if tag in tags
-        }
+        cell: dict[str, float] = {}
+        for tag, name in CELL_TAGS.items():
+            if tag not in tags:
+                continue
+            parsed = _parse_float(tags[tag])
+            if parsed is not None:
+                cell[name] = parsed
         records.append(
             CpossStructureRecord(
                 block_id=block_id,

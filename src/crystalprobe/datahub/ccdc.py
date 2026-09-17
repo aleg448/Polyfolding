@@ -18,6 +18,7 @@ SPACE_GROUP_REPLACEMENTS = {
     "P2(1)/c": "P 21/c",
     "P21/c": "P 21/c",
     "P21/a": "P 21/a",
+    "P 1 21 1": "P 21",
 }
 
 
@@ -46,7 +47,15 @@ def _clean_value(value: str) -> str:
 
 def _parse_tags(text: str) -> dict[str, str]:
     tags: dict[str, str] = {}
+    in_text_field = False
     for line in text.splitlines():
+        # Skip CIF multi-line text fields (delimited by lines starting with ';')
+        # so their free-text contents are not misread as single-line tag values.
+        if line.startswith(";"):
+            in_text_field = not in_text_field
+            continue
+        if in_text_field:
+            continue
         match = TAG_RE.match(line.strip())
         if match:
             tags[match.group("tag")] = _clean_value(match.group("value"))
@@ -60,9 +69,12 @@ def split_ccdc_cif(path: str | Path) -> list[CcdcCifBlock]:
     blocks: list[CcdcCifBlock] = []
     current: list[str] | None = None
     current_id: str | None = None
+    in_text_field = False
 
     for line in source.read_text(encoding="utf-8", errors="replace").splitlines(True):
-        match = DATA_RE.match(line)
+        if line.startswith(";"):
+            in_text_field = not in_text_field
+        match = None if in_text_field else DATA_RE.match(line.strip())
         if match:
             if current is not None and current_id is not None:
                 text = "".join(current)
@@ -108,13 +120,50 @@ def find_ccdc_block(blocks: list[CcdcCifBlock], *, block_id: str | None = None, 
 
 
 def sanitize_cif_text(text: str) -> str:
-    """Normalize common CSD space-group spellings that ASE cannot parse."""
+    """Normalize common CSD space-group spellings that ASE cannot parse.
 
-    sanitized = text
-    for old, new in SPACE_GROUP_REPLACEMENTS.items():
-        pattern = rf"(?m)^(_(?:symmetry_space_group_name_H-M|space_group_name_H-M_alt)\s+)'?{re.escape(old)}'?\s*$"
-        sanitized = re.sub(pattern, lambda match, value=new: f"{match.group(1)}'{value}'", sanitized)
-    return sanitized
+    The replacements are equivalence-preserving spelling normalizations (for
+    example ``P 1 21 1`` and ``P 21`` denote the same space group), not
+    symmetry changes. Use :func:`cif_spacegroup_replacements` to record which
+    normalizations were applied for provenance.
+    """
+
+    return _normalize_spacegroup_lines(text)[0]
+
+
+def cif_spacegroup_replacements(text: str) -> list[dict[str, str]]:
+    """List the space-group spelling normalizations :func:`sanitize_cif_text` applies.
+
+    Returns one ``{"from": old, "to": new}`` entry per replacement that actually
+    matches a space-group tag line, so callers can log the normalization in a
+    provenance record instead of silently rewriting the input.
+    """
+
+    return _normalize_spacegroup_lines(text)[1]
+
+
+def _normalize_spacegroup_lines(text: str) -> tuple[str, list[dict[str, str]]]:
+    pattern = re.compile(
+        r"^([ \t]*_(?:symmetry_space_group_name_H-M|space_group_name_H-M_alt)[ \t]+)(.+?)[ \t]*$"
+    )
+    lines = []
+    changes: list[dict[str, str]] = []
+    in_text_field = False
+    for line in text.splitlines(keepends=True):
+        if line.startswith(";"):
+            in_text_field = not in_text_field
+        body = line.rstrip("\r\n")
+        match = None if in_text_field else pattern.match(body)
+        if match:
+            old = _clean_value(match.group(2))
+            if old in SPACE_GROUP_REPLACEMENTS:
+                new = SPACE_GROUP_REPLACEMENTS[old]
+                line = f"{match.group(1)}'{new}'{line[len(body):]}"
+                change = {"from": old, "to": new}
+                if change not in changes:
+                    changes.append(change)
+        lines.append(line)
+    return "".join(lines), changes
 
 
 def write_ccdc_block(

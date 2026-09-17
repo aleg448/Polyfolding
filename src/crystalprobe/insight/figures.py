@@ -138,7 +138,7 @@ def calibration_reliability_svg(calibration: dict[str, Any], *, width: int = 850
 
     bins = list(calibration.get("reliability_bins", []))
     pieces = [_svg_open(width, height), _title("Calibration reliability", width)]
-    plot = _plot_area(width=width, height=height, left=90, right=58, top=108, bottom=96)
+    plot = _plot_area(width=width, height=height, left=90, right=58, top=108, bottom=132)
     _append_axes(pieces, plot, x_label="Predicted confidence", y_label="Empirical accuracy")
     pieces.append(_line(plot["x"], plot["y"] + plot["height"], plot["x"] + plot["width"], plot["y"], stroke="#94a3b8", width=1.5))
     active = [row for row in bins if row.get("count", 0) and row.get("mean_confidence") is not None and row.get("empirical_accuracy") is not None]
@@ -153,7 +153,12 @@ def calibration_reliability_svg(calibration: dict[str, Any], *, width: int = 850
             radius = 5 + min(int(row.get("count", 1)), 12)
             pieces.append(_circle(x, y, radius, fill="#2563eb", stroke="#1e3a8a"))
             pieces.append(_text(x + 10, y - 8, f"n={row.get('count')}", size=12, fill="#334155"))
-    pieces.append(_text(56, height - 34, f"ECE: {float(calibration.get('expected_calibration_error', 0.0)):.3f}; Brier: {float(calibration.get('brier_score', 0.0)):.3f}", size=14, fill="#475569"))
+    ece = calibration.get("expected_calibration_error") if active else None
+    brier = calibration.get("brier_score") if active else None
+    ece_label = f"{float(ece):.3f}" if ece is not None else "unavailable"
+    brier_label = f"{float(brier):.3f}" if brier is not None else "unavailable"
+    pieces.append(_text(56, height - 56, "Heuristic confidence diagnostics; calibration not validated.", size=14, fill="#475569"))
+    pieces.append(_text(56, height - 34, f"ECE: {ece_label}; Brier: {brier_label}", size=14, fill="#475569"))
     pieces.append("</svg>")
     return "\n".join(pieces)
 

@@ -72,6 +72,8 @@ def run_quick_benchmark(
             metrics={
                 "fingerprint_overall": report.as_dict()["overall"],
                 "calibration": {
+                    "status": calibration.as_dict()["status"],
+                    "calibration_validated": False,
                     "brier_score": calibration.brier_score,
                     "expected_calibration_error": calibration.expected_calibration_error,
                     "points": len(calibration.points),

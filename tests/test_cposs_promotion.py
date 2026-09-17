@@ -1,3 +1,5 @@
+import pytest
+
 from crystalprobe.insight.cposs_promotion import cposs_promotion_markdown, cposs_promotion_report
 
 
@@ -63,7 +65,7 @@ def test_cposs_promotion_blocks_incomplete_workpack_item():
     ]
 
 
-def test_cposs_promotion_builds_verified_pair_record():
+def test_cposs_promotion_blocks_missing_mapping():
     report = cposs_promotion_report(
         {
             "work_items": [
@@ -91,8 +93,8 @@ def test_cposs_promotion_builds_verified_pair_record():
         family_annotations=_annotations(),
     )
 
-    assert report["promoted_count"] == 1
-    assert report["promoted_records"][0]["curation_status"] == "verified"
+    assert report["promoted_count"] == 0
+    assert "block-to-form mapping row is missing" in report["rows"][0]["blockers"]
 
 
 def test_cposs_promotion_blocks_promote_decision_without_locked_block_mapping():
@@ -135,7 +137,7 @@ def test_cposs_promotion_blocks_promote_decision_without_locked_block_mapping():
     assert report["promoted_count"] == 0
     assert report["blocked_count"] == 1
     assert report["block_mapping_enforced"] is True
-    assert report["rows"][0]["blockers"] == ["A A: 12 mapping blockers"]
+    assert "A A: 12 mapping blockers" in report["rows"][0]["blockers"]
     assert "Lock block-to-experimental-form mapping" in report["rows"][0]["upgrade_requirements"][-1]
 
 
@@ -160,6 +162,7 @@ def test_cposs_promotion_allows_promote_decision_with_locked_block_mapping():
                         "curator": "curator",
                         "reviewer": "reviewer",
                         "promotion_decision": "promote",
+                        "human_expert_review": True,
                     },
                 }
             ]
@@ -231,7 +234,44 @@ def test_cposs_promotion_markdown_includes_field_completion():
     assert "## Family Summary" in markdown
     assert "## Curation Queue" in markdown
     assert "## Upgrade Requirements" in markdown
-    assert "- Block mapping enforced: `False`" in markdown
+    assert "- Block mapping enforced: `True`" in markdown
     assert "| `CBZ` | `1` | `0` | `0` | `1` | `1` |" in markdown
     assert "| `citation_doi_or_url` | `0` | `1` |" in markdown
     assert "| `cbz_a_vs_b` | `CBZ` | `high` | `8` |" in markdown
+
+
+@pytest.mark.parametrize("changes,expected", [
+    ({"has_disorder_a": "unknown"}, "has_disorder_a must be explicitly true or false"),
+    ({"human_expert_review": False}, "confirmed human_expert_review is required for verified promotion"),
+    ({"reviewer": "curator"}, "curator and reviewer must be independent"),
+    ({"citation_doi": "   "}, "citation_doi or citation_url is required"),
+])
+def test_promotion_rejects_unresolved_or_self_reviewed_evidence(changes, expected):
+    form = {
+        "experimental_stability_ordering": "A>B", "citation_doi": "10.0000/example",
+        "source_license_a": "CC-BY-4.0", "source_license_b": "CC-BY-4.0",
+        "has_disorder_a": False, "has_disorder_b": False,
+        "curator": "curator", "reviewer": "reviewer",
+        "promotion_decision": "promote", "human_expert_review": True,
+    }
+    form.update(changes)
+    report = cposs_promotion_report(
+        {"work_items": [{"candidate_id": "fixture", "family": "CBZ",
+                         "structure_a": {"block_id": "A"}, "structure_b": {"block_id": "B"},
+                         "evidence_form": form}]},
+        family_annotations=_annotations(),
+        block_mapping_report={"candidate_rows": [{"candidate_id": "fixture", "mapping_ready": True}]},
+    )
+    assert report["promoted_count"] == 0
+    assert expected in report["rows"][0]["blockers"]
+
+
+@pytest.mark.parametrize("form", [None, [], "invalid", {"experimental_stability_ordering": []}])
+def test_malformed_form_is_blocked_without_aborting_other_candidates(form):
+    report = cposs_promotion_report({"work_items": [
+        {"candidate_id": "bad", "family": "CBZ", "evidence_form": form},
+        {"candidate_id": "next", "family": "CBZ", "evidence_form": {}},
+    ]}, family_annotations=_annotations())
+    assert report["candidate_count"] == 2
+    assert report["blocked_count"] == 2
+    assert report["promoted_count"] == 0

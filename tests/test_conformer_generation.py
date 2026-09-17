@@ -1,4 +1,5 @@
 import sqlite3
+import pytest
 
 import crystalprobe.insight.conformer_generation as conformers
 from crystalprobe.insight.conformer_generation import (
@@ -77,3 +78,15 @@ def test_xyz_text_renders_generated_coordinates():
         "C 0.000000 0.000000 0.000000",
         "H 1.250000 -0.500000 0.125000",
     ]
+
+
+def test_generated_ammonium_preserves_charge_through_xyz(tmp_path):
+    pytest.importorskip("rdkit")
+    ase_io = pytest.importorskip("ase.io")
+    from crystalprobe.foundry.scope import structure_total_charge
+
+    report = conformer_generation_report(_records()[:1], write_xyz_dir=tmp_path)
+    row = report["rows"][0]
+    assert row["status"] in {"generated", "warning"}
+    assert row["metrics"]["total_charge"] == 1
+    assert structure_total_charge(ase_io.read(row["xyz_path"])) == 1.0

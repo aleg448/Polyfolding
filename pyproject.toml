@@ -20,9 +20,16 @@ dependencies = [
 dev = [
   "pytest>=8.0"
 ]
+lint = [
+  "ruff>=0.6.0",
+  "mypy>=1.11.0"
+]
 conformer = [
-  "numpy<2",
-  "rdkit-pypi==2022.9.5"
+  "numpy>=1.23",
+  "rdkit>=2023.3.1"
+]
+orchestration = [
+  "prefect==3.8.5"
 ]
 
 [project.scripts]
@@ -37,3 +44,40 @@ where = ["src"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = [".", "src"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+# Default rules (E4/E7/E9, F) plus flake8-bugbear. B905 (zip strict=) is left to
+# author discretion on this codebase's Python floor.
+extend-select = ["B"]
+ignore = ["B905"]
+
+[tool.mypy]
+python_version = "3.11"
+mypy_path = "src"
+ignore_missing_imports = true
+# Scoped "typed core": modules that already pass cleanly. follow_imports=silent
+# keeps the gate stable on exactly these files; expand the list as more modules
+# are annotated.
+follow_imports = "silent"
+files = [
+  "src/crystalprobe/uncertainty",
+  "src/crystalprobe/core",
+  "src/crystalprobe/structures",
+  "src/crystalprobe/config.py",
+  "src/crystalprobe/foundry/scope.py",
+  "src/crystalprobe/foundry/adapters.py",
+  "src/crystalprobe/foundry/mlip.py",
+  "src/crystalprobe/benchmark/schema.py",
+  "src/crystalprobe/benchmark/metrics.py",
+  "src/crystalprobe/benchmark/predictions.py",
+  "src/crystalprobe/benchmark/dataset.py",
+  "src/crystalprobe/benchmark/curation.py",
+  # First insight/ modules brought into the typed core; the remaining insight/
+  # modules still need annotation before they can join the gate.
+  "src/crystalprobe/insight/fingerprint.py",
+  "src/crystalprobe/insight/reporting.py",
+]

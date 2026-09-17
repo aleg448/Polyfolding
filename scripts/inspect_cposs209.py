@@ -32,7 +32,7 @@ def main() -> int:
     report = {
         "zip_path": str(zip_path),
         "bytes": zip_path.stat().st_size,
-        "md5": hashlib.md5(zip_path.read_bytes()).hexdigest(),
+        "sha256": hashlib.sha256(zip_path.read_bytes()).hexdigest(),
         "members": members,
         "extracted_cifs": [str(path) for path in cif_paths],
         "index_summary": summarize_cposs_records(cposs_records),

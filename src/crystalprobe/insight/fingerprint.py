@@ -17,6 +17,7 @@ class SliceResult:
     evaluated: int
     skipped: int
     accuracy: float | None
+    coverage: float | None
 
 
 @dataclass(frozen=True)
@@ -61,6 +62,7 @@ def _slice_result(name: str, result: RankingAccuracy) -> SliceResult:
         evaluated=result.evaluated,
         skipped=result.skipped,
         accuracy=result.accuracy,
+        coverage=result.coverage,
     )
 
 

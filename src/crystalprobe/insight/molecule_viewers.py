@@ -5,6 +5,8 @@ from __future__ import annotations
 from html import escape
 from typing import Any
 
+from crystalprobe.core.urls import is_safe_http_url, safe_http_url
+
 
 def molecule_viewer_report(candidate_document: dict[str, Any]) -> dict[str, Any]:
     """Build viewer targets from candidate-only evidence-resolution records."""
@@ -287,12 +289,31 @@ def _target_for_pair(report: dict[str, Any], pair_id: str) -> dict[str, Any] | N
 
 
 def _structure_card(structure: dict[str, Any]) -> str:
-    viewer_url = escape(str(structure["viewer_url"]), quote=True)
+    # Only render web links/iframes for http(s) URLs. A javascript:/data: URL
+    # from a source record would otherwise execute on click or on iframe load,
+    # which a candidate-safe navigation page must never do.
+    raw_viewer_url = str(structure["viewer_url"])
+    viewer_url = escape(safe_http_url(raw_viewer_url), quote=True)
+    if is_safe_http_url(raw_viewer_url):
+        viewer_frame = (
+            f'<iframe class="remote-frame" src="{viewer_url}" '
+            f'title="Remote COD/JSmol viewer for {escape(str(structure["source_id"]), quote=True)}" '
+            'loading="lazy" referrerpolicy="no-referrer"></iframe>'
+        )
+        viewer_button = (
+            f'<a class="button" href="{viewer_url}" target="_blank" '
+            'rel="noopener noreferrer">Open COD JSmol</a>'
+        )
+    else:
+        viewer_frame = (
+            '<div class="remote-frame empty">Viewer URL omitted: not a safe http(s) link.</div>'
+        )
+        viewer_button = ""
     cif_url = structure.get("cif_url")
     cif_link = ""
-    if cif_url:
+    if is_safe_http_url(cif_url):
         cif_link = (
-            f'<a class="button" href="{escape(str(cif_url), quote=True)}" '
+            f'<a class="button" href="{escape(safe_http_url(cif_url), quote=True)}" '
             'target="_blank" rel="noopener noreferrer">Open CIF Source</a>'
         )
     return f"""      <article class="viewer-card" data-claim-label="{escape(str(structure['claim_label']), quote=True)}">
@@ -305,9 +326,9 @@ def _structure_card(structure: dict[str, Any]) -> str:
           <dt>Disorder</dt><dd>{escape(str(structure['has_disorder']))}</dd>
           <dt>Policy</dt><dd>{escape(str(structure['coordinate_policy']))}</dd>
         </dl>
-        <iframe class="remote-frame" src="{viewer_url}" title="Remote COD/JSmol viewer for {escape(str(structure['source_id']), quote=True)}" loading="lazy" referrerpolicy="no-referrer"></iframe>
+        {viewer_frame}
         <div class="actions">
-          <a class="button" href="{viewer_url}" target="_blank" rel="noopener noreferrer">Open COD JSmol</a>
+          {viewer_button}
           {cif_link}
         </div>
       </article>"""

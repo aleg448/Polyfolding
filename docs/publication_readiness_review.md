@@ -2,6 +2,13 @@
 
 Date: 2026-06-10
 
+Historical review snapshot. For the September 10, 2026 campaign implementation,
+correctness fixes, and current validation procedure, see
+[Autonomous Research Pipeline](autonomous_research_pipeline.md). The counts and
+clean-worktree statement below describe the June snapshot, not the current branch.
+The latest local review checkpoint is
+[September 16 Review Validation](review_validation_2026-09-16.md).
+
 This review covers the current all-molecule QA, backend-result, release-boundary, and publication-readiness state after the backend result table and molecule bug dashboard work.
 
 ## Current Decision

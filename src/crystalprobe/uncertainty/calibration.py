@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from math import isfinite
 from statistics import fmean
 
 
@@ -54,10 +55,9 @@ class ReliabilityBin:
 def reliability_bins(confidences: list[float], outcomes: list[bool], *, bins: int = 10) -> list[ReliabilityBin]:
     """Compute reliability bins for confidence-calibrated binary outcomes."""
 
-    if len(confidences) != len(outcomes):
-        raise ValueError("confidences and outcomes must have the same length")
-    if bins <= 0:
-        raise ValueError("bins must be positive")
+    _validate_probabilities(confidences, outcomes)
+    if isinstance(bins, bool) or not isinstance(bins, int) or bins <= 0:
+        raise ValueError("bins must be a positive integer")
 
     rows: list[ReliabilityBin] = []
     for index in range(bins):
@@ -85,13 +85,13 @@ def reliability_bins(confidences: list[float], outcomes: list[bool], *, bins: in
     return rows
 
 
-def expected_calibration_error(confidences: list[float], outcomes: list[bool], *, bins: int = 10) -> float:
-    """Return ECE for binary confidence estimates."""
+def expected_calibration_error(confidences: list[float], outcomes: list[bool], *, bins: int = 10) -> float | None:
+    """Return ECE, or None when no evidence is available."""
 
     rows = reliability_bins(confidences, outcomes, bins=bins)
     total = sum(row.count for row in rows)
     if total == 0:
-        return 0.0
+        return None
     error = 0.0
     for row in rows:
         if row.count == 0 or row.mean_confidence is None or row.empirical_accuracy is None:
@@ -100,11 +100,19 @@ def expected_calibration_error(confidences: list[float], outcomes: list[bool], *
     return error
 
 
-def brier_score(probabilities: list[float], outcomes: list[bool]) -> float:
-    """Return the binary Brier score."""
+def brier_score(probabilities: list[float], outcomes: list[bool]) -> float | None:
+    """Return the binary Brier score, or None without evidence."""
 
+    _validate_probabilities(probabilities, outcomes)
+    if not probabilities:
+        return None
+    return fmean((probability - float(outcome)) ** 2 for probability, outcome in zip(probabilities, outcomes))
+
+
+def _validate_probabilities(probabilities: list[float], outcomes: list[bool]) -> None:
     if len(probabilities) != len(outcomes):
         raise ValueError("probabilities and outcomes must have the same length")
-    if not probabilities:
-        return 0.0
-    return fmean((probability - float(outcome)) ** 2 for probability, outcome in zip(probabilities, outcomes))
+    if any(not isfinite(value) or not 0 <= value <= 1 for value in probabilities):
+        raise ValueError("probabilities must be finite and between 0 and 1")
+    if any(not isinstance(value, bool) for value in outcomes):
+        raise ValueError("outcomes must be booleans")

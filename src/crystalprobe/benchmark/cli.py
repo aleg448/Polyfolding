@@ -112,6 +112,7 @@ def main(argv: list[str] | None = None) -> int:
             json.dumps(
                 {
                     "accuracy": result.accuracy,
+                    "coverage": result.coverage,
                     "correct": result.correct,
                     "evaluated": result.evaluated,
                     "skipped": result.skipped,
@@ -167,6 +168,8 @@ def main(argv: list[str] | None = None) -> int:
             )
             print(json.dumps({"report_json": str(result.report_json), "report_markdown": str(result.report_markdown), "calibration_json": str(result.calibration_json), "ledger": str(result.ledger_path) if result.ledger_path else None}, indent=2, sort_keys=True))
             return 0
+        parser.error(f"unsupported workflow: {config.workflow}")
+        return 2
 
     if args.command == "doctor":
         rows = [availability.__dict__ | {"blocker": availability.blocker} for availability in all_adapter_availability()]

@@ -64,6 +64,61 @@ def test_index_cposs_cif_without_atom_metadata(tmp_path):
     assert records[0].formula is None
 
 
+def test_index_cposs_cif_tolerates_cif_null_cell_values(tmp_path):
+    cif = tmp_path / "nulls.cif"
+    cif.write_text(
+        """
+data_NUL01_PsiCrys
+_symmetry_space_group_name_H-M   'P 21/c'
+_cell_length_a                   10.1
+_cell_length_b                   ?
+_cell_length_c                   .
+_cell_angle_beta                 116.7(3)
+_cell_angle_alpha                nan
+_cell_angle_gamma                inf
+_cell_volume                     659.7
+""".lstrip(),
+        encoding="utf-8",
+        newline="\n",
+    )
+    records = index_cposs_cif(cif, with_atoms=False)
+    assert len(records) == 1
+    cell = records[0].cell
+    assert cell["a"] == 10.1
+    assert cell["volume"] == 659.7
+    assert cell["beta"] == 116.7  # standard-uncertainty suffix stripped
+    assert "b" not in cell  # '?' null marker skipped
+    assert "c" not in cell  # '.' null marker skipped
+    assert "alpha" not in cell
+    assert "gamma" not in cell
+
+
+def test_index_cposs_cif_skips_multiline_text_fields(tmp_path):
+    # A ';'-delimited text field contains a 'data_' token and a fake cell-length
+    # line. Neither must be parsed as a real block or tag.
+    cif = tmp_path / "text_field.cif"
+    cif.write_text(
+        """
+data_REAL01_PsiCrys
+_symmetry_space_group_name_H-M   'P 21/c'
+_journal_paper_doi
+;
+Discussion of data_FAKE99 with _cell_length_a 999.9 inside prose.
+;
+_cell_length_a                   10.1
+_cell_volume                     659.7
+""".lstrip(),
+        encoding="utf-8",
+        newline="\n",
+    )
+    assert iter_cif_block_ids(cif) == ["REAL01_PsiCrys"]
+    records = index_cposs_cif(cif, with_atoms=False)
+    assert len(records) == 1
+    assert records[0].block_id == "REAL01_PsiCrys"
+    assert records[0].cell["a"] == 10.1  # real tag after the text field is still read
+    assert records[0].cell["volume"] == 659.7
+
+
 def test_summarize_cposs_records(tmp_path):
     cif = tmp_path / "tiny.cif"
     _write_tiny_cif(cif)

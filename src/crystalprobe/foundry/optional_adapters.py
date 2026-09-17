@@ -7,6 +7,11 @@ from pathlib import Path
 
 from crystalprobe.foundry.adapters import require_adapter
 from crystalprobe.foundry.mlip import MLIPAdapter
+from crystalprobe.foundry.scope import (
+    describe_structure_scope,
+    structure_is_periodic,
+    structure_total_charge,
+)
 from crystalprobe.uncertainty.base import EnergyForcePrediction, StructureInput
 
 
@@ -20,6 +25,7 @@ class MACEOffAdapter(MLIPAdapter):
 
         self.model = model
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
+        self.energy_reference = f"mace_off:{model}"
         self.calculator = mace_off(model=model, device=self.device)
 
     def predict(self, structure: StructureInput) -> EnergyForcePrediction:
@@ -30,7 +36,13 @@ class MACEOffAdapter(MLIPAdapter):
         return EnergyForcePrediction(
             energy=energy,
             forces=forces,
-            metadata={"adapter": self.name, "model": self.model, "device": self.device},
+            metadata={
+                "adapter": self.name,
+                "model": self.model,
+                "device": self.device,
+                "energy_reference": self.energy_reference,
+                "scope": describe_structure_scope(structure),
+            },
         )
 
 
@@ -43,6 +55,8 @@ class AIMNet2Adapter(MLIPAdapter):
         *,
         device: str | None = None,
         needs_dispersion: bool = False,
+        charge: float = 0.0,
+        allow_periodic_cluster: bool = False,
         warp_cache_path: str | Path | None = None,
     ) -> None:
         require_adapter("aimnet2")
@@ -55,14 +69,31 @@ class AIMNet2Adapter(MLIPAdapter):
         self.model = model
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
         self.needs_dispersion = needs_dispersion
+        self.charge = float(charge)
+        # When True, a periodic input is evaluated as an isolated cluster of the
+        # unit-cell atoms. This is an explicit, documented approximation; it is
+        # off by default so a crystal cannot silently become a cluster energy.
+        self.allow_periodic_cluster = allow_periodic_cluster
+        self.energy_reference = f"aimnet2:{model}"
         self.calculator = AIMNet2Calculator(model=model, device=self.device, needs_dispersion=needs_dispersion)
 
     def predict(self, structure: StructureInput) -> EnergyForcePrediction:
         import numpy as np
 
+        periodic = structure_is_periodic(structure)
+        if periodic and not self.allow_periodic_cluster:
+            raise ValueError(
+                "AIMNet2Adapter received a periodic structure but cannot consume "
+                "cell/PBC through this code path, so it would silently return a "
+                "non-periodic cluster energy. Use a periodic backend (UMA task=omc) "
+                "for crystals, or pass allow_periodic_cluster=True to force a "
+                "documented isolated-cluster approximation."
+            )
+
+        total_charge = structure_total_charge(structure, default=self.charge)
         numbers = np.asarray(structure.get_atomic_numbers(), dtype=np.int64)[None, :]
         coord = np.asarray(structure.get_positions(), dtype=np.float32)[None, :, :]
-        charge = np.asarray([0.0], dtype=np.float32)
+        charge = np.asarray([total_charge], dtype=np.float32)
         output = self.calculator.eval({"numbers": numbers, "coord": coord, "charge": charge}, forces=True)
         energy = float(output["energy"].detach().cpu().numpy()[0])
         forces_array = output["forces"].detach().cpu().numpy()[0]
@@ -75,6 +106,10 @@ class AIMNet2Adapter(MLIPAdapter):
                 "model": self.model,
                 "device": self.device,
                 "needs_dispersion": self.needs_dispersion,
+                "energy_reference": self.energy_reference,
+                "total_charge": total_charge,
+                "treated_as_cluster": bool(periodic),
+                "scope": describe_structure_scope(structure, default_charge=self.charge),
             },
         )
 
@@ -96,6 +131,7 @@ class UMAAdapter(MLIPAdapter):
         self.checkpoint = checkpoint
         self.task_name = task_name
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
+        self.energy_reference = f"uma:{checkpoint}:{task_name}"
         self.calculator = FAIRChemCalculator.from_model_checkpoint(
             checkpoint,
             task_name=task_name,
@@ -115,5 +151,7 @@ class UMAAdapter(MLIPAdapter):
                 "checkpoint": self.checkpoint,
                 "task_name": self.task_name,
                 "device": self.device,
+                "energy_reference": self.energy_reference,
+                "scope": describe_structure_scope(structure),
             },
         )

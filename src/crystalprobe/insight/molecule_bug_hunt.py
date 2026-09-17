@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 import sqlite3
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -30,9 +29,10 @@ def molecule_bug_hunt_report(catalog: dict[str, Any]) -> dict[str, Any]:
     """Summarize a molecule stress catalog for parser/database QA."""
 
     molecules = [_molecule_row(row) for row in catalog.get("molecules", [])]
-    duplicate_groups = _duplicate_groups(molecules)
+    dup_keys = {row["molecule_id"]: _canonical_smiles_key(row["smiles"]) for row in molecules}
+    duplicate_groups = _duplicate_groups(molecules, dup_keys)
     for row in molecules:
-        group = duplicate_groups.get(row["smiles"])
+        group = duplicate_groups.get(dup_keys[row["molecule_id"]])
         row["duplicate_smiles_group"] = "; ".join(group) if group and len(group) > 1 else ""
 
     tag_counts = Counter(tag for row in catalog.get("molecules", []) for tag in row.get("stress_tags", []))
@@ -109,6 +109,50 @@ def write_molecule_bug_hunt_sqlite(report: dict[str, Any], path: str | Path) -> 
         connection.execute("CREATE INDEX idx_molecule_stress_smiles ON molecule_stress_cases(smiles)")
 
 
+def _crude_smiles_features(smiles: str) -> dict[str, bool]:
+    """String-only chemistry flags used when RDKit is unavailable.
+
+    These are approximate: ``"-" in smiles`` also matches an explicit single-bond
+    token, so the charge flag can false-positive without RDKit.
+    """
+
+    return {
+        "has_charge": "+" in smiles or "-" in smiles,
+        "has_stereochemistry": "@" in smiles or "/" in smiles or "\\" in smiles,
+        "has_aromatic_tokens": any(token in smiles for token in ("c", "n", "o", "s")),
+    }
+
+
+def _smiles_features(smiles: str) -> dict[str, bool]:
+    """Chemistry feature flags, preferring exact RDKit detection.
+
+    RDKit (an optional dependency) gives exact formal-charge, stereochemistry,
+    and aromaticity perception, avoiding the false positives of the string
+    heuristics. Falls back to :func:`_crude_smiles_features` when RDKit is not
+    installed or the SMILES cannot be parsed.
+    """
+
+    try:
+        from rdkit import Chem, rdBase
+    except ImportError:
+        return _crude_smiles_features(smiles)
+
+    with rdBase.BlockLogs():
+        mol = Chem.MolFromSmiles(smiles)
+    if mol is None:
+        return _crude_smiles_features(smiles)
+
+    has_chiral_atom = any(
+        atom.GetChiralTag() != Chem.ChiralType.CHI_UNSPECIFIED for atom in mol.GetAtoms()
+    )
+    has_bond_stereo = any(bond.GetStereo() != Chem.BondStereo.STEREONONE for bond in mol.GetBonds())
+    return {
+        "has_charge": any(atom.GetFormalCharge() != 0 for atom in mol.GetAtoms()),
+        "has_stereochemistry": has_chiral_atom or has_bond_stereo,
+        "has_aromatic_tokens": any(atom.GetIsAromatic() for atom in mol.GetAtoms()),
+    }
+
+
 def _molecule_row(row: dict[str, Any]) -> dict[str, Any]:
     smiles = str(row["smiles"])
     return {
@@ -118,9 +162,7 @@ def _molecule_row(row: dict[str, Any]) -> dict[str, Any]:
         "stress_tags": "; ".join(row.get("stress_tags", [])),
         "expected_bug_surfaces": "; ".join(row.get("expected_bug_surfaces", [])),
         "component_count": smiles.count(".") + 1,
-        "has_charge": "+" in smiles or "-" in smiles,
-        "has_stereochemistry": "@" in smiles or "/" in smiles or "\\" in smiles,
-        "has_aromatic_tokens": any(token in smiles for token in ("c", "n", "o", "s")),
+        **_smiles_features(smiles),
         "has_ring_digits": any(character.isdigit() for character in smiles),
         "is_large_string": len(smiles) >= 55,
         "duplicate_smiles_group": "",
@@ -128,10 +170,33 @@ def _molecule_row(row: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _duplicate_groups(rows: list[dict[str, Any]]) -> dict[str, list[str]]:
+def _canonical_smiles_key(smiles: str) -> str:
+    """Return a duplicate-detection key that catches equivalent connectivity.
+
+    With RDKit (an optional dependency) two SMILES that describe the same
+    molecule but are written differently — reordered atoms, different
+    kekulization, alternate ring closures — canonicalize to the same string, so
+    they are recognized as the duplicate-connectivity traps this database is
+    meant to exercise. Without RDKit, or when the SMILES cannot be parsed, it
+    falls back to the raw string so exact-string duplicates are still grouped.
+    """
+
+    try:
+        from rdkit import Chem, rdBase
+    except ImportError:
+        return smiles
+
+    with rdBase.BlockLogs():
+        mol = Chem.MolFromSmiles(smiles)
+    if mol is None:
+        return smiles
+    return Chem.MolToSmiles(mol)
+
+
+def _duplicate_groups(rows: list[dict[str, Any]], keys: dict[str, str]) -> dict[str, list[str]]:
     grouped: dict[str, list[str]] = defaultdict(list)
     for row in rows:
-        grouped[row["smiles"]].append(row["molecule_id"])
+        grouped[keys[row["molecule_id"]]].append(row["molecule_id"])
     return dict(grouped)
 
 

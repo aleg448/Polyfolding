@@ -25,4 +25,12 @@ def test_ranking_accuracy_skips_ambiguous_and_scores_defined_pairs():
     assert result.evaluated == 1
     assert result.skipped == 1
     assert result.accuracy == 1.0
+    # 1 of 2 considered pairs was rankable, so a perfect accuracy only covers half.
+    assert result.coverage == 0.5
+
+
+def test_ranking_accuracy_coverage_is_none_without_considered_pairs():
+    result = ranking_accuracy([], {})
+    assert result.accuracy is None
+    assert result.coverage is None
 

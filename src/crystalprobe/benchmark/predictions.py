@@ -39,6 +39,7 @@ def load_pair_energy_predictions(path: str | Path) -> dict[str, PairEnergyPredic
 
     prediction_path = Path(path)
     predictions: dict[str, PairEnergyPrediction] = {}
+    seen_units: dict[str, str] = {}
     with prediction_path.open("r", encoding="utf-8") as handle:
         for line_number, line in enumerate(handle, start=1):
             stripped = line.strip()
@@ -50,16 +51,33 @@ def load_pair_energy_predictions(path: str | Path) -> dict[str, PairEnergyPredic
                 raise ValueError(f"{prediction_path}:{line_number}: invalid prediction: {exc}") from exc
             if record.pair_id in predictions:
                 raise ValueError(f"{prediction_path}:{line_number}: duplicate pair_id {record.pair_id}")
+            # This loader discards the unit; downstream magnitude-sensitive analyses
+            # (calibration, fingerprint slices) assume a single shared unit, so reject
+            # a file that silently mixes units rather than aggregating across scales.
+            seen_units.setdefault(record.energy_unit, record.pair_id)
+            if len(seen_units) > 1:
+                detail = ", ".join(f"{pair_id}={unit}" for unit, pair_id in seen_units.items())
+                raise ValueError(
+                    f"{prediction_path}:{line_number}: mixed energy units in one file ({detail})"
+                )
             predictions[record.pair_id] = record.as_metric_prediction()
     return predictions
 
 
 def load_pair_energy_prediction_records(path: str | Path) -> list[PairEnergyPredictionRecord]:
-    """Load full prediction records from a JSON Lines file."""
+    """Load full prediction records from a JSON Lines file.
+
+    Like :func:`load_pair_energy_predictions`, this rejects a file that silently
+    mixes energy units. Magnitude-sensitive consumers of these records
+    (calibration diagnostics, energy verification) assume a single shared unit,
+    so aggregating across scales must fail loudly rather than produce a wrong
+    calibration report.
+    """
 
     prediction_path = Path(path)
     records: list[PairEnergyPredictionRecord] = []
     seen: set[str] = set()
+    seen_units: dict[str, str] = {}
     with prediction_path.open("r", encoding="utf-8") as handle:
         for line_number, line in enumerate(handle, start=1):
             stripped = line.strip()
@@ -71,6 +89,12 @@ def load_pair_energy_prediction_records(path: str | Path) -> list[PairEnergyPred
                 raise ValueError(f"{prediction_path}:{line_number}: invalid prediction: {exc}") from exc
             if record.pair_id in seen:
                 raise ValueError(f"{prediction_path}:{line_number}: duplicate pair_id {record.pair_id}")
+            seen_units.setdefault(record.energy_unit, record.pair_id)
+            if len(seen_units) > 1:
+                detail = ", ".join(f"{pair_id}={unit}" for unit, pair_id in seen_units.items())
+                raise ValueError(
+                    f"{prediction_path}:{line_number}: mixed energy units in one file ({detail})"
+                )
             seen.add(record.pair_id)
             records.append(record)
     return records

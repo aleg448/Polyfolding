@@ -19,12 +19,18 @@ def fingerprint_markdown(report: FingerprintReport, *, title: str = "CrystalProb
 
 
 def _table(rows: list[SliceResult]) -> str:
-    table = ["| Slice | Accuracy | Correct | Evaluated | Skipped |", "|---|---:|---:|---:|---:|"]
+    table = [
+        "| Slice | Accuracy | Coverage | Correct | Evaluated | Skipped |",
+        "|---|---:|---:|---:|---:|---:|",
+    ]
     if not rows:
-        table.append("| none | n/a | 0 | 0 | 0 |")
+        table.append("| none | n/a | n/a | 0 | 0 | 0 |")
         return "\n".join(table)
     for row in rows:
         accuracy = "n/a" if row.accuracy is None else f"{row.accuracy:.3f}"
-        table.append(f"| {row.name} | {accuracy} | {row.correct} | {row.evaluated} | {row.skipped} |")
+        coverage = "n/a" if row.coverage is None else f"{row.coverage:.3f}"
+        table.append(
+            f"| {row.name} | {accuracy} | {coverage} | {row.correct} | {row.evaluated} | {row.skipped} |"
+        )
     return "\n".join(table)
 

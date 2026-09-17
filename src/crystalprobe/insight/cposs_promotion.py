@@ -37,7 +37,7 @@ def cposs_promotion_report(
             item,
             annotations.get(str(item.get("family")), {}),
             None if block_mapping_rows is None else block_mapping_rows.get(str(item.get("candidate_id"))),
-            enforce_block_mapping=block_mapping_rows is not None,
+            enforce_block_mapping=True,
         )
         for item in evidence_workpack.get("work_items", [])
     ]
@@ -56,7 +56,7 @@ def cposs_promotion_report(
         "literature_mapped_count": len(literature_mapped),
         "blocked_count": len(blocked),
         "not_promoted_count": len(rows) - len(promoted),
-        "block_mapping_enforced": block_mapping_rows is not None,
+        "block_mapping_enforced": True,
         "milestones": milestones,
         "family_summary": family_summary,
         "field_completion": field_completion,
@@ -67,7 +67,7 @@ def cposs_promotion_report(
         "policy": [
             "No CPOSS candidate becomes a benchmark record without experimental stability evidence.",
             "Literature-mapped candidates are evidence-populated prebenchmark records, not verified benchmark pairs.",
-            "When a block-to-form mapping report is supplied, promotion requires mapping-ready candidate pairs.",
+            "Promotion always requires locked block-to-form mapping and confirmed independent human review.",
             "Verified records require source license decisions and explicit disorder annotations.",
             "Ambiguous or incomplete records remain excluded from headline fingerprint and calibration metrics.",
         ],
@@ -174,8 +174,11 @@ def _promotion_row(
     enforce_block_mapping: bool,
 ) -> dict[str, Any]:
     candidate_id = str(item.get("candidate_id"))
-    form = dict(item.get("evidence_form", {}))
+    raw_form = item.get("evidence_form", {})
+    form = dict(raw_form) if isinstance(raw_form, dict) else {}
     blockers = _missing_fields(form)
+    if not isinstance(raw_form, dict):
+        blockers.append("evidence_form must be an object")
     if not annotation:
         blockers.append("family chemistry annotation is missing")
     if blockers:
@@ -198,6 +201,15 @@ def _promotion_row(
             "upgrade_requirements": _upgrade_requirements_for_form(form),
         }
     mapping_blockers = _block_mapping_blockers(block_mapping_row, enforce_block_mapping)
+    for field in ("has_disorder_a", "has_disorder_b"):
+        try:
+            _bool_field(form.get(field))
+        except ValueError:
+            mapping_blockers.append(f"{field} must be explicitly true or false")
+    if form.get("human_expert_review") is not True:
+        mapping_blockers.append("confirmed human_expert_review is required for verified promotion")
+    if str(form.get("curator", "")).strip().casefold() == str(form.get("reviewer", "")).strip().casefold():
+        mapping_blockers.append("curator and reviewer must be independent")
     if mapping_blockers:
         return {
             "candidate_id": candidate_id,
@@ -211,17 +223,19 @@ def _promotion_row(
                 "Lock block-to-experimental-form mapping for both candidate structures.",
             ],
         }
-    record = _record(item, form, annotation)
     try:
+        record = _record(item, form, annotation)
         validated = PolymorphPair.model_validate(record)
-    except ValidationError as exc:
+    except (ValidationError, ValueError, TypeError, KeyError) as exc:
         return {
             "candidate_id": candidate_id,
             "family": item.get("family"),
             "priority": item.get("priority", "unspecified"),
             "promotion_status": "blocked",
             "next_required_fields": [],
-            "validation_errors": [error["msg"] for error in exc.errors()],
+            "validation_errors": (
+                [error["msg"] for error in exc.errors()] if isinstance(exc, ValidationError) else [str(exc)]
+            ),
             "upgrade_requirements": ["Fix schema validation errors before promotion."],
         }
     return {
@@ -229,6 +243,7 @@ def _promotion_row(
         "family": item.get("family"),
         "priority": item.get("priority", "unspecified"),
         "promotion_status": "promoted",
+        "review_attestation": {key: form[key] for key in ("curator", "reviewer", "human_expert_review")},
         "next_required_fields": [],
         "upgrade_requirements": [],
         "record": validated.model_dump(mode="json"),
@@ -238,10 +253,15 @@ def _promotion_row(
 def _missing_fields(form: dict[str, Any]) -> list[str]:
     missing = []
     for field in REQUIRED_EVIDENCE_FIELDS:
+        if field == "citation_doi":
+            continue
         value = form.get(field)
-        if value in {None, ""}:
+        if isinstance(value, (dict, list, tuple, set)):
+            missing.append(f"{field} must be a scalar value")
+            continue
+        if value is None or (isinstance(value, str) and not value.strip()):
             missing.append(f"{field} is required")
-    if not form.get("citation_doi") and not form.get("citation_url"):
+    if not _field_has_value(form, "citation_doi_or_url"):
         missing.append("citation_doi or citation_url is required")
     return missing
 
@@ -284,9 +304,15 @@ def _field_completion(work_items: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 
 def _field_has_value(form: dict[str, Any], field: str) -> bool:
+    if not isinstance(form, dict):
+        return False
     if field == "citation_doi_or_url":
-        return bool(form.get("citation_doi") or form.get("citation_url"))
-    return form.get(field) not in {None, ""}
+        return any(isinstance(form.get(key), str) and bool(form[key].strip())
+                   for key in ("citation_doi", "citation_url"))
+    value = form.get(field)
+    if isinstance(value, (dict, list, tuple, set)):
+        return False
+    return value is not None and not (isinstance(value, str) and not value.strip())
 
 
 def _next_required_fields(form: dict[str, Any]) -> list[str]:
@@ -372,7 +398,7 @@ def _upgrade_requirements_for_form(form: dict[str, Any]) -> list[str]:
     requirements = []
     if _next_required_fields(form):
         requirements.append("Complete all required evidence fields.")
-    if form.get("experimental_stability_ordering") in {None, "", "ambiguous"}:
+    if form.get("experimental_stability_ordering") in (None, "", "ambiguous"):
         requirements.append("Map CPOSS block IDs to experimental form labels and assign a non-ambiguous stability ordering.")
     if str(form.get("has_disorder_a", "")).strip().casefold() == "unknown" or str(
         form.get("has_disorder_b", "")
@@ -438,8 +464,8 @@ def _record(item: dict[str, Any], form: dict[str, Any], annotation: dict[str, An
             "temperature_K": _optional_float(form.get("temperature_K")),
             "relative_humidity": _optional_float(form.get("relative_humidity")),
             "free_energy_diff_kJ_per_mol": _optional_float(form.get("free_energy_diff_kJ_per_mol")),
-            "citation_doi": form.get("citation_doi") or None,
-            "citation_url": form.get("citation_url") or None,
+            "citation_doi": str(form.get("citation_doi") or "").strip() or None,
+            "citation_url": str(form.get("citation_url") or "").strip() or None,
             "notes": form.get("notes", ""),
         },
         "curation_status": "verified" if form.get("promotion_decision") == "promote" else "reviewed",
@@ -456,4 +482,9 @@ def _optional_float(value: Any) -> float | None:
 
 
 def _bool_field(value: Any) -> bool:
-    return str(value).strip().casefold() in {"true", "yes", "1"}
+    normalized = str(value).strip().casefold()
+    if normalized in {"true", "yes", "1"}:
+        return True
+    if normalized in {"false", "no", "0"}:
+        return False
+    raise ValueError("disorder must be explicitly true or false")

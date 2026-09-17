@@ -1,5 +1,3 @@
-from pathlib import Path
-
 from crystalprobe.insight.sensitivity_results import load_sensitivity_rows, sensitivity_markdown, summarize_sensitivity
 
 

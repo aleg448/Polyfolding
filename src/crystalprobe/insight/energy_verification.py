@@ -10,6 +10,7 @@ from typing import Any
 from crystalprobe.benchmark.dataset import load_manifest
 from crystalprobe.benchmark.predictions import PairEnergyPredictionRecord, load_pair_energy_prediction_records
 from crystalprobe.benchmark.schema import PolymorphPair
+from crystalprobe.uncertainty.calibrated_abstention import calibrated_abstention_decision
 
 
 ALLOWED_ENERGY_UNITS = {"eV"}
@@ -20,27 +21,39 @@ def energy_verification_report(
     manifest_path: str | Path,
     predictions_path: str | Path,
     molecule_bug_hunt: dict[str, Any] | None = None,
+    conformal_threshold: float | None = 0.0,
 ) -> dict[str, Any]:
-    """Audit pair-energy predictions without turning them into benchmark claims."""
+    """Audit pair-energy predictions without turning them into benchmark claims.
 
+    ``conformal_threshold`` is an optional calibrated absolute-error margin added
+    to the combined uncertainty before a verified ranking is allowed to be
+    eligible for scoring. It defaults to ``0.0`` (pure uncertainty margin).
+    """
+
+    _validate_threshold(conformal_threshold)
     dataset = load_manifest(manifest_path)
     predictions = load_pair_energy_prediction_records(predictions_path)
     pair_by_id = {pair.pair_id: pair for pair in dataset.pairs}
-    rows = [_energy_row(record, pair_by_id.get(record.pair_id)) for record in predictions]
+    rows = [
+        _energy_row(record, pair_by_id.get(record.pair_id), conformal_threshold=conformal_threshold)
+        for record in predictions
+    ]
     issues = _energy_issues(rows, dataset.pairs, predictions)
     stress = _stress_coverage(molecule_bug_hunt or {})
     issues.extend(stress["issues"])
     counts = Counter(issue["severity"] for issue in issues)
     verified_pairs = sum(1 for pair in dataset.pairs if pair.curation_status.value == "verified")
-    status = "energy_verification_passed"
+    status = "energy_sanity_checks_passed_not_calibration"
     if counts.get("blocker", 0) or verified_pairs == 0:
         status = "energy_verification_blocked_until_verified_calibration"
     return {
         "schema_version": "0.1.0",
         "status": status,
+        "calibration_validated": False,
         "inputs": {
             "manifest": str(manifest_path),
             "predictions": str(predictions_path),
+            "conformal_threshold_eV": conformal_threshold,
         },
         "counts": {
             "manifest_pairs": len(dataset.pairs),
@@ -121,7 +134,12 @@ def energy_verification_markdown(report: dict[str, Any]) -> str:
     return "\n".join(lines).rstrip() + "\n"
 
 
-def _energy_row(record: PairEnergyPredictionRecord, pair: PolymorphPair | None) -> dict[str, Any]:
+def _energy_row(
+    record: PairEnergyPredictionRecord,
+    pair: PolymorphPair | None,
+    *,
+    conformal_threshold: float | None = 0.0,
+) -> dict[str, Any]:
     predicted_winner = record.as_metric_prediction().predicted_winner
     combined_uncertainty = _combined_uncertainty(record.energy_uncertainty_a, record.energy_uncertainty_b)
     curation_status = pair.curation_status.value if pair else "missing_manifest_pair"
@@ -143,7 +161,7 @@ def _energy_row(record: PairEnergyPredictionRecord, pair: PolymorphPair | None) 
         "ood_flag_a": bool(record.ood_flag_a),
         "ood_flag_b": bool(record.ood_flag_b),
         "curation_status": curation_status,
-        "claim_decision": _claim_decision(pair, record),
+        "claim_decision": _claim_decision(pair, record, conformal_threshold=conformal_threshold),
         "notes": record.notes,
     }
 
@@ -184,6 +202,8 @@ def _energy_issues(
             issues.append(_issue("blocker", "nonfinite_energy", pair_id, "Energy values must be finite."))
         if row["energy_uncertainty_a"] is None or row["energy_uncertainty_b"] is None:
             issues.append(_issue("warning", "missing_uncertainty", pair_id, "Both sides should carry uncertainty for abstention."))
+        elif not all(math.isfinite(row[key]) for key in ("energy_uncertainty_a", "energy_uncertainty_b")):
+            issues.append(_issue("blocker", "nonfinite_uncertainty", pair_id, "Energy uncertainties must be finite."))
         elif row["energy_uncertainty_a"] < 0 or row["energy_uncertainty_b"] < 0:
             issues.append(_issue("blocker", "negative_uncertainty", pair_id, "Energy uncertainties must be non-negative."))
         if row["predicted_winner"] == "tie":
@@ -221,22 +241,57 @@ def _stress_coverage(report: dict[str, Any]) -> dict[str, Any]:
 
 
 def _combined_uncertainty(a: float | None, b: float | None) -> float:
-    total = 0.0
-    if a is not None:
-        total += float(a) * float(a)
-    if b is not None:
-        total += float(b) * float(b)
-    return math.sqrt(total)
+    return math.hypot(a if a is not None else 0.0, b if b is not None else 0.0)
 
 
-def _claim_decision(pair: PolymorphPair | None, record: PairEnergyPredictionRecord) -> str:
+def _validate_threshold(value: float | None) -> None:
+    if value is not None and (not math.isfinite(value) or value < 0):
+        raise ValueError("conformal threshold must be finite and non-negative (eV)")
+
+
+def _claim_decision(
+    pair: PolymorphPair | None,
+    record: PairEnergyPredictionRecord,
+    *,
+    conformal_threshold: float | None = 0.0,
+) -> str:
+    _validate_threshold(conformal_threshold)
     if pair is None:
         return "blocked_missing_manifest_pair"
     if pair.curation_status.value != "verified":
         return "abstain_non_verified_record"
+    if record.energy_unit not in ALLOWED_ENERGY_UNITS:
+        return "blocked_unsupported_energy_unit"
+    gap = record.energy_b - record.energy_a
+    if not all(math.isfinite(value) for value in (record.energy_a, record.energy_b, gap)):
+        return "blocked_nonfinite_energy"
     if record.ood_flag_a or record.ood_flag_b:
         return "abstain_ood_flag"
-    return "eligible_for_verified_slice_scoring"
+    if record.energy_uncertainty_a is None or record.energy_uncertainty_b is None:
+        # Policy: missing uncertainty forces abstention until calibrated evidence exists.
+        return "abstain_missing_uncertainty"
+    if not all(math.isfinite(value) and value >= 0 for value in (
+        record.energy_uncertainty_a, record.energy_uncertainty_b,
+    )):
+        return "blocked_invalid_uncertainty"
+    combined = _combined_uncertainty(record.energy_uncertainty_a, record.energy_uncertainty_b)
+    if not math.isfinite(combined):
+        return "blocked_invalid_uncertainty"
+    # A verified, non-OOD record is only eligible when the predicted gap clears the
+    # combined uncertainty plus any calibrated conformal margin. This reuses the
+    # single abstention implementation so the energy gate and the standalone
+    # calibrated-abstention helper cannot drift apart.
+    decision = calibrated_abstention_decision(
+        predicted_gap=gap,
+        combined_uncertainty=combined,
+        conformal_threshold=conformal_threshold,
+        evidence_status="verified",
+    )["decision"]
+    if decision == "margin_clear_not_calibrated":
+        return "eligible_for_verified_slice_scoring"
+    if decision == "abstain_missing_calibration_threshold":
+        return decision
+    return "abstain_uncertain_ranking"
 
 
 def _issue(severity: str, check: str, pair_id: str, detail: str) -> dict[str, str]:

@@ -2,6 +2,12 @@
 
 CrystalProbe is an interpretability-first research suite for trustworthy polymorph prediction.
 
+For the resumable computational research campaign, persistent experiment registry,
+and September 10, 2026 technology review, see
+[`docs/autonomous_research_pipeline.md`](docs/autonomous_research_pipeline.md).
+Run `.\.venv\Scripts\python.exe scripts/run_molecule_campaign.py` for a bounded
+conformer campaign over the molecule panel; repeat to resume validated work.
+
 For a public-facing walkthrough of the project motivation, architecture, demo, result boundaries, and drug-discovery reliability thesis, see [`CASE_STUDY.md`](CASE_STUDY.md).
 For the reviewer-facing visual demo gallery, see [`docs/public_demo.md`](docs/public_demo.md).
 For the public demo checklist and one stronger unverified example, see [`docs/public_demo_checklist.md`](docs/public_demo_checklist.md) and [`docs/cases/cposs_ibp_candidate.md`](docs/cases/cposs_ibp_candidate.md).

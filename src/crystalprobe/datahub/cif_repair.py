@@ -2,13 +2,16 @@
 
 from __future__ import annotations
 
+from crystalprobe.datahub.ccdc import sanitize_cif_text
+
 
 def repair_cif_spacegroup_text(text: str) -> str:
-    """Normalize common CSD monoclinic P21 spellings that ASE cannot resolve."""
+    """Normalize common CSD monoclinic P21 spellings that ASE cannot resolve.
 
-    return (
-        text.replace("_space_group_name_H-M_alt        'P 1 21 1'", "_space_group_name_H-M_alt        'P 21'")
-        .replace("_symmetry_space_group_name_H-M   'P 1 21 1'", "_symmetry_space_group_name_H-M   'P 21'")
-        .replace("_space_group_name_H-M_alt 'P 1 21 1'", "_space_group_name_H-M_alt 'P 21'")
-        .replace("_symmetry_space_group_name_H-M 'P 1 21 1'", "_symmetry_space_group_name_H-M 'P 21'")
-    )
+    Delegates to the regex-based, whitespace-tolerant normalizer in
+    :func:`crystalprobe.datahub.ccdc.sanitize_cif_text` so there is a single
+    implementation instead of two divergent ones. The tag/whitespace prefix of
+    each matched line is preserved; only the space-group value is rewritten.
+    """
+
+    return sanitize_cif_text(text)

@@ -55,7 +55,7 @@ def _prediction_row(
     adapter: Any,
     include_local_geometry: bool,
 ) -> dict[str, Any]:
-    atoms = read_cif_structure(source_path, index=record.source_index)
+    atoms = read_cif_structure(source_path, block_id=record.block_id)
     prediction = adapter.predict(atoms)
     row = {
         "block_id": record.block_id,
